@@ -1,0 +1,276 @@
+\begin{frame}{Rotation matrix }
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\columnwidth]{2frames.pdf}
+	\end{figure}
+	\begin{itemize}
+		\item 	The orientation of the frame $\setR_B$ w.r.t the frame $\setR_I$ can be represented by the rotation matrix $\matriceR_B^I=\begin{bmatrix} \vectorX_B & \vectorY_B& \vectorZ_B\end{bmatrix}\in\rm{SO}(3)$
+		\item $\vectorX_B, \vectorY_B,\vectorZ_B\inR^3$ are expressed in $\setR_I$
+	\end{itemize}
+
+\end{frame}
+\begin{frame}{Rotation matrix }
+	\begin{itemize}
+		\item The columns of $\matriceR_B^I$ are orthogonal to each other: $\vectorX_B^T\vectorY_B=0$, $\vectorY_B^T\vectorZ_B=0$, $\vectorX_B^T\vectorZ_B=0$
+		\item The columns of $\matriceR_B^I$ are normal: $\vectorX_B^T\vectorX_B=1$, $\vectorY_B^T\vectorY_B=1$, $\vectorZ_B^T\vectorZ_B=1$
+		\item$\matriceR_I^B=\left(\matriceR_B^I\right)^{-1}=\left(\matriceR_B^I\right)^T$
+		\item $\rm{SO}(3)$ denotes the group of $3\times3$ orthogonal matrices $\matriceR$ such that $\matriceR^T = \matriceR$ and $\det(\matriceR)=1$
+		\item Sucessive rotations are expressed by rotation composition: $\matriceR_C^I = \matriceR_B^I\matriceR_C^B$. Meaning: perfirm a rotation $\matriceR_B^I$ w.r.t $\setR_I$, then perform a rotation $\matriceR_C^B$ w.r.t $\setR_B$
+		\item \textbf{Remark:} rotation composition is generally not commutative!
+	\end{itemize}
+\end{frame}
+\begin{frame}{Rotation matrix }
+	\begin{itemize}
+		\item If $\vectorV^B\inR^3$ is expressed in the frame $\setR_B$, then it can be expressed in the frame $\setR_I$ by $\vectorV=\matriceR_B^I\vectorV^B$
+		\item Rotation matrix time derivative: 
+		\begin{align*}
+			\matriceRdot_B^I&=\matriceR_B^I\left[\vectorOmega_B^B\times\right]\\
+			\matriceRdot_B^I&=\left[\vectorOmega_B^I\times\right]\matriceR_B^I
+		\end{align*} 
+		\item Orientation can also be represented by: Euler angles, Angle-axis, Quaternions
+	\end{itemize}
+\end{frame}
+\begin{frame}{Rigid body kinematics}
+	A rigid body kinematics is completely described by the \emph{position} and \emph{orientation} (\emph{pose}) of the frame $\setR_B$ (attached to the rigid body) w.r.t a reference frame $\setR_I$. 
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\columnwidth]{rigid-body.pdf}
+	\end{figure}
+\end{frame}
+\begin{frame}{Rigid body kinematics}
+The rigid body position is given by $\boldsymbol{o}_B\inR^3$ (expressed in $\setR_I$), whereas the orientation can be defined by the rotation matrix $\matriceR_B^I$%=\begin{bmatrix} \vectorX_B & \vectorY_B& \vectorZ_B\end{bmatrix}\in \rm{SO}(3)$
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\columnwidth]{rigid-body.pdf}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Rigid body kinematics}
+	The rigid body pose can be compactly represented by a homogeneous transformation matrix 
+	\begin{equation*}
+		\matriceT_B^I=\begin{bmatrix}
+			\matriceR_B^I & \vectorO_B \\ \boldsymbol{0}_{1\times 3} &1
+		\end{bmatrix}\in {\rm SE}(3)
+	\end{equation*}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\columnwidth]{rigid-body.pdf}
+	\end{figure}
+\end{frame}
+\begin{frame}{Homegeneous transformation}
+%	\textbf{Note:}
+	\begin{itemize}
+		\item The homogeneous transformation matrix performs a translation and a rotation of a rigid body without changing its dimensions while preserving the right handedness 
+		\item Case of a pure translation:
+		\begin{equation*}
+			\matriceT_B^I=\begin{bmatrix}
+				\matriceI_3 & \vectorO_B \\ \boldsymbol{0}_{1\times 3} &1
+			\end{bmatrix}
+		\end{equation*} 
+		\item Case of a pure rotation:  
+		\begin{equation*}
+			\matriceT_B^I=\begin{bmatrix}
+				\matriceR_B^I  & \boldsymbol{0}_{3\times 1}  \\ \boldsymbol{0}_{1\times 3} &1
+			\end{bmatrix}
+		\end{equation*}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Homegeneous transformation}
+	The inverse of the homogeneous transformation matrix is given by 
+	\begin{align*}
+		\left(\matriceT_B^I\right)^{-1} = \matriceT^B_I &= \begin{bmatrix}
+			\left(\matriceR_B^I\right)^T & -\left(\matriceR_B^I\right)^T \vectorO_B\\
+			\vectorZero_{1\times3} &1
+		\end{bmatrix} \\
+		&=\begin{bmatrix}
+			\matriceR^B_I & -\matriceR^B_I \vectorO_B\\
+			\vectorZero_{1\times3} &1
+		\end{bmatrix}
+	\end{align*} 
+\end{frame}
+\begin{frame}{Homegeneous transformation}
+	In homogeneous coordinates, a point is represented by 
+	\begin{equation*}
+		\underline{\vectorP} = \begin{bmatrix}
+			x\\y\\z\\1
+		\end{bmatrix}
+	\end{equation*}
+	while a velocity vector is represented as 
+	\begin{equation*}
+		\underline{\vectorV} = \begin{bmatrix}
+			v_x\\v_y\\v_z\\0
+		\end{bmatrix}
+	\end{equation*}
+\end{frame}
+\begin{frame}{Homegeneous transformation}
+	Given a point $P$ with homogeneous coordinates $\underline{\vectorP}_B$ expressed in the frame $\setR_B$. Its coordinates $\underline{\vectorP}$ expressed in $\setR_I$ can be computed as 
+	\begin{align*}
+		\underline{\vectorP} &= \matriceT_B^I\underline{\vectorP}_B 
+	\end{align*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\columnwidth]{TransformationMatrix-PositionVector}
+	\end{figure}
+\end{frame}
+\begin{frame}{Homegeneous transformation}
+	Given a velocity vector with homogeneous coordinates $\underline{\vectorV}_B$ expressed in $\setR_B$. Its coordinates $\underline{\vectorV}$ expressed in $\setR_I$ can be computed as 
+	\begin{align*}
+		\underline{\vectorV} &= \matriceT_B^I\underline{\vectorV}_B 
+	\end{align*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.55\columnwidth]{TransformationMatrix-VelocityVector}
+	\end{figure}
+\end{frame}
+%\begin{frame}{Homegeneous transformation}
+%	\begin{itemize}	
+%		\item The position and orientation of the rigid body w.r.t the frame $\setR_I$ can be completely described by $\matriceT_B^I$: 
+%		\begin{align*}
+%			\begin{bmatrix}
+%				\vectorO_B \\ 1
+%			\end{bmatrix} &= \matriceT_B^I\begin{bmatrix}
+%				0\\0\\0 \\ 1
+%			\end{bmatrix}\\
+%			\matriceR_B^I &= \matriceT_B^I(1:3,1:3)
+%		\end{align*}
+%	\end{itemize}
+%\end{frame}
+%\begin{frame}{Homegeneous transformation}
+%	Consider a point $P$ on the rigid body. The position $\boldsymbol{p}_I$ of $P$ w.r.t the frame $\setR_I$ can be expressed  by the homogeneous transformation 
+%	\begin{equation*}
+%		{\color{blue}\vectorP_I} = {\color{red}\vectorO_B} + \matriceR_B^I{\color{SeaGreen}\boldsymbol{p}_B}
+%	\end{equation*}
+%	where $\boldsymbol{p}_B$ is the position of the point $P$ in the frame $\setR_B$
+%		\begin{figure}
+%		\centering
+%		\includegraphics[width=0.5\columnwidth]{rigid-body_TransformationMatrix.pdf}
+%	\end{figure}
+%\end{frame}
+%\begin{frame}{Homegeneous transformation}
+%Alternatively, the position $\vectorP_I$ can be computed by the homegeneous transformation matrix $\matriceT_B^I$
+%	\begin{equation*}
+%		\begin{bmatrix}
+%			\boldsymbol{p}_I \\ 1
+%		\end{bmatrix} = \matriceT_B^I\begin{bmatrix}
+%			\boldsymbol{p}_B \\ 1
+%		\end{bmatrix}, 
+%	\end{equation*}
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=0.5\columnwidth]{rigid-body_TransformationMatrix.pdf}
+%	\end{figure}
+%\end{frame}
+\begin{frame}{Homegeneous transformation}
+The {\color{blue}{position}} and {\color{purple}orientation} of the  frame $\setR_C$ w.r.t to $\setR_I$ can be computed through the homogeneous transformation matrix composition
+			
+	\begin{minipage}{0.3\columnwidth}
+		\begin{align*}
+			\matriceT_C^I&=\matriceT_B^I\matriceT_C^B\\
+			&=\begin{bmatrix}
+				\matriceR_B^I&{\color{red}\vectorO_B}\\\vectorZero_{1\times3}&1
+			\end{bmatrix}\begin{bmatrix}
+				\matriceR_C^B&{\color{SeaGreen}\vectorO_C^B}\\\vectorZero_{1\times3}&1
+			\end{bmatrix} \\
+			&=\begin{bmatrix}
+				\matriceR_B^I\matriceR_C^B&{\color{blue}\vectorO_B+\matriceR_B^I\vectorO_C^B}\\\vectorZero_{1\times3}&1
+			\end{bmatrix}\\
+			&=\begin{bmatrix}
+				{\color{purple}\matriceR_C^I}&{\color{blue}\vectorO_B+\matriceR_B^I\vectorO_C^B}\\\vectorZero_{1\times3}&1
+			\end{bmatrix}
+		\end{align*}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.4\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{rigid-body_TransformationMatrix_rot.pdf}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Homegeneous transformation}
+Following the same reasoning, the position and orientation of the end-effector frame  $\setR_{ee}$ w.r.t to $\setR_I$ can be obtained through the homogeneous transformation matrix composition
+	
+	\begin{minipage}{0.2\columnwidth}
+		\begin{align*}
+			\matriceT_{ee}^I&=\matriceT_B^I\matriceT_C^B\matriceT_D^C\matriceT_E^D\matriceT_F^E\matriceT_{ee}^{F}\\
+		\end{align*}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.6\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.4\textheight]{rigid-tree_TransformationMatrix.pdf}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Homegeneous transformation}
+\begin{itemize}
+	\item The homogeneous transformation matrix $\matriceT_{ee}^I$ depends on the choice of the frames placement
+	\item Need for a \textbf{standard method} to decribe the relative transformation matrices between each pair of bodies with a \textbf{minimum number of parameters}\footnote[frame]{A homogeneous transformation matrix needs 9 parameters.}
+\end{itemize}
+	
+	\begin{minipage}{0.2\columnwidth}
+		\begin{align*}
+			\matriceT_{ee}^I&=\begin{bmatrix}
+				{\matriceR_{ee}^I}&{\vectorP_{ee}}\\\vectorZero_{1\times3}&1
+			\end{bmatrix}
+		\end{align*}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+DH convention is based on the following rules for the frames placement
+\begin{itemize}
+	\item Choose axis $z_j$ along the axis of joint $j+1$
+	\item Choose axis $x_j$ such that $x_j\perp z_{j-1}$ and intersects with it
+\end{itemize}
+\begin{figure}
+	\centering
+	\includegraphics[height=0.55\textheight]{bodies&joints.pdf}
+\end{figure}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is defined using 4 parameters
+
+	\begin{minipage}{0.5\columnwidth}
+		\begin{itemize}
+			\item $\theta_j$: angle between $x_{j-1}$ and $x_j$ around $z_{j-1}$
+			\item $d_j$: distance between $x_{j-1}$ and $x_j$ along $z_{j-1}$
+			\item $\alpha_j$: angle between $z_{j-1}$ and $z_j$ around $x_{j}$
+			\item $a_j$: distance between $z_{j-1}$ and $z_j$ along $x_{j}$
+		\end{itemize}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.45\columnwidth}
+			\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{DH.pdf}
+		\end{figure}
+	\end{minipage}
+%	$a_j$ and $\alpha_j$ are always constant and depends on the placement of the joint on the robot structure, whereas $\theta_j$ and $d_j$ depends on the type of the joint:
+%	\begin{itemize}
+%		\item If joint $j$ is revolute $ \Rightarrow\theta_j$ is variable, $d_j$ constant
+%		\item If joint $j$ is prismatic $ \Rightarrow d_j$ is variable, $\theta_j$ constant
+%	\end{itemize} 
+	
+
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	\begin{itemize}
+		\item $a_j$ and $\alpha_j$ are \textbf{always constant} and depend on the placement of the joint on the robot structure,
+		\item $\theta_j$ and $d_j$ depends on the type of the joint:
+		\begin{itemize}
+			\item If joint $j$ is \textbf{revolute} $ \Rightarrow\theta_j$ is variable, $d_j$ constant
+			\item If joint $j$ is \textbf{prismatic} $ \Rightarrow d_j$ is variable, $\theta_j$ constant
+		\end{itemize} 
+		\item The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is given as 
+		\begin{equation*}
+			\matriceT_{j}^{j-1} = \begin{bmatrix}
+				\cos(\theta_j)&-\sin(\theta_j)\cos(\alpha_j) &\sin(\theta_j)\sin(\alpha_j) & a_j\cos(\theta_j)\\
+				\sin(\theta_j)&\cos(\theta_j)\cos(\alpha_j) &-\cos(\theta_j)\sin(\alpha_j) & a_j\sin(\theta_j)\\
+				0&\sin(\alpha_j)&\cos(\alpha_j)&d_j\\
+				0&0&0&1
+			\end{bmatrix}
+		\end{equation*}
+	\end{itemize} 	
+\end{frame}

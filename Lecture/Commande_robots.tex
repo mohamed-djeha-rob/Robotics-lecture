@@ -1,0 +1,186 @@
+\subsection{Multi-robot Control}
+\begin{frame}
+	\centering
+	\Large Multi-Robot Control
+\end{frame}
+\begin{frame}{Multi-robot Control}
+\textbf{Goal:}	Control 2 robotic arms with a single controller
+	\begin{align*}
+		&\matriceM_1\vectorQddot_1+\vectorC_1(\vectorQ_1,\vectorQdot_1)=\vectorTau_1\\
+		&\matriceM_2\vectorQddot_2+\vectorC_2(\vectorQ_2,\vectorQdot_2)=\vectorTau_2\\
+		&h = \delta(\vectorQ_1,\vectorQ_2) - \delta_{\min}\geq0
+	\end{align*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\columnwidth]{02Pandas.pdf}
+	\end{figure}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	By posing,
+	\begin{equation*}
+		\vectorQ = \begin{bmatrix}
+			\vectorQ_1\\\vectorQ_2
+		\end{bmatrix},\
+		\vectorTau = \begin{bmatrix}
+			\vectorTau_1\\\vectorTau_2
+		\end{bmatrix},\
+		\matriceM = {\rm BlockDiag}(\matriceM_1, \matriceM_2),\
+		\vectorC = {\rm BlockDiag}(\vectorC_1, \vectorC_2)
+	\end{equation*}
+	the unified dynamics is obtained
+	\begin{equation*}
+		\matriceM\vectorQddot+\vectorC(\vectorQ,\vectorQdot)=\vectorTau
+	\end{equation*}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	The two robots can be independantly controlled using a \textbf{centralized}   QP
+	\begin{align*}
+		\begin{split}
+			\underset{\vectorTau,\vectorQddot}{\min}&\frac{1}{2}\norm{\vectorTau-\vectorTau_d}^2\\
+			{\rm S.t:~}&\vectorTau_{\min}\leq \vectorTau\leq \vectorTau_{\max}\\
+				&\vectorQddot_{\min}\leq \vectorQddot\leq \vectorQddot_{\max}\\
+				&\matriceM\vectorQddot+\vectorC(\vectorQ,\vectorQdot)=\vectorTau
+		\end{split}
+	\end{align*}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	\textbf{Goal:}	Control 2 robotic arms while  avoiding collision
+	\begin{align*}
+		&\matriceM\vectorQddot+\vectorC(\vectorQ,\vectorQdot)=\vectorTau\\
+		&h = \delta(\vectorQ_1,\vectorQ_2) - \delta_{\min}\geq0
+	\end{align*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\columnwidth]{02Pandas_collision.pdf}
+	\end{figure}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	In practice, convex shells encapsulating the robots' bodies are used for a continuous measuring of the distance
+	\begin{align*}
+		&\matriceM\vectorQddot+\vectorC(\vectorQ,\vectorQdot)=\vectorTau\\
+		&h = \delta(\vectorQ_1,\vectorQ_2) - \delta_{\min}\geq0
+	\end{align*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\columnwidth]{02Pandas_collision_convex_shell.pdf}
+	\end{figure}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	Same centralized QP can be formulated through CBF constraint
+	\begin{align*}
+		\begin{split}
+			\underset{\vectorTau,\vectorQddot}{\min}&\frac{1}{2}\norm{\vectorTau-\vectorTau_d}^2\\
+			{\rm S.t:~}&\vectorTau_{\min}\leq \vectorTau\leq \vectorTau_{\max}\\
+			&\vectorQddot_{\min}\leq \vectorQddot\leq \vectorQddot_{\max}\\
+			&\matriceM\vectorQddot+\vectorC(\vectorQ,\vectorQdot)=\vectorTau\\
+			&L_fh+L_gh\vectorTau\geq-\alpha(h)
+		\end{split}
+	\end{align*}
+\end{frame}
+\begin{frame}{CLF-CBF-QP}
+	\begin{picture}(0,0)
+		%		\put(0,70){Robots are able to accomplish complex missions...}
+		\put(10,-20){\begin{minipage}{0.95\columnwidth}
+				\centering
+				\embedvideo*{\includegraphics[width=\columnwidth]{Screenshot from 2025-11-17 22-54-50.png}}{Figures/HandOVer-MOntage.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{0cm}\centering\small Safe multi-robot handover}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}{CLF-CBF-QP}
+	\begin{picture}(0,0)
+		%		\put(0,70){Robots are able to accomplish complex missions...}
+		\put(10,-20){\begin{minipage}{0.95\columnwidth}
+				\centering
+				\embedvideo*{\includegraphics[width=\columnwidth]{Screenshot from 2025-11-17 22-54-50.png}}{Figures/HandOver-TwoPandas-Planes.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{0cm}\centering\small Safe multi-robot handover}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+%\begin{frame}{CLF-CBF-QP}
+%	\begin{picture}(0,0)
+%		%		\put(0,70){Robots are able to accomplish complex missions...}
+%		\put(10,-20){\begin{minipage}{0.85\columnwidth}
+%				\centering
+%				\embedvideo*{\includegraphics[height=0.6\textheight]{Screenshot from 2025-11-17 22-54-50.png}}{Figures/HRP2 Handover.mp4}[autoplay=false,showGUI=true]\\
+%				\makebox{\hspace{0cm}\centering\small Safe humanoid handover}
+%		\end{minipage}}
+%	\end{picture}
+%\end{frame}
+\begin{frame}{Multi-robot Control}
+	Now, assume  02 robotic arms manipulating a rigid object
+%	\begin{align*}
+%		&\matriceM_1\vectorQddot_1+\vectorC_1(\vectorQ_1,\vectorQdot_1)=\vectorTau_1\\
+%		&\matriceM_2\vectorQddot_2+\vectorC_2(\vectorQ_2,\vectorQdot_2)=\vectorTau_2
+%	\end{align*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\columnwidth]{02Pandas01Object.pdf}
+	\end{figure}
+	\only<2->{
+	\begin{itemize}
+		\item The robotics arms can nolonger move freely!
+		\item How to formulate the control problem?
+	\end{itemize}}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\columnwidth]{02Pandas01Object_forces.pdf}
+	\end{figure}
+	\begin{itemize}
+		\item Consider the object as a (unactuated) 6-DoF \textbf{‘robot’} to which contact forces $\vectorF_{i,j}$ are applied
+		\item All the robots are coupled through the contact forces
+		\item Contact forces work in pairs of action/reaction 
+	\end{itemize}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	\begin{align*}
+	&\matriceM_1\vectorQddot_1+\vectorC_1(\vectorQ_1,\vectorQdot_1)=\vectorTau_1+\matriceJ_{1,3}^T\vectorF_{1,3}\\
+	&\matriceM_2\vectorQddot_2+\vectorC_2(\vectorQ_2,\vectorQdot_2)=\vectorTau_2+\matriceJ_{2,3}^T\vectorF_{2,3}\\
+	&\matriceM_3\vectorQddot_3+\vectorC_3(\vectorQ_3,\vectorQdot_3)=\matriceJ_{3,1}^T\vectorF_{3,1} + \matriceJ_{3,2}^T\vectorF_{3,2} 
+\end{align*}
+Thanks to Newton's third law: 
+\begin{equation*}
+	\vectorF_{1,3} = -\vectorF_{3,1}, \ \vectorF_{2,3} = -\vectorF_{3,2}
+\end{equation*}
+leading to 
+	\begin{align*}
+\matriceM_3\vectorQddot_3+\vectorC_3(\vectorQ_3,\vectorQdot_3)=-\matriceJ_{3,1}^T\vectorF_{1,3} - \matriceJ_{3,2}^T\vectorF_{2,3} 
+\end{align*}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+The unified dynamics becomes 
+\begin{align*}
+	&\matriceM\vectorQddot+\vectorC(\vectorQ,\vectorQdot)=\matriceS\vectorTau + \matriceJ^T\vectorF\\
+		&\vectorQ = \begin{bmatrix}
+		\vectorQ_1\\\vectorQ_2\\\vectorQ_3
+	\end{bmatrix},\vectorTau = \begin{bmatrix}
+		\vectorTau_1\\\vectorTau_2
+	\end{bmatrix},\vectorF=\begin{bmatrix}
+	\vectorF_{1,3} \\\vectorF_{2,3}
+	\end{bmatrix},\vectorC = {\rm BlockDiag}(\vectorC_1, \vectorC_2,\vectorC_3),\\
+	&\matriceM = {\rm BlockDiag}(\matriceM_1, \matriceM_2,\matriceM_3), \matriceS^T=\begin{bmatrix}
+		\mathbf{I}&\bm{0}&\bm{0} \\
+		\bm{0}&\mathbf{I}& \bm{0}
+	\end{bmatrix},\\
+	&\matriceJ = \begin{bmatrix}
+		\matriceJ_{1,3}&\bm{0}&-\matriceJ_{3,1} \\
+		\bm{0}&\matriceJ_{2,3}&-\matriceJ_{3,2}\\
+	 \end{bmatrix}
+\end{align*}
+\end{frame}
+\begin{frame}{Multi-robot Control}
+	Multi-robot QP is then formulated as 
+	\begin{align*}
+		\begin{split}
+			\underset{\vectorTau,\vectorQddot,{\color{red}\vectorF}}{\min}&\frac{1}{2}\norm{\vectorTau-\vectorTau_d}^2 + \frac{1}{2}\norm{\vectorF_{1,3}-\vectorF_{{1,3}_d}}^2 + \frac{1}{2}\norm{\vectorF_{2,3}-\vectorF_{{2,3}_d}}^2\\
+			{\rm S.t:~}&\vectorTau_{\min}\leq \vectorTau\leq \vectorTau_{\max}\\
+			&\vectorQddot_{\min}\leq \vectorQddot\leq \vectorQddot_{\max}\\
+			&\matriceM\vectorQddot+\vectorC(\vectorQ,\vectorQdot)=\vectorTau\\
+			&\vectorF_{1,3}\in{\cal F}_{1,3}~\text{(Friction cone)}\\
+			&\vectorF_{2,3}\in{\cal F}_{2,3}~\text{(Friction cone)}
+		\end{split}
+	\end{align*}
+	\textbf{Important result:} The \textbf{unactuated} object becomes \textbf{actuated} through the \textbf{contact forces!} 
+\end{frame}

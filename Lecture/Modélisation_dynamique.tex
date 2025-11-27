@@ -1,0 +1,144 @@
+%\begin{frame}{Multi-objective control notion}
+%	\begin{figure}
+%		\centering
+%		\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+%			\node [block] (CRA) at (-1, 12) {Complex robotic application};
+%			\node [sum] (comp) at (4,11) {}; 
+%			\node [block] (adjust) at (6,11) {\color{red}Adjustment};
+%			
+%			
+%		\end{tikzpicture}
+%	\end{figure}
+%\end{frame}
+\begin{frame}
+	\centering
+	\Large Multi-Objective Control
+\end{frame}
+\subsection{Multi-Objective Control}
+\begin{frame}{Redundancy}
+	\begin{itemize}
+		\item For some systems, the Jacobian matrix $  L_gL_f^{\rho-1}\vectorE(\vectorX)\inR^{p\times m}$ is wide: $p<m$
+		\item Example: humanoid robot 
+		\begin{itemize}
+			\item Number of actuators $m=\sim30$
+			\item Task: control the hand position $p=3$
+		\end{itemize} 
+		\item In this case, \begin{equation*}
+			L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU =- L_f^\rho\vectorE(\vectorX) - \matriceK\vectorZ
+		\end{equation*} may accept multiple $ \vectorU$ solutions\footnote[frame]{Namely, $\ker(L_gL_f^{\rho-1}\vectorE(\vectorX))\neq\emptyset$}, but all of theme acheive the task!
+		\item This type of systems (robots) are called \emph{‘redundant’}: more DoF than required to perform a task
+	\end{itemize}
+\end{frame}
+\begin{frame}{Redundancy}
+	\begin{itemize}	
+		\item \textbf{Idea:} From the set of all possible solutions, choose --\emph{if possible}-- the one that achieves \emph{simultaneously} other tasks 
+		\item E.g., robotic arm
+		\begin{itemize}
+			\item Task 01: bring the hand to a desired position
+			\item Task 02: keep the elbow up  
+		\end{itemize}
+		\item Why ‘if possible’? Depending on the system state, redundancy can be lost $\Rightarrow$ impossible to perform \emph{two tasks simultaneously}, only one task can be performed, e.g., for a robotic arm
+		\begin{itemize}
+			\item Task 01: bring the hand to a desired position and orientation
+			\item Task 02: keep the elbow up
+		\end{itemize}
+		\item When two (or more) objectives cannot be met simultaneously (conflictual), a hierarchy needs to be defined
+	\end{itemize}
+\end{frame}
+\begin{frame}{Tasks Hierarchy}
+	\begin{itemize}
+		\item What is the purpose of defining a hierarchy between tasks?
+		\item Hierarchy defines how the redundancy should be resolved such that low-priority control objectives do not (or at least minimally) disturb the high-priority ones
+		\item Two tasks hierarchical schemes exist:
+%	\begin{itemize}
+%		\item Strict
+%		\item Soft/weighted
+%	\end{itemize}
+\end{itemize}
+\begin{minipage}{.48\columnwidth}
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.38\textheight]{strict.png}
+	%	\includegraphics[height=0.4\textheight]{weighted.png}content...
+	\caption{Strict hierarchy}
+	\end{figure}
+\end{minipage}
+\begin{minipage}{.48\columnwidth}
+	\begin{figure}
+		\centering
+	%	\includegraphics[height=0.4\textheight]{strict.png}
+		\includegraphics[height=0.4\textheight]{weighted.png}
+		\caption{Soft/weighted hierarchy}
+	\end{figure}
+\end{minipage}
+\end{frame}
+\begin{frame}{Tasks Hierarchy}
+	\textbf{Strict hierarchy:}
+	\begin{itemize}
+		 \item Strict order of priority is defined (lexicographic order)
+		 \begin{equation*}
+		 	{\rm Task~01}\succ{\rm Task~02}\succ\cdots\succ{\rm Task~N}
+		 \end{equation*}
+		 \item \textbf{Principle:} 
+		 \begin{enumerate}
+		 	\item Perform ${\rm Task~01}$;
+		 	\item If redundancy is still available $\rightarrow$ perform ${\rm Task~02}$ such that ${\rm Task~01}$ is not disturbed; else keep solution in (1)
+		 	\item If redundancy is still available $\rightarrow$ perform ${\rm Task~03}$ such that ${\rm Task~01}$ and ${\rm Task~02}$ are not disturbed; else keep solution in (2)...
+		 \end{enumerate}
+		 \item \textbf{Methodology:} Solve cascade of QPs
+		 \begin{itemize}
+		 	\item \textbf{Pros:} Helps solving infeasibility
+		 	\item \textbf{Cons:} Time consuming, not all tasks are performed, order subjectivity
+		 \end{itemize}	  
+	\end{itemize}
+\end{frame}
+\begin{frame}{Tasks Hierarchy}
+	\textbf{Soft hierarchy:}
+	\begin{itemize}
+		\item Tasks are sorted by scalar positive weights 
+		\begin{align}\label{eq:cost-func weighted QP}
+			w_1\norm{\matriceA_1\vectorU+\vectorB_1}^2 &+ w_2\norm{\matriceA_2\vectorU+\vectorB_2}^2 + \cdots +
+			w_N\norm{\matriceA_N\vectorU+\vectorB_N}^2,\\
+			&w_i\geq0,\ i\in\left\{1,\cdots,N\right\}
+		\end{align}
+		\item \textbf{Principle:} Solve redundancy such that each task is performed \emph{at best} according to its weight (tasks competition)
+		\item \textbf{Methodology:} Solve only one QP which cost-function is~\eqref{eq:cost-func weighted QP}
+		\begin{itemize}
+			\item \textbf{Pros:} Solved efficiently, all tasks are performed proportionally to their weights
+			\item \textbf{Cons:} Precision not guaranteed, potential infeasibility due to constraints conflict 
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Tasks Hierarchy}
+	\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black, title=Remark]
+		In both strict and soft hierarchical schemes: 
+		\begin{itemize}
+			\item the constraints have  \textbf{always} a higher priority than the tasks within the QP structure
+			\item The constraints have the same level of priority
+		\end{itemize}
+	\end{tcolorbox}
+	
+\end{frame}
+%\begin{frame}{Multi-objective control - Example}
+%	Example: Moving the base of a quadruped robot
+%	\begin{minipage}{0.51\columnwidth}
+%		\begin{figure}
+%			\includegraphics[width=\columnwidth]{multi-task example.pdf}
+%		\end{figure}
+%	\end{minipage}
+%	\hfill
+%	\begin{minipage}{0.48\columnwidth}
+%		\begin{itemize}
+%			\item \textbf{Task:} move the base in the manipulability space
+%			\item \textbf{Constraints:} 
+%			\begin{itemize}
+%				\item Keep end-effector fixed
+%				\item Keep non-slipping contacts
+%				\item Avoid self-collision
+%				\item Respect joint position/velocity/torque constraints
+%				\item Keep CoM projection inside the static equilibrium region
+%			\end{itemize}
+%		\end{itemize}
+%		
+%	\end{minipage}
+%\end{frame}

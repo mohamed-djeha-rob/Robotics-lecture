@@ -1,0 +1,305 @@
+\subsection{Control Lyapunov Functions \& Control Barrier Functions}
+\begin{frame}
+	\centering
+	\Large Control Lyapunov Function
+\end{frame}
+\begin{frame}{Control Lyapunov Function}
+\textbf{Lyapunov stability theorem:}\\
+Given a system
+\begin{equation*}
+	\vectorXdot = f(\vectorX),\ \vectorX\in{\cal D}\subset\mathbb{R}^n
+\end{equation*} 
+having the origin as an equilibrium point. 
+\begin{theorem}
+	If their exists a positive definite function (PDF) $V(\vectorX)$ which time derivative $\dot{V}(\vectorX)$ is negative definite in~${\cal D}$, then the system is asymptotically stable.
+\end{theorem}
+ 
+%\vspace{0.3cm}
+\only<2->{ \textbf{How to use Lyapunov stability theorem for stabilization?}}  
+\end{frame}
+
+\begin{frame}{Control Lyapunov Function}
+	Given a system
+	\begin{equation*}
+		\vectorXdot = f(\vectorX) + g(\vectorX)\vectorU
+	\end{equation*} 
+$\vectorU=\phi(\vectorX)$ is asymptotically stabilizing control-law if their exists a PDF $V(\vectorX)$ such that 
+\begin{equation*}
+	\dot{V}(\vectorX) =%\frac{\partial  V(\vectorX)}{\partial\vectorX}f(\vectorX,\phi(\vectorX))<0
+	L_fV(\vectorX) + L_gV(\vectorX)\phi(\vectorX)<0
+\end{equation*}
+
+\only<2->{\begin{tcolorbox}[colback=white, colframe=gray!50]
+		This is the basic principle for the design of several control techniques, e.g., Backstepping.
+	\end{tcolorbox}}
+\end{frame}
+\begin{frame}{Control Lyapunov Function}
+	Alternatively, we can just find \textbf{any} $\vectorU$ that satisfies\footnote[frame]{This concept is not new. It has been already introduced by Zvi Artntein in 1983 (See~\cite{artstein1983nonlinearAnalysis})}
+	\begin{equation}\label{eq:CLF constraint}
+		L_fV(\vectorX) + L_gV(\vectorX)\vectorU\leq-\alpha(\norm{\vectorX}),
+	\end{equation}
+	with $\alpha(\norm{\vectorX})$ strictly monotonically increasing function. 
+	
+	
+	\vspace{0.3cm}\only<2->{
+	In this case, $V$ is called a \textbf{Control Lyapunov Function (CLF)}.}
+\end{frame}
+\begin{frame}{Control Lyapunov Function}
+	\begin{tcolorbox}[colback=green!5!white, colframe=green!50!black, title=CLF-QP advantages]
+		\begin{itemize}
+			\item CLF constraint~\eqref{eq:CLF constraint} \textbf{linear} w.r.t $\vectorU$ $\Rightarrow$ can be \textbf{enforced} by QP
+			\item $\vectorU$ computed \textbf{numerically} $\Rightarrow$ No analytic formula $\vectorU=\phi(\vectorX)$ is required
+			\item Non-uniqueness of $\vectorU$ : CLF constraint~\eqref{eq:CLF constraint} constructs a \textbf{whole set ${\Upsilon}_{\rm CLF}$ of asymptotically stabilizing control-laws} 
+			\begin{equation*}
+				{\Upsilon}_{\rm CLF}=\left\{\vectorU\inR^m:\eqref{eq:CLF constraint}\right\}
+			\end{equation*}
+		\end{itemize}
+	\end{tcolorbox}	
+	%No longer required to compute $\vectorU$ analytically, just enforce the CLF constraint within QP
+	%\only<2->{\textbf{Imagine how this is such a powerful tool to enforce other types of stability!}}	
+\end{frame}
+\begin{frame}{Control Lyapunov Function}
+	\vspace*{-0.5cm}
+	\begin{minipage}{0.5\columnwidth}
+		\begin{align*}
+			\underset{\vectorU}{\min}&\frac{1}{2}\norm{\vectorU}^2\\
+			{\rm S.t:~}&{\color{blue}L_fV(\vectorX) + L_gV(\vectorX)\vectorU\leq-\alpha(\norm{\vectorX})}\\
+			&\color{red}\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}
+		\end{align*}
+		\begin{itemize}
+			\item Feasibility domain $\subset\Upsilon_{\rm CLF}$
+			\item Optimal solution $\vectorU^{\star}$: minimum norm among all the stabilizing controllers in  $\Upsilon_{\rm CLF}$
+		\end{itemize}
+		
+	\end{minipage}
+	\begin{minipage}{0.4\columnwidth}
+		\vspace*{0.2cm}
+		\begin{figure}
+			\includegraphics[height=0.55\textheight]{CLF-QP_sol.pdf}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Control Lyapunov Function}
+	Several types of CLF can be formalized depending on the kind of stability being sought:
+	\begin{itemize}
+		\item Exponential CLF
+		\item Robust CLF
+		\item Adaptive CLF
+		\item etc.
+	\end{itemize}
+	Still ongoing research works on this topic.
+\end{frame}
+\begin{frame}
+	\centering
+	\Large Control Barrier Function
+\end{frame}
+\begin{frame}{Control Barrier Function}
+		Given a system
+	\begin{equation*}
+		\vectorXdot = f(\vectorX) + g(\vectorX)\vectorU
+	\end{equation*}
+	Sometimes, the goal is to find $\vectorU$ such that $\vectorX$ \emph{\textbf{remains within a given set ${\cal C}$ forward in time}}... \only<2->{Need for a theoretical framework!}
+	
+	\only<3->{ 
+	\begin{tcolorbox}[colback=gray!5!white, colframe=gray!50!black, title=Set invariance]
+		A set $\setC$ is said to be \emph{forward invariant} if 
+		\begin{align*}
+			\forall\vectorX(t_0)\in{\cal C}\Rightarrow\vectorX(t)\in{\cal C}, \ \forall t\geq t_0,%\\
+			%	&{\text{Otherwise}}~\vectorX(t)\longrightarrow{\cal C}
+		\end{align*}
+	\end{tcolorbox}}
+%In addition, if
+%	\begin{equation*}
+%		\textit{In addition, if}~\vectorX(t_0)\notin{\cal C}
+%	\end{equation*}	
+\end{frame}
+\begin{frame}{Control Barrier Function}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.5\columnwidth]{safety_set.pdf}
+		\caption{Forward invariance of the set $\setC$. \textbf{The origin does not necessarily belong to $\setC$!}}
+	\end{figure}
+\end{frame}
+\begin{frame}{Control Barrier Function}
+	The ${\cal C}$  can be defined using a \textbf{barrier function}\footnote[frame]{$h(\vectorX)$ can be seen as a ‘distance to the boundary of $\setC$’.} $h(\vectorX)$
+	\begin{equation*}
+		\setC = \left\{\vectorX\inR^n:h(\vectorX)\geq0\right\}
+	\end{equation*}
+	with $h(\vectorX)=0$ means that $\vectorX$ is at the boundary of $\setC$. \\
+	
+	Examples:
+	\begin{itemize}
+		\item $h(\vectorX) = \vectorX_{\max}-\vectorX$: keep the state below the upper bound
+		\item $h(\vectorX)={\rm dist}({\rm CoM}(\vectorX), \setS)$: keep CoM inside equilibrium polygon $\setS$
+		\item $h(\vectorX)={\rm dist}\left(\vectorY_{{\rm ee}_1}(\vectorX)-\vectorY_{{\rm ee}_2}(\vectorX)\right)-\delta_{\min}$: keep a minimum distance $\delta_{\min}$ between the bodies $1$ and $2 $
+	\end{itemize} 
+%The barrier function is general tool to deal with state-dependant constraints.}
+\end{frame}
+\begin{frame}{Control Barrier Function}
+		\begin{tcolorbox}[colback=blue!5!white, colframe=blue!50!black, title=Fundamental result]
+		If the barrier function $h(\vectorX)\geq0$ over the system trajectories than the set $\setC$ is forward invariant.
+	\end{tcolorbox}
+	%\vspace{0.5 cm}
+	\only<2->{
+	\begin{tcolorbox}[colback=green!5!white, colframe=green!50!black, title=Sufficient condition -- Lyapunov-like condition]
+		If
+		\begin{equation*}
+			\dot{h}\geq-\alpha(h),
+		\end{equation*}
+		 with $\alpha(.)$ is a strictly monotonically increasing function, then $\setC$ is \textbf{forward invariant} and \textbf{asymptotically stable}.
+	\end{tcolorbox}}
+	
+\end{frame}
+\begin{frame}{Control Barrier Function}
+		\begin{figure}
+		\centering
+		\includegraphics[height=0.7\textheight]{safety_set_asymptotic_stability.pdf}
+		\caption{Forward invariance (green) and asymptotic stability (blue) of the set $\setC$.}
+	\end{figure} 
+\end{frame}
+\begin{frame}{Control Barrier Function}
+	The forward invariance and asymptotic stability of $\setC$ can be enforced by 
+finding $\vectorU$ such that
+\begin{equation}\label{eq:CBF constraint}
+	\dot{h}=L_fh(\vectorX)+L_gh(\vectorX)\vectorU\geq-\alpha(h)
+\end{equation}
+\vspace{0.3cm}\only<2->{	
+In this case, $h$ is called a \textbf{Control Barrier Function}.}
+
+\textbf{General framework:} large class of state-dependent constraints can be considered
+\begin{itemize}
+	\item Position and velocity constraints (already seen!) 
+	\hyperlink{position constraint}{\beamerbutton{position constraint}}
+	\hyperlink{velocity constraint}{\beamerbutton{velocity constraint}}
+	\item Task-space constrained manipulation
+	\item collision avoidance: Self-collision, Obstacles, Multi-robot, etc.
+	%	\item Singularity avoidance
+\end{itemize}
+\end{frame}
+\begin{frame}{Control Barrier Function}
+	\hypertarget{CBF applications}{}
+\begin{tcolorbox}[colback=green!5!white, colframe=green!50!black, title=CBF-QP advantages]
+	\begin{itemize}
+		\item CBF constraint~\eqref{eq:CBF constraint} linear w.r.t $\vectorU$ $\Rightarrow$ can be enforced by QP
+		\item CBF ensures the \textbf{system  safety}: keep the state in the safety region (strong theoretical background)
+		\item Non-uniqueness of $\vectorU$ : CBF constraint~\eqref{eq:CBF constraint} constructs a \textbf{whole set ${\Upsilon}_{\rm CBF}$ of safe control-laws} 
+		\begin{equation*}
+			{\Upsilon}_{\rm CBF}=\left\{\vectorU\inR^m:\eqref{eq:CBF constraint}\right\}
+		\end{equation*}
+	\end{itemize}
+\end{tcolorbox}	
+\end{frame}
+\begin{frame}{CLF-CBF-QP}
+	Stability and safety can be ensured by combining CLF and CBF through QP\footnote[frame]{For the fundamentals see~\cite{ames2017tac,ames2019ecc}, for a recent survey, see~\cite{li2023jas}.}
+	\begin{align*}
+		\begin{split}
+			\underset{\vectorU}{\min}&\frac{1}{2}\norm{\vectorU}^2\\
+			{\rm S.t:~}&L_fV(\vectorX) + L_gV(\vectorX)\vectorU<-\alpha(\norm{\vectorX})~\text{(CLF constraint)}\\
+			&L_fh(\vectorX)+L_gh(\vectorX)\vectorU\geq-\alpha(h)~\text{(CBF constraint)}
+		\end{split}
+	\end{align*}	
+\end{frame}
+%\begin{frame}{CLF-CBF-QP}
+%	\begin{figure}
+%		\centering
+%		\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+%			% Nodes
+%			\node [block] (CRA) at (-1, 12) {CLF};
+%			\node [sum] (comp) at (4,11) {}; 
+%			\node [block] (adjust) at (6,11) {\color{red}Adjustment};
+%			\node [block] (Sim) at (-1,10.5) {Simulation};
+%			\node (COP) at (2.2, 9) {Control objective primitives};
+%		\end{tikzpicture}
+%	\end{figure}
+%\end{frame}
+%\begin{frame}{CLF-CBF-QP}
+%		\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black, title=Issue]
+%			\begin{itemize}
+%				\item CLF and CBF constraints have the same level of priority
+%				\item If the constraints are \textbf{in conflict }(cannot be satisfied simultaneously), QP will fail to find a solution
+%				\only<2->{\item Need to prioritize: \textbf{‘Stability first, than safety’} or \textbf{‘Safety first, than stability’}}
+%				\only<3->{\item \textbf{Reasonable choice:} relax stability, prioritize safety!}
+%			\end{itemize}
+%		\end{tcolorbox}	
+%\end{frame}
+%\begin{frame}{CLF-CBF-QP}
+%	Relaxed CLF-CBF-QP through slack variable ${\color{red}\delta}$
+%	\begin{align*}
+%		\begin{split}
+%			\underset{\vectorU,{\color{red}\delta}}{\min}&\frac{1}{2}\norm{\vectorU}^2+\frac{1}{2}{{\color{red}\delta}}^2\\
+%			{\rm S.t:~}&L_fV(\vectorX) + L_gV(\vectorX)\vectorU\geq-\alpha(\norm{\vectorX})+{\color{red}\delta}~\text{(Relaxed CLF constraint)}\\
+%			&L_fh(\vectorX)+L_gh(\vectorX)\vectorU\geq-\alpha(h)~\text{(CBF constraint)}
+%		\end{split}
+%	\end{align*}
+%	\begin{itemize}
+%		\item $\delta$ is minimized to keep it bounded and to enforce $\delta=0$ when no relaxation is needed
+%		\item Relaxed CLF ($\equiv\dot{V}\leq\delta$): allows  the task error to grow \textbf{to ensure} safety 		
+%		\item Stability study if $\delta\neq0$: use \textbf{Input-to-State-Stability} theory 
+%	\end{itemize}	
+%\end{frame}
+%\begin{frame}{Multi-CLF-CBF-QP}
+%	The multi-objective case is written as  
+%	\begin{align*}
+%		\begin{split}
+%			\underset{\vectorU,{\boldsymbol{\delta}}}{\min}&\frac{1}{2}\norm{\vectorU}^2+\frac{1}{2}{\norm{\boldsymbol{\delta}}}^2\\
+%			{\rm S.t:~}&L_fV_1(\vectorX) + L_gV_1(\vectorX)\vectorU\geq-\alpha_1(\norm{\vectorX})+{\delta_1}\\
+%			&\vdots\\
+%			&L_fV_k(\vectorX) + L_gV_k(\vectorX)\vectorU\geq-\alpha_k(\norm{\vectorX})+{\delta_k}\\
+%			&L_fh_1(\vectorX)+L_gh_1(\vectorX)\vectorU\geq-\alpha_1(h_1)\\
+%			&\vdots\\
+%			&L_fh_l(\vectorX)+L_gh_l(\vectorX)\vectorU\geq-\alpha_l(h_l)
+%		\end{split}
+%	\end{align*}	
+%\end{frame}
+\begin{frame}{CLF-CBF-QP - Example}
+A mass moving on a plane.
+\begin{figure}
+	\centering
+	\includegraphics[width=0.45\columnwidth]{CLF-CBF_obs_avoidance_1.pdf}
+\end{figure}
+\end{frame}
+\begin{frame}{CLF-CBF-QP - Example}
+	A mass moving on a plane.
+	Red path: CLF-QP.
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.45\columnwidth]{CLF-CBF_obs_avoidance_2.pdf}
+	\end{figure}
+\end{frame}
+\begin{frame}{CLF-CBF-QP - Example}
+	A mass moving on a plane.
+	Blue path: CLF-CBF-QP. 
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.45\columnwidth]{CLF-CBF_obs_avoidance_4.pdf}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{CLF-CBF-QP}
+	\begin{tcolorbox}[colback=green!5!white, colframe=green!50!black, title=CLF-CBF-QP advantages]
+		\begin{itemize}
+			\item The stability and safety problems are treated \textbf{separately}! 
+			\item \textbf{Compactness:}  ensuring the  task error convergence, \textbf{while} guaranteeing the system safety by one single QP 
+			\item CBF constraint acts a filter for the non-safe CLF control laws
+			\item CBF significantly reduces the necessity of motion planning!
+		\end{itemize}
+	\end{tcolorbox}
+\end{frame}
+%\begin{frame}{CLF-CBF-QP}
+%	Now, what if, for a given system, we want to find $\vectorU$ such that 
+%	\begin{itemize}
+%		\item $\vectorY$ converges toward $\vectorY_d$ ($\vectorE = \vectorY-\vectorY_d\longrightarrow0$), \emph{\textbf{while}}
+%		\item ensuring the forward invariance a set $\setC$ defined for a given state-dependant constraint
+%	\end{itemize}
+%	\begin{tcolorbox}[colback=white, colframe=gray!50, title=Example]
+%		We want a segway-like robot to keep its upright position while keeping the pitch angle between max and min bounds
+%	\end{tcolorbox} 
+%\end{frame}
+%\begin{frame}{Control Barrier Function}
+%	\textbf{CBF-QP applications:}
+%	\begin{
+%\end{frame}
+
+%\begin{frame}{Control Barrier Function}
+%	The set and the origin: the relation between them! What if the set $\setC$ shrinks until becoming a point (origin)!
+%\end{frame}

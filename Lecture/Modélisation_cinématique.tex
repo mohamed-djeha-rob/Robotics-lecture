@@ -1,0 +1,682 @@
+%\subsection{Handling Inequality Constraints}
+%\begin{frame}
+%\centering
+%\Large Handling Inequality Constraints
+%\end{frame}
+\begin{frame}{QP Control - Introductory example}
+Mass sliding on a surface
+
+\begin{minipage}{0.4\columnwidth}
+	\begin{tikzpicture}[>=latex', scale=1]
+
+% Parameters (change angle or size here)
+\def\planeAngle{0}   % angle of the plane in degrees
+\def\s{.8}           % half-size of the square (so square side = 2*\s)
+\def\gap{0.39}        % gap between square and plane for clarity
+\def\arrowlen{\s}    % length scaling for force arrows
+
+% Coordinates: base point on plane (origin)
+\coordinate (O) at (0,0);
+% point on plane to draw a long line
+\coordinate (P) at (6,0);
+% rotate coordinate system by planeAngle to place plane horizontally in rotated frame
+\begin{scope}[rotate=\planeAngle]
+
+  % draw plane (a long rectangle strip)
+  \fill[gray!20] (-0.5,-0.4) -- (5,-0.4) -- (5,0.4) -- (-0.5,0.4) -- cycle;
+  \draw[black,line width=0.6pt] (-1,0) -- (6,0);
+
+  % place square center at x = 2.2 along rotated axis
+  \coordinate (C) at (2.2, \s + \gap);
+
+  % draw square (centered at C)
+  \draw[fill=blue!5] ($(C)+(-\s,-\s)$) rectangle ++(2*\s,2*\s);
+  \draw ($(C)+(0,0)$) node {$m$};
+
+  % draw velocity vector (down the plane)
+  %\draw[->, line width=1pt] ($(C)+(0,-\s)$) -- ++(0,-\arrowlen*0.55) node[midway,right] {$\mathbf{v}$};
+
+  % gravity at center: draw downward in world frame (rotate back)
+\end{scope}
+
+% Transform C back to world coords by rotating
+\coordinate (Cw) at ($(C)$);
+\coordinate (Cworld) at ($(Cw)$);
+% Actually the above C was defined in rotated scope; easier: recompute Cworld
+\coordinate (Cworld) at ($( {2.2*cos(\planeAngle) - ( \s+\gap)*sin(\planeAngle) } , {2.2*sin(\planeAngle) + ( \s+\gap)*cos(\planeAngle) } )$);
+
+% draw gravity (mg) downward (world vertical)
+%\draw[->, line width=1pt] (Cworld) -- ++(0,-\arrowlen) node[below] {$m\mathbf{g}$};
+
+% draw normal N (perpendicular to plane) at contact point
+% contact point on plane under the cube (project center to plane)
+\coordinate (proj) at ($(Cworld) + ({( \s+\gap)*sin(\planeAngle)},{-(\s+\gap)*cos(\planeAngle)})$);
+\coordinate (applicationPoint) at (2.2 - 2*\s, \s + \gap);
+% Normal direction (unit vector perpendicular to plane, pointing away from plane)
+%\draw[->, line width=1pt] (proj) -- ++({\arrowlen*cos(\planeAngle)},{\arrowlen*sin(\planeAngle)}) node[right] {$\mathbf{N}$};
+
+% Friction direction (parallel to plane, up the plane if block slides down)
+\draw[->, line width=1pt] (applicationPoint) -- ++({ \arrowlen*cos(\planeAngle)},{ \arrowlen*sin(\planeAngle)}) node[above left] {${u}$};
+
+% Draw components of gravity relative to plane: g_parallel and g_perp (dashed)
+% Vector from center along negative plane-parallel direction
+%\draw[dashed] (Cworld) -- ++({\arrowlen*sin(\planeAngle)},{-\arrowlen*cos(\planeAngle)}) coordinate (gpar);
+%\draw[->, dashed] (Cworld) -- ++({\arrowlen*cos(90-\planeAngle)*0.9*sin(1)},{- \arrowlen}); % no-op to show dashed style (kept for clarity)
+
+% Instead compute exact components using trig:
+% g_parallel: along plane downward (points down the slope)
+%\draw[->, blue!60!black, line width=0.9pt] (Cworld) -- ++({\arrowlen*sin(\planeAngle)},{- \arrowlen*cos(\planeAngle)}) node[midway, below right] {$mg\sin\theta$};
+% g_perp: perpendicular to plane (points into plane)
+%\draw[->, red!70!black, line width=0.9pt] (Cworld) -- ++({-\arrowlen*cos(\planeAngle)},{- \arrowlen*sin(\planeAngle)}) node[midway, left] {$mg\cos\theta$};
+
+% draw angle label theta at origin between horizontal and plane
+%\draw[->] (0.8,0.18) arc (0:\planeAngle:0.8) node[right, yshift=2] {$\theta$};
+
+% Axes for reference
+\draw[->] (-0.5,0) -- (6,0) node[above] {$y$};
+%\draw[-] (-0.5,-0.4) -- (5,-0.4) node[below] {$y_{\max}$};
+%\draw[-] (5,-0.4) -- (-0.5,-0.4) node[below] {$y_{\min}$};
+%\draw[->] (0,-1.2) -- (0,3.2) node[above] {$y$};
+
+% small note
+%\node[align=left, right] at (6.2,2.6) {Square mass sliding \\ on an inclined plane};
+
+\end{tikzpicture}
+\end{minipage}
+\hfill
+\begin{minipage}{0.55\columnwidth}
+Equation of motion
+	\begin{align*}
+		\begin{split}
+			m\ddot{y}&=u, \ \vectorX=\begin{bmatrix}
+				 y-y_{\rm d} \\ \dot{y}
+			\end{bmatrix}\\
+			\bm{\dot{x}} &= \begin{bmatrix}
+				0 & 1 \\ 0 & 0
+			\end{bmatrix}\vectorX + \begin{bmatrix}
+				0 \\\frac{1}{m}
+			\end{bmatrix} u = f(\vectorX,u)
+		\end{split}
+	\end{align*}	
+\end{minipage}
+The goal is to steer the mass to a desired position $y_{\rm d}$. 
+Let's assume there exists a feedback control $u=\phi_1(\vectorX)$ such that the origin of the closed-loop system $f(\vectorX,\phi_1(\vectorX))$ is asymptotically stable.
+% while respecting 
+% \begin{itemize}
+% 		\item $u_{\min}\leq u\leq u_{\max}$
+% \end{itemize}
+
+%Let's assume there exists a feedback $u=\phi_1(\vectorX)$ such that the origin of the closed-loop system $f(\vectorX,\phi_1(\vectorX))$ is asymptotically stable.
+% \begin{itemize}
+% 	\item What is the context of QP use in control
+% 	\item How QP can be used in control context? %A bit of history
+% 	\item 
+% \end{itemize}	
+\end{frame}
+
+\begin{frame}{QP Control - Introductory example}
+\begin{itemize}
+	\item Now, let's assume there exist constraints on the control input $u$
+\begin{itemize}
+		\item $u_{\min}\leq u\leq u_{\max}$
+\end{itemize}
+	\item How to account for these constraints in the control law synthesis?
+	\item Solution: 
+	\begin{equation*}
+		u=\begin{matrix} \max\left(\min(\phi_1(\vectorX),u_{\max}),u_{\min}\right) \end{matrix},
+	\end{equation*} 
+	or equivalently 
+	\begin{align*} 
+		\begin{split}
+	 		\underset{u}{\min}&\frac{1}{2}
+	 		\begin{Vmatrix}
+	 			u-\phi_1(\vectorX)
+	 		\end{Vmatrix}^2\\
+		\rm{S.t:~}&u_{\min}\leq u\leq u_{\max}\\
+	 	\end{split}
+	\end{align*}
+	\item QP \textbf{outputs} the control law, and takes the system state as \textbf{input}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints - Position Constraint}
+Now, let's assume that the mass motion is constrained to remain within $y_{\min}$ et $y_{\max}$ 
+
+\begin{minipage}{0.4\columnwidth}
+	\begin{tikzpicture}[>=latex', scale=1]
+
+% Parameters (change angle or size here)
+\def\planeAngle{0}   % angle of the plane in degrees
+\def\s{.8}           % half-size of the square (so square side = 2*\s)
+\def\gap{0.39}        % gap between square and plane for clarity
+\def\arrowlen{\s}    % length scaling for force arrows
+
+% Coordinates: base point on plane (origin)
+\coordinate (O) at (0,0);
+% point on plane to draw a long line
+\coordinate (P) at (6,0);
+% rotate coordinate system by planeAngle to place plane horizontally in rotated frame
+\begin{scope}[rotate=\planeAngle]
+
+  % draw plane (a long rectangle strip)
+  \fill[gray!20] (-0.5,-0.4) -- (5,-0.4) -- (5,0.4) -- (-0.5,0.4) -- cycle;
+  \draw[black,line width=0.6pt] (-1,0) -- (6,0);
+
+  % place square center at x = 2.2 along rotated axis
+  \coordinate (C) at (2.2, \s + \gap);
+
+  % draw square (centered at C)
+  \draw[fill=blue!5] ($(C)+(-\s,-\s)$) rectangle ++(2*\s,2*\s);
+  \draw ($(C)+(0,0)$) node {$m$};
+
+  % draw velocity vector (down the plane)
+  %\draw[->, line width=1pt] ($(C)+(0,-\s)$) -- ++(0,-\arrowlen*0.55) node[midway,right] {$\mathbf{v}$};
+
+  % gravity at center: draw downward in world frame (rotate back)
+\end{scope}
+
+% Transform C back to world coords by rotating
+\coordinate (Cw) at ($(C)$);
+\coordinate (Cworld) at ($(Cw)$);
+% Actually the above C was defined in rotated scope; easier: recompute Cworld
+\coordinate (Cworld) at ($( {2.2*cos(\planeAngle) - ( \s+\gap)*sin(\planeAngle) } , {2.2*sin(\planeAngle) + ( \s+\gap)*cos(\planeAngle) } )$);
+
+% draw gravity (mg) downward (world vertical)
+%\draw[->, line width=1pt] (Cworld) -- ++(0,-\arrowlen) node[below] {$m\mathbf{g}$};
+
+% draw normal N (perpendicular to plane) at contact point
+% contact point on plane under the cube (project center to plane)
+\coordinate (proj) at ($(Cworld) + ({( \s+\gap)*sin(\planeAngle)},{-(\s+\gap)*cos(\planeAngle)})$);
+\coordinate (applicationPoint) at (2.2 - 2*\s, \s + \gap);
+% Normal direction (unit vector perpendicular to plane, pointing away from plane)
+%\draw[->, line width=1pt] (proj) -- ++({\arrowlen*cos(\planeAngle)},{\arrowlen*sin(\planeAngle)}) node[right] {$\mathbf{N}$};
+
+% Friction direction (parallel to plane, up the plane if block slides down)
+\draw[->, line width=1pt] (applicationPoint) -- ++({ \arrowlen*cos(\planeAngle)},{ \arrowlen*sin(\planeAngle)}) node[above left] {${u}$};
+
+% Draw components of gravity relative to plane: g_parallel and g_perp (dashed)
+% Vector from center along negative plane-parallel direction
+%\draw[dashed] (Cworld) -- ++({\arrowlen*sin(\planeAngle)},{-\arrowlen*cos(\planeAngle)}) coordinate (gpar);
+%\draw[->, dashed] (Cworld) -- ++({\arrowlen*cos(90-\planeAngle)*0.9*sin(1)},{- \arrowlen}); % no-op to show dashed style (kept for clarity)
+
+% Instead compute exact components using trig:
+% g_parallel: along plane downward (points down the slope)
+%\draw[->, blue!60!black, line width=0.9pt] (Cworld) -- ++({\arrowlen*sin(\planeAngle)},{- \arrowlen*cos(\planeAngle)}) node[midway, below right] {$mg\sin\theta$};
+% g_perp: perpendicular to plane (points into plane)
+%\draw[->, red!70!black, line width=0.9pt] (Cworld) -- ++({-\arrowlen*cos(\planeAngle)},{- \arrowlen*sin(\planeAngle)}) node[midway, left] {$mg\cos\theta$};
+
+% draw angle label theta at origin between horizontal and plane
+%\draw[->] (0.8,0.18) arc (0:\planeAngle:0.8) node[right, yshift=2] {$\theta$};
+
+% Axes for reference
+\draw[->] (-0.5,0) -- (6,0) node[above] {$y$};
+\draw[-, line width=2pt] (-0.5,-0.4) -- (5,-0.4) node[below] {$y_{\max}$};
+\draw[-, line width=1pt] (5,-0.4) -- (-0.5,-0.4) node[below] {$y_{\min}$};
+%\draw[->] (0,-1.2) -- (0,3.2) node[above] {$y$};
+
+% small note
+%\node[align=left, right] at (6.2,2.6) {Square mass sliding \\ on an inclined plane};
+
+\end{tikzpicture}
+\end{minipage}
+%\hfill
+%\begin{minipage}{0.55\columnwidth}
+%How to account for the limit on $y$?
+%	
+%\end{minipage}
+
+The goal is to steer the mass to a desired position $y_{\rm d}$ while respecting 
+\begin{itemize}
+	\item $u_{\min}\leq u\leq u_{\max}$, and 
+	\item $y_{\min}\leq y\leq y_{\max}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints - Position Constraints}
+\begin{itemize}
+	\item In this case, $y$ does not appear in decision variables vector $\decisionVar$
+	\item Need for more elaborated approach... 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints - Position Constraint}
+	\hypertarget{position constraint}{}
+Think in terms of acceleration\footnote[frame]{Same steps apply for $h={y} -{y}_{\min}$.}\bigskip
+\hyperlink{CBF applications}{\beamerbutton{Back to CBF}}
+	\begin{minipage}{0.4\columnwidth}
+	\begin{align*}
+		h&=y_{\max} -y\\
+		\dot{h} &= -\dot{y}\\
+		\ddot{h} &=-\ddot{y}\\
+		\vectorX_h &= \begin{bmatrix}h \\ \dot{h}\end{bmatrix}
+	\end{align*}
+	\end{minipage}
+	%\hfill
+	%\begin{minipage}{0.55\columnwidth}
+		
+		Assume there exists $\phi_2(\vectorX_h)$ such that if $\ddot{h} = \phi_2(\vectorX_h)$ then $h(t)=\alpha e^{-\lambda t}$. 
+		% Note that if $h(t_0)\geq0 \ \Rightarrow h(t)\geq0, \  \forall t\geq t_0 \ \Rightarrow {\color{red}y(t)\leq y_{\max}}$
+	%\end{minipage}
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints - Position Constraint}
+	Then, if 
+	\begin{equation*}
+	\ddot{h} \geq \phi_2(\vectorX_h)~\left(\Leftrightarrow\ddot{y}\leq-\phi(\vectorX_h)\right), \ \text{and~} h(t_0)\geq0~\left(\Leftrightarrow{y}(t_0)\leq y_{\max}\right)
+	\end{equation*}
+	by virtue of the Comparison Lemma\footnote[frame]{Differential inequality solution, see~\cite[Lemma~3.4]{khalil2002NonLinearSystems}.} 
+	\begin{equation}
+		h(t)\geq\alpha e^{-\lambda t}\geq0, \  \forall t\geq t_0 \ \Rightarrow {\color{red}y(t)\leq y_{\max}}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints - Position Constraint}
+QP is then formulated as 
+\begin{align*}
+	\begin{split}
+	 		\underset{{\color{red}\decisionVar=\begin{bmatrix}u,\ddot{y}\end{bmatrix}}}{\min}&\frac{1}{2}
+	 		\begin{Vmatrix}
+	 			u-\phi_1(\vectorX)
+	 		\end{Vmatrix}^2\\
+		\rm{S.t:~}&u_{\min}\leq u\leq u_{\max}\\
+							&\ddot{y}\leq-\phi_2(\vectorX_h)\\
+							&{\color{red}m\ddot{y}=u}
+	 	\end{split}
+\end{align*}
+\begin{itemize}
+	\item The decision variables vector {\color{red}$\decisionVar$} is extended
+	\item The system dynamics {\color{red}(equation of motion)} is accounted for to induce coupling between $\ddot{y}$ and $u$ 
+\end{itemize}
+\end{frame}
+\begin{frame}{Handling Inequality Constraints - Velocity Constraint}
+Now, let's assume that the mass velocity is constrained to remain within $\dot{y}_{\min}$ et $\dot{y}_{\max}$ 
+
+\begin{minipage}{0.4\columnwidth}
+	\begin{tikzpicture}[>=latex', scale=1]
+
+% Parameters (change angle or size here)
+\def\planeAngle{0}   % angle of the plane in degrees
+\def\s{.8}           % half-size of the square (so square side = 2*\s)
+\def\gap{0.39}        % gap between square and plane for clarity
+\def\arrowlen{\s}    % length scaling for force arrows
+
+% Coordinates: base point on plane (origin)
+\coordinate (O) at (0,0);
+% point on plane to draw a long line
+\coordinate (P) at (6,0);
+% rotate coordinate system by planeAngle to place plane horizontally in rotated frame
+\begin{scope}[rotate=\planeAngle]
+
+  % draw plane (a long rectangle strip)
+  \fill[gray!20] (-0.5,-0.4) -- (5,-0.4) -- (5,0.4) -- (-0.5,0.4) -- cycle;
+  \draw[black,line width=0.6pt] (-1,0) -- (6,0);
+
+  % place square center at x = 2.2 along rotated axis
+  \coordinate (C) at (2.2, \s + \gap);
+  \coordinate (C1) at (3.5, \s + \gap);
+  \coordinate (C2) at (1.1, \s + \gap);
+
+  % draw square (centered at C)
+  \draw[fill=blue!5] ($(C)+(-\s,-\s)$) rectangle ++(2*\s,2*\s);
+  \draw ($(C)+(0,0)$) node {$m$};
+
+  \draw[fill=blue!50,  opacity=0.2, dashed] 
+  ($(C1)+(-\s,-\s)$) rectangle ++(2*\s,2*\s);
+  % \draw[fill=blue!50, fill opacity=0.1] 
+  % ($(C2)+(-\s,-\s)$) rectangle ++(2*\s,2*\s);
+
+  % draw velocity vector (down the plane)
+  %\draw[->, line width=1pt] ($(C)+(0,-\s)$) -- ++(0,-\arrowlen*0.55) node[midway,right] {$\mathbf{v}$};
+
+  % gravity at center: draw downward in world frame (rotate back)
+\end{scope}
+
+% Transform C back to world coords by rotating
+\coordinate (Cw) at ($(C)$);
+\coordinate (Cworld) at ($(Cw)$);
+% Actually the above C was defined in rotated scope; easier: recompute Cworld
+\coordinate (Cworld) at ($( {2.2*cos(\planeAngle) - ( \s+\gap)*sin(\planeAngle) } , {2.2*sin(\planeAngle) + ( \s+\gap)*cos(\planeAngle) } )$);
+
+% draw gravity (mg) downward (world vertical)
+%\draw[->, line width=1pt] (Cworld) -- ++(0,-\arrowlen) node[below] {$m\mathbf{g}$};
+
+% draw normal N (perpendicular to plane) at contact point
+% contact point on plane under the cube (project center to plane)
+\coordinate (proj) at ($(Cworld) + ({( \s+\gap)*sin(\planeAngle)},{-(\s+\gap)*cos(\planeAngle)})$);
+\coordinate (applicationPoint) at (2.2 - 2*\s, \s + \gap);
+% Normal direction (unit vector perpendicular to plane, pointing away from plane)
+%\draw[->, line width=1pt] (proj) -- ++({\arrowlen*cos(\planeAngle)},{\arrowlen*sin(\planeAngle)}) node[right] {$\mathbf{N}$};
+
+% Friction direction (parallel to plane, up the plane if block slides down)
+\draw[->, line width=1pt] (applicationPoint) -- ++({ \arrowlen*cos(\planeAngle)},{ \arrowlen*sin(\planeAngle)}) node[above left] {${u}$};
+
+% Draw components of gravity relative to plane: g_parallel and g_perp (dashed)
+% Vector from center along negative plane-parallel direction
+%\draw[dashed] (Cworld) -- ++({\arrowlen*sin(\planeAngle)},{-\arrowlen*cos(\planeAngle)}) coordinate (gpar);
+%\draw[->, dashed] (Cworld) -- ++({\arrowlen*cos(90-\planeAngle)*0.9*sin(1)},{- \arrowlen}); % no-op to show dashed style (kept for clarity)
+
+% Instead compute exact components using trig:
+% g_parallel: along plane downward (points down the slope)
+%\draw[->, blue!60!black, line width=0.9pt] (Cworld) -- ++({\arrowlen*sin(\planeAngle)},{- \arrowlen*cos(\planeAngle)}) node[midway, below right] {$mg\sin\theta$};
+% g_perp: perpendicular to plane (points into plane)
+%\draw[->, red!70!black, line width=0.9pt] (Cworld) -- ++({-\arrowlen*cos(\planeAngle)},{- \arrowlen*sin(\planeAngle)}) node[midway, left] {$mg\cos\theta$};
+
+% draw angle label theta at origin between horizontal and plane
+%\draw[->] (0.8,0.18) arc (0:\planeAngle:0.8) node[right, yshift=2] {$\theta$};
+
+% Axes for reference
+\draw[->] (-0.5,0) -- (6,0) node[above] {$y$};
+\draw[-, line width=2pt] (-0.5,-0.4) -- (5,-0.4) node[below] {$y_{\max}$};
+\draw[-, line width=1pt] (5,-0.4) -- (-0.5,-0.4) node[below] {$y_{\min}$};
+%\draw[->] (0,-1.2) -- (0,3.2) node[above] {$y$};
+\draw[->] (3.0,0.3) -- (4.3,0.3) node[pos=1.2] {$\dot{y}$};
+
+% small note
+%\node[align=left, right] at (6.2,2.6) {Square mass sliding \\ on an inclined plane};
+
+\end{tikzpicture}
+\end{minipage}
+%\hfill
+%\begin{minipage}{0.55\columnwidth}
+%How to account for the limit on $y$?
+%	
+%\end{minipage}
+
+The goal is to steer the mass to a desired position $y_{\rm d}$ while respecting 
+\begin{itemize}
+	\item $u_{\min}\leq u\leq u_{\max}$, 
+	\item $y_{\min}\leq y\leq y_{\max}$ and $\dot{y}_{\min}\leq \dot{y}\leq \dot{y}_{\max}$
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints - Velocity Constraint}
+	\hypertarget{velocity constraint}{}
+	Same reasoning\footnote[frame]{Same steps apply for $h=\dot{y} -\dot{y}_{\min}$.}\hyperlink{CBF applications}{\beamerbutton{Back to CBF}}
+	\begin{minipage}{0.4\columnwidth}
+	\begin{align*}
+		h&=\dot{y}_{\max} -\dot{y}\\
+		\dot{h} &= -\ddot{y}
+	\end{align*}
+	\end{minipage}
+	%\hfill
+	%\begin{minipage}{0.55\columnwidth}
+		
+		Assume there exists $\phi_3(h)$ such that if $\dot{h} = \phi_3(h)$ then $h(t)=\alpha e^{-\lambda t}$. 
+		% Note that if $h(t_0)\geq0 \ \Rightarrow h(t)\geq0, \  \forall t\geq t_0 \ \Rightarrow {\color{red}y(t)\leq y_{\max}}$
+	%\end{minipage}
+		Then, if 
+	\begin{equation*}
+	\dot{h} \geq \phi_3(h)~\left(\Leftrightarrow\ddot{y}\leq-\phi_3(h)\right), \ \text{and~} h(t_0)\geq0~\left(\Leftrightarrow\dot{y}(t_0)\leq \dot{y}_{\max}\right),
+	\end{equation*}
+	thus by virtue of the Comparison Lemma
+	\begin{equation}
+		h(t)\geq\alpha e^{-\lambda t}\geq0, \  \forall t\geq t_0 \ \Rightarrow {\color{red}\dot{y}(t)\leq \dot{y}_{\max}}
+	\end{equation}
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints - Velocity Constraint}
+QP is formulated as 
+\begin{align*}
+	\begin{split}
+	 		\underset{\decisionVar=\begin{bmatrix}u,\ddot{y}\end{bmatrix}}{\min}&\frac{1}{2}
+	 		\begin{Vmatrix}
+	 			u-\phi_1(\vectorX)
+	 		\end{Vmatrix}^2\\
+		\rm{S.t:~}&u_{\min}\leq u\leq u_{\max}\\
+							&\ddot{y}\leq-\phi_2(\vectorX_h)\\
+							&\ddot{y}\leq-\phi_3(h)\\
+							&m\ddot{y}=u
+	 	\end{split}
+\end{align*}
+\end{frame}
+
+\begin{frame}{Handling Inequality Constraints}
+	\begin{itemize}
+		\item In general, finding the feedback terms $\phi_1(\vectorX),\phi_2(\vectorX_h)$ and $\phi_3(h)$ is a relatively easier problem
+		\item It relies on the control theory (Lyapunov theory, advanced control techniques, etc.), and control objectives (asymptotic/exponential/robust stability, etc.) e.g.:
+		\begin{align*}
+		\begin{split}
+			\phi_1(\vectorX)&=-k_px - k_d\dot{x}\\
+			\phi_2(\vectorX_h)&=-k_ph - k_d\dot{h}~\text{(with careful choice\footnotemark of $k_p$ and $k_d$)}\\
+			\phi_3(h)&=-\lambda h
+		\end{split}
+		\end{align*}
+		\addtocounter{footnote}{-3}
+		\footnotetext{See~\cite{djeha2020ral}}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Handling Inequality Constraints}
+	How does QP control relates to LQR approach?
+	\begin{minipage}{0.45\columnwidth}
+		\begin{align*}
+			\begin{split}
+				\underset{\decisionVar}{\min}&\frac{1}{2}\decisionVar^T\matriceH\decisionVar +\vectorH^T\decisionVar \\
+				\rm{S.t:~}&\mathbf{C}_{\rm ineq}\decisionVar\leq\bm{d}_{\rm ineq}\\
+				&\mathbf{C}_{\rm eq}\decisionVar=\bm{d}_{\rm eq}
+			\end{split}
+		\end{align*}
+	\end{minipage}
+	\begin{minipage}{0.45\columnwidth}
+		\begin{align*}
+			\underset{\vectorU}{\min}&\frac{1}{2}\int_{0}^{t}\left(\vectorX^T\matriceQ\vectorX+\vectorU^T\matriceR\vectorU\right)\\
+			\rm{S.t:~}&\vectorXdot = \matriceA\vectorX+\matriceB\vectorU
+		\end{align*}
+	\end{minipage}
+	\begin{itemize}
+		\item Both have quadratic cost-function\alert<2>{... and that's it!}  
+		\only<3->{\item They address different questions, and are solved differently}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Handling Inequality Constraints}
+%	\begin{minipage}{0.45\columnwidth}
+%		content...
+%	\end{minipage}
+\textbf{LQR:}
+\begin{itemize}
+	\item Problem solved analytically, offline
+	\item Finds the optimal feedback gains that balance between  convergence speed and control effort 
+	\item Explicit inequality constraints on the control or state are not handled
+\end{itemize}
+\textbf{QP:}
+\begin{itemize}
+	\item Problem solved numerically, online
+	\item Finds the optimal control input based on the current state, cost-function and constraints
+	\item Handle both equality and inequality constraints
+\end{itemize}
+\end{frame}
+\begin{frame}%{Handling Inequality Constraints}
+\begin{minipage}{0.2\columnwidth}
+	{Example 1}
+	\begin{align*}
+	y_d &= 2.5~{\rm m} \\
+	u_{\max} &= 2.5~{\rm N}\\
+	y_{\max} &= 4~{\rm m}\\
+	\dot{y}_{\max} &= 2~{\rm m/s}
+	\end{align*}
+\end{minipage}
+\put(10,0){\begin{minipage}{0.75\columnwidth}
+	\centering
+	% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+		% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+	\embedvideo*{\includegraphics[width=\textwidth,height=6.35cm]{Screenshot from 2025-10-09 19-21-48.png}}{Figures/QP_expl_1_adjusted.mp4}[autoplay=false,showGUI=true]%\\
+	%\makebox{\hspace{1.5cm}\centering\small \emph{Atlas} humanoid robot assisting workers}
+\end{minipage}}
+\end{frame}
+
+\begin{frame}%{Handling Inequality Constraints}
+\begin{minipage}{0.2\columnwidth}
+	Example 2 
+	\begin{align*}
+	y_d &= 5~{\rm m}\\
+	u_{\max} &= 2.5~{\rm N}\\
+	y_{\max} &= 4~{\rm m}\\
+	\dot{y}_{\max} &= 2~{\rm m/s}
+	\end{align*}
+\end{minipage}
+\put(10,0){\begin{minipage}{0.75\columnwidth}
+		\centering
+		% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+			% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+		\embedvideo*{\includegraphics[width=\textwidth,height=6.35cm]{Screenshot from 2025-10-09 19-22-18.png}}{Figures/Example_target_5.0.mp4}[autoplay=false,showGUI=true]
+	\end{minipage}}
+\end{frame}
+\begin{frame}{Nonlinear systems}
+	\begin{itemize}
+		\item QP Control is OK for linear systems... but how about nonlinear systems?
+		\begin{equation*}
+			\vectorXdot = f(\vectorX,\vectorU)
+		\end{equation*}
+		\only<2->{\item \textbf{Sufficient condition:} The nonlinear system is control affine 
+		\begin{equation*}
+			\vectorXdot = f(\vectorX) + g(\vectorX)\vectorU, \vectorX\inR^n, \vectorU\inR^m
+		\end{equation*}}
+		\only<3->{\item Fortunately, a large class of nonlinear systems are control affine\footnote[frame]{Robotic arms, humanoids, quadrupeds, drones, unicycle, etc.}!}
+	\end{itemize}
+	% \only<3->{\footnotetext}
+\end{frame}
+%\begin{frame}
+%	\centering
+%	\Large Task-space QP Control
+%\end{frame}
+\begin{frame}{Task-space QP Control}
+%	\begin{itemize}
+		 \textbf{Task-space:}  space in which the state of a certain point of interest $\vectorY(\vectorX)\inR^p$ is monitored\footnote[frame]{In control theory jargon, $\vectorY(\vectorX)$ is the system output.}, e.g., 
+		\begin{itemize}
+			\item Coordinate of a point on the robot (Cartesian-space~$\mathbb{R}^3$)
+			\item Orientation of a frame attached to the robot (orientation-space ${\rm SO}(3)$)
+			\item Coordinate of an object in the robot field of view (image-space $\mathbb{R}^2$)
+		\end{itemize}  
+		 \only<2->{\textbf{Control goal:} find $\vectorU$ such that $\vectorY(\vectorX)\longrightarrow\vectorY_d$ given that  $\vectorXdot = f(\vectorX) + g(\vectorX)\vectorU$}
+		 
+		 \only<3->{\textbf{Challenge:} the system dynamics and $\vectorY(\vectorX)$ are nonlinear }
+%	\end{itemize}	
+\end{frame}
+\begin{frame}{Task-space QP Control}
+	\textbf{Solution:} forget about the nonlinear dynamics, focus on the task-state 
+	\begin{itemize}
+		\item Pose $\vectorE=\vectorY-\vectorY_d\inR^p$
+		\item Derive $\vectorE$ $\rho$ times until the control input $\vectorU$ appears
+		\begin{equation*}
+		\vectorE^{\rho}=	L_f^\rho\vectorE(\vectorX) + L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU = \vectorV, \ \vectorV\inR^p
+		\end{equation*}
+		\only<2->{\item $\vectorZ=\begin{bmatrix}
+			\vectorE \\\vectorEdot\\\vdots\\\vectorE^{\rho-1}
+		\end{bmatrix}\inR^{p\rho}\Rightarrow
+		\vectorZdot = \begin{bmatrix}
+			\mathbf{0}_{p(\rho-1)\times p} & \mathbf{I}_{p(\rho-1)}\\
+			\mathbf{0}_{p\times p}&\mathbf{0}_{p\times p(\rho-1)}
+		\end{bmatrix}\vectorZ + 
+		\begin{bmatrix}
+			\mathbf{0}_{p(\rho-1)\times p} \\\mathbf{I}_{p\times p}
+		\end{bmatrix}\vectorV$ 
+		
+		\item  $\vectorV$ is the task-space control input}
+	\end{itemize}	
+\end{frame}
+\begin{frame}{Task-space QP Control}
+	\begin{itemize}
+		\item Design $\vectorV=\phi(\vectorZ)$ such that 
+		\begin{equation*}
+			\vectorZ\longrightarrow0\Rightarrow \vectorE\longrightarrow0\Rightarrow \vectorY\longrightarrow\vectorY_d
+		\end{equation*}
+		\only<2->{\item The task dynamics is linear $\Rightarrow$ it is sufficient to choose $\phi(\vectorZ) = -\matriceK\vectorZ$, with $\matriceK\inR^{p\times p\rho}$ is the stabilizing gains matrix}
+		\only<3->{\item Map the task-space control $\vectorV$ to the system control input $\vectorU$
+		\begin{equation*}
+			L_f^\rho\vectorE(\vectorX) + L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU = -\matriceK\vectorZ
+		\end{equation*}}
+		\only<4->{\item 	This mapping is \textbf{linear} w.r.t $\vectorU$ because the system dynamics is nonlinear \textbf{control-affine}!}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Task-space QP Control}
+	\begin{itemize}
+		\item How to compute $\vectorU$?
+		\item \textbf{Analytically:} using the Jacobian pseudo-inverse
+		\begin{equation*}
+			\vectorU = \left[L_gL_f^{\rho-1}\vectorE(\vectorX)\right]^\dagger\left(-L_f^\rho\vectorE(\vectorX)-\matriceK\vectorZ\right)
+		\end{equation*}
+		\only<2->{Does not account for limits on $\vectorU$: $\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}$}
+		\only<3->{\item \textbf{Numerically:}
+		\begin{align*}
+			\underset{\vectorU}{\min}&\frac{1}{2}\norm{L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU + L_f^\rho\vectorE(\vectorX) + \matriceK\vectorZ}^2\\
+			{\rm S.t:~}&\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}
+			\end{align*}}
+		\only<4->{Is it the \textbf{unique} solution ?} 
+	\end{itemize}
+\end{frame}
+\begin{frame}{Task-space QP Control}
+	Another possible solution: 
+	\begin{align*}
+		\underset{\vectorU}{\min}&\frac{1}{2}\norm{\vectorU}^2\\
+		{\rm S.t:~}&L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU =- L_f^\rho\vectorE(\vectorX) - \matriceK\vectorZ\\
+		&\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}
+		\end{align*}
+		
+		\only<2->{Does it produce the same solutions as the first QP form?}
+\end{frame}
+\begin{frame}{Task-space QP Control}
+	\begin{minipage}{0.4\columnwidth}
+		\begin{align*}
+			\underset{\vectorU}{\min}&\frac{1}{2}\norm{L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU + L_f^\rho\vectorE(\vectorX) + \matriceK\vectorZ}^2\\
+			{\rm S.t:~}&\color{red}\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}
+		\end{align*}
+		If $\min$ cost-function $\in$ feasibility domain, then it is the solution $\vectorU^\star$;\\
+		Otherwise $\vectorU$ is saturated to its max values
+	\end{minipage}
+	\begin{minipage}{0.4\columnwidth}
+		\begin{figure}
+			\includegraphics[height=0.54\textheight]{QP1_sol.pdf}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Task-space QP Control}
+\vspace*{-0.5cm}
+	\begin{minipage}{0.4\columnwidth}
+		\begin{align*}
+			\underset{\vectorU}{\min}&\frac{1}{2}\norm{\vectorU}^2\\
+			{\rm S.t:~}&{\color{blue}L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU =- L_f^\rho\vectorE(\vectorX) - \matriceK\vectorZ}\\
+			&\color{red}\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}
+		\end{align*}
+		$(1)~\vectorU^\star$ the closest point on the hyper-plane to the origin\\
+		$(2)~\vectorU^\star$ on the feasibility domain boundary\\
+		$(3)~$ QP fails to find a feasible solution
+	\end{minipage}
+	\begin{minipage}{0.4\columnwidth}
+	\vspace*{0.2cm}
+		\begin{figure}
+			\includegraphics[height=0.55\textheight]{QP2_sol.pdf}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Task-space QP Control}	
+\vspace*{-0.5cm}
+%	\begin{minipage}{0.3\columnwidth}	
+	\begin{align}\label{eq:QP form1}
+		\begin{split}
+			\underset{\vectorU}{\min}&\frac{1}{2}\norm{L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU + L_f^\rho\vectorE(\vectorX) + \matriceK\vectorZ}^2\\
+			{\rm S.t:~}&\color{red}\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}
+		\end{split}
+		\end{align}
+%	\end{minipage}
+%	\begin{minipage}{0.3\columnwidth}
+		\begin{align}\label{eq:QP form2}
+			\begin{split}
+			\underset{\vectorU}{\min}&\frac{1}{2}\norm{\vectorU}^2\\
+			{\rm S.t:~}&{\color{blue}L_gL_f^{\rho-1}\vectorE(\vectorX)\vectorU =- L_f^\rho\vectorE(\vectorX) - \matriceK\vectorZ}\\
+			&\color{red}\vectorU_{\min}\leq\vectorU\leq\vectorU_{\max}
+			\end{split}
+		\end{align}
+%	\end{minipage}
+	
+	The solutions of \cref{eq:QP form1,eq:QP form2} are \textbf{equivalent}, but \eqref{eq:QP form2} may run into \textbf{infeasibility}!!
+\end{frame}
+
+%Let's assume there exists a feedback $u=\phi_1(\vectorX)$ such that the origin of the closed-loop system $f(\vectorX,\phi_1(\vectorX))$ is asymptotically stable.
+% \begin{itemize}$y_{\min}\leq y\leq y_{\max}$
+% 	\item What is the context of QP use in control
+% 	\item How QP can be used in control context? %A bit of history
+% 	\item 
+% \end{itemize}	
+% \end{frame}
+

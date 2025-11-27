@@ -1,0 +1,138 @@
+\PassOptionsToPackage{table,dvipsnames,svgnames}{xcolor}
+\documentclass[14pt,aspectratio=169]{beamer}
+%\documentclass[14pt,  aspectratio=169]{beamer}  
+
+\usepackage[default,oldstyle,scale=0.95]{opensans}
+\usepackage[utf8]{inputenc}
+\usepackage{xparse}
+\input{embed_video.tex}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
+\usepackage{multicol}
+\usepackage{amsmath,amsfonts}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc,fit,decorations.markings,spy}
+\usepackage{tikz-cd}
+\usepackage{pdfpages}
+%\usepackage[usenames,table,dvipsnames,svgnames]{xcolor}
+\graphicspath{{Figures/}}
+\usepackage{media9}
+\usepackage{hyperref}
+\usepackage{subfiles}
+\usepackage{varwidth}
+\usepackage{bm}
+\usepackage{caption}
+\usepackage[stable]{footmisc}
+\usepackage{cleveref}
+\usepackage[percent]{overpic}
+% \setbeamertemplate{footnote}{%
+%   \hangpara{2em}{1}%
+%   \makebox[2em][l]{\insertfootnotemark}\footnotesize\insertfootnotetext\par%
+% }
+%commands
+\def\decisionVar{\boldsymbol{\chi}}
+\def\matriceA{\mathbf{A}}
+\def\matriceB{\mathbf{B}}
+\def\matriceC{\mathbf{C}}
+\def\matriceD{\mathbf{D}}
+\def\matriceH{\mathbf{H}}
+\def\matriceR{\mathbf{R}}
+\def\matriceRdot{\mathbf{\dot{R}}}
+\def\matriceQ{\mathbf{Q}}
+\def\matriceK{\mathbf{K}}
+\def\matriceM{\mathbf{M}}
+\def\matriceS{\mathbf{S}}
+\def\matriceJ{\mathbf{J}}
+\def\matriceT{\mathbf{T}}
+\def\matriceI{\mathbf{I}}
+\def\vectorB{\bm{b}}
+\def\vectorD{\bm{d}}
+\def\vectorH{\bm{h}}
+\def\vectorX{\bm{x}}
+\def\vectorU{\bm{u}}
+\def\vectorS{\bm{s}}
+\def\vectorY{\bm{y}}
+\def\vectorZ{\bm{z}}
+\def\vectorV{\bm{v}}
+\def\vectorE{\bm{e}}
+\def\vectorC{\bm{c}}
+\def\vectorF{\bm{f}}
+\def\vectorQ{\bm{q}}
+\def\vectorO{\bm{o}}
+\def\vectorP{\bm{p}}
+\def\vectorZero{\bm{0}}
+\def\vectorOmega{\boldsymbol{\omega}}
+\def\vectorTau{\boldsymbol{\tau}}
+\def\vectorXdot{\bm{\dot{x}}}
+\def\vectorYdot{\bm{\dot{y}}}
+\def\vectorZdot{\bm{\dot{z}}}
+\def\vectorEdot{\bm{\dot{e}}}
+\def\vectorQdot{\bm{\dot{q}}}
+\def\vectorQddot{\bm{\ddot{q}}}
+\def\inR{\in\mathbb{R}}
+\def\setC{{\cal C}}
+\def\setR{{\cal R}}
+\def\setS{{\cal S}}
+\newcommand{\norm}[1]{\begin{Vmatrix}
+		#1
+\end{Vmatrix}}
+\usetheme{CambridgeUS}
+
+\usefonttheme[onlymath]{serif}
+\tikzset{
+	block/.style = {draw, fill=white, rectangle, minimum height=1.5em, minimum width=2em},
+	tmp/.style  = {coordinate}, 
+	sum/.style= {draw, fill=white, circle, node distance=1cm},
+	input/.style = {coordinate},
+	output/.style= {coordinate},
+	pinstyle/.style = {pin edge={to-,thin,black}},
+	dotted_block/.style={draw=black!50!white, line width=1.5pt, dash pattern=on 3pt off 3pt on 3pt off 3pt, inner ysep=3mm,inner xsep=2mm, rectangle, rounded corners}
+}
+
+\title[Introduction à la robotique industrielle]{Robots industriels: \\ Opportunités et défis d'exploitation}
+\author[Dr Alouane, Dr Djeha]{Dr Alouane Mohamed Amine, Dr Djeha Mohamed}
+\institute[LCSCS]{UER SAI - LCSCS}
+\date{ESSAT Seminar -- \today}
+\AtBeginSection[]{
+	\begin{frame}
+		\centering
+		\vfill
+		\usebeamerfont{section title}\LARGE\insertsection
+		\vfill
+	\end{frame}
+}
+\AtBeginDocument{%
+	\hypersetup{colorlinks=true, citecolor=SeaGreen}%
+	\makeatletter
+	\def\@citecolor{SeaGreen}%
+	\makeatother
+}
+\begin{document}
+	
+% Title Slide
+\begin{frame}
+	\titlepage%~\cite{richalet1978automatica}
+\end{frame}	
+\section*{Introduction to industrial robotics}
+\input{intro_slides.tex}	
+\section{Kinematic Modeling}
+\input{Modélisation_géométrique.tex}	
+%\section{Modélisation Cinématique}
+%\input{Modélisation_cinématique.tex}
+\section{Dynamic Modeling}%QP control strategies %New possibilities wit QP
+%\input{Modélisation_dynamique.tex}
+%\input{New Control Strategies.tex}
+%\input{Multi-robot Control.tex}
+\section{Industrial Robots Control}
+%\input{Commande_robots.tex}
+%\section{Applications}
+
+
+\begin{frame}[allowframebreaks]{Références}
+  \footnotesize
+  \bibliographystyle{apalike}
+  \bibliography{biblio.bib}
+\end{frame}
+% \bibliographystyle{apalike}	
+% \bibliography{biblio.bib} 
+\end{document}

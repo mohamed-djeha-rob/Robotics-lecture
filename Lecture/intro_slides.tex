@@ -1,0 +1,482 @@
+\begin{frame}{Introduction}
+	\begin{itemize}
+		\item Robotics has a profound historical and cultural roots
+		\item Constant attempts to make machines able to substitue humans in repeititve and tedious tasks
+		\item Origin of \emph{‘Robot’} term
+		\item Historical examples of robots: water clock (Harun Arrachid), Al Jazari, Turk chess player, Japanese robots, etc.
+		\item Isaac Asimov sci-fi roman: robots as mechanical artifacts - Definition of \emph{‘Robotics’} (Science devoted to the study of robots) - Asimov's three fundamental laws:
+		\begin{enumerate}
+			\item A robot may not injure human beings 
+			\item A robot must obey the orders given by human beings, except when such orders would conflict with the first law
+			\item A robot must protect its own existence, as long as this protection does not conflict with the first and second laws
+		\end{enumerate}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\begin{itemize}
+		\item A robot can be seen as a machine that is able to modify and interact with its environment in which it operates while respecting the Asimov's rules
+		\item Components of a robot: 
+		\begin{enumerate}
+			\item Mechanical system
+			\begin{itemize}
+				\item Locomotion apparatus: wheels, crawler, legs, etc. 
+				\item Manipulation apparatus: manipulator arms, end-effector, hands, section cap, etc.
+			\end{itemize}
+			\item Actuator: the organ by which the robot exert an action (either locomotion or manipulation)
+			\item Sensors: the ability for the perception of the internal status (prioprioceptive sensors, e.g., joint-position sensors) or the external status (exteroceptive sensors, e.g., camera, force sensor)
+			\item Control system: compute commands for the actuators based on the sensors information   
+		\end{enumerate}		 
+	\end{itemize}
+\end{frame}
+\begin{frame}{Robotic manipulator - Structure}
+	\begin{itemize}
+		\item \textbf{Robotic manipulator:} sequence of bodies (links) connected through articulation (joints).
+		\item The rigid body tree (kinematic chain) is constituted by the \emph{arm}, the \emph{wrist} and the end-effector (hand)
+		\item Two types of kinematic chain
+		\begin{itemize}
+			\item \emph{Open kinematic chain:} when there is only one kinematic chain between two ends. It can be a simple chain (robotic arm) or a tree kinematic chain (dual-arm robot, humanoid, quadruped, etc.) 
+			\item \emph{Closed kinematic chain:} when a sequence of links forms a loop
+		\end{itemize}
+	%	\item Joints: can be either \emph{prismatic} or \emph{revolute}. A prismatic joint allows a relative translation between two bodies, whereas a revolute joint porduces a relative rotation
+	%TODO add figures of the three types
+	\end{itemize}
+\end{frame}
+\begin{frame}{Robotic manipulator - Joints}
+		\begin{itemize}
+		\item Basic joints are \emph{prismatic} or \emph{revolute}. 
+		\item Prismatic joint allows a relative translation between two bodies 
+		\item Revolute joint produces a relative rotation between two bodies
+	\end{itemize}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\columnwidth]{joints_type}
+		\caption{Conventional representation of revloute and prismatic joints}
+	\end{figure}
+\end{frame}
+\begin{frame}{Robotic manipulator - Joints}
+	\begin{itemize}
+		\item Any other types of joints can be modeled through prismatic or revolute joints, e.g., 
+		\begin{itemize}
+			\item Spherical joint: 3 revolute joints with concurrent axes (agile eye)
+			\item Helical joint: combination of a translation $x$ and a rotation $\theta$ along the same axis: $x=p\theta$
+		\end{itemize}
+		\item Every allowed motion by a joint is a Degree of Freedom (DoF)
+		\begin{itemize}
+			\item Revolute, prismatic and helical joints: 1 DoF
+			\item Spherical joint: 3 DoF
+		\end{itemize}
+		\item Each joint $\vectorQ$ has mechanical limits ($\vectorQ_{\min}$, $\vectorQ_{\max}$), velocity limits ($\vectorQdot_{\min}$, $\vectorQdot_{\max}$) and acceleration limits  ($\vectorQddot_{\min}$, $\vectorQddot_{\max}$)
+	\end{itemize}
+\end{frame}
+\begin{frame}{Robotic manipulator - Workspace}
+	\begin{itemize}
+	%	\item Degree of Freedom (DoF) = number of possible motion - constraints imposed by the joint $\Rightarrow$ Each revolute or prismatic joint allows one DoF 
+		\item Workspace: the space reachable by the robot's end-effector. Its shape and volume are defined by the robot structure and the mechanical joint limits.
+		\begin{figure}
+			\centering
+			\includegraphics[width = 0.3\columnwidth]{Cartesian robot.png}
+			\includegraphics[width = 0.3\columnwidth]{Cylindrical robot.png}
+			\includegraphics[width = 0.3\columnwidth]{Spherical robot.png}
+			\caption{Types of robots according to the shape of the workspace: \textbf{Cartesian} (left), \textbf{cylindrical} (middle) and \textbf{spherical} (right)}
+		\end{figure}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Robotic manipulator - Repeatability and Payload}
+	\begin{itemize}
+		\item Repeatability: a measure of the robot ability to return to a previously reached position. It is measured in $mm$
+		\item Payload: the maximum load the robot can widthstand statically.
+	\end{itemize} 
+\end{frame}
+
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){Robots are becoming sophisticated, redundant and versatile}
+		\put(10,-30){\begin{minipage}{0.3\columnwidth}
+				\centering
+				% \href{run:Figures/Quadruped_Redundancy.mp4}{
+				% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 16-43-33.png}} \\
+				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 16-43-33.png}}{Figures/Quadruped_Redundancy.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1cm}\centering\small Armed \emph{Spot} quadruped robot}
+		\end{minipage}}
+		
+		
+		\put(230,-30){\begin{minipage}{0.3\columnwidth}
+				\centering
+				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 17-33-28.png}}{Figures/wheel-legged-robots.mp4}[autoplay=false,showGUI=true]\\
+				% \href{run:Figures/wheel-legged-robots}{
+				% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 17-33-28.png}}
+				% \\
+				\makebox{\hspace{0cm}\centering\small Wheeled \emph{Anymal C} quadruped robot}
+			%	\small{Wheeled quadruped robot}
+		\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
+	\end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}
+	Robots are embedding multiple sensors	
+	% \begin{picture}(0,0)
+		% \put(0,70){}
+		% \put(150,-20){
+		% \begin{minipage}{\columnwidth}
+			\begin{figure}
+									\centering
+								\embedvideo*{\includegraphics[width=0.59\columnwidth,height=5cm]{Screenshot from 2025-06-10 18-19-32.png}}{Figures/OceanOne.m4v}[autoplay=false,showGUI=true]\\
+				\caption*{\emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
+			\end{figure}
+				% \href{run:Figures/OceanOne.m4v}{
+				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 18-19-32.png}}
+				% \\
+
+				% \makebox{\hspace{-1.25cm}\centering\small \emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
+			% \end{minipage}
+			% }
+				
+		
+%		\put(250,-30){\begin{minipage}{0.25\columnwidth}
+%				\centering
+%				\includegraphics[height=\columnwidth]{The-Eelume-AIAUV-courtesy-of-Eelume.png}\\
+%				\small{Underwater exploration 
+%				vehicle \\
+%				(Basso et al., 2020)}
+%			\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
+	% \end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){Robots are able to accomplish complex missions...}
+		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+						\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.5cm}\centering\small \emph{Atlas} humanoid robot assisting workers}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){... can cooperate ...}
+		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/CooperativeLocomotion.m4v}{
+				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
+									\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/CooperativeLocomotion.m4v}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{-0.8cm}\centering\small Two \emph{Go 1} quadruped robots cooperating to lift heavy objects}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}[t]\frametitle{Robots are -\emph{almost}- everywhere !}
+	\begin{picture}(0,0)
+		\put(0,10){... and even replace humans in tedious tasks}
+		\put(70,-90){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/CooperativeLocomotion.m4v}{
+				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
+			\embedvideo*{\includegraphics[width=1.3\textwidth,height=5.5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/Motivation-IAM.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.8cm}\centering\small Results from the European Project I.AM}
+		\end{minipage}}
+	\end{picture}
+
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){... but have to satisfy some hard constraints}
+		\put(00,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Control Barrier Function based safe navigation -- experiment.mp4}{
+				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-50.png}} \\
+										\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-50.png}}{Figures/Control Barrier Function based safe navigation -- experiment.mp4}[autoplay=false,showGUI=true]\\
+
+				\makebox{\hspace{-0.2cm}\centering\small Getting to the target while avoiding collision}
+		\end{minipage}}
+		\put(220,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Safe Behavior through Control Barrier Functions.mp4}{
+				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-28.png}} \\
+					\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-28.png}}{Figures/Safe Behavior through Control Barrier Functions.mp4}[autoplay=false,showGUI=true]\\
+
+				\makebox{\hspace{-0.5cm}\centering\small Keeping upright position}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+%\begin{frame}{Motivation - One control framework, many applications}
+%	\vspace{-0.5cm}
+%%	\begin{multicols}{2}
+%		% Left column
+%		\begin{tcolorbox}[colback=gray!5!white, colframe=gray!75!black, title=One robotic application]
+%			\begin{itemize}\small
+%				\item Use high DoF robots
+%				\item Achieve complex maneuvers
+%				\item Rely on sensors
+%				\item Satisfy constraints: safety specifications, hardware limits, etc.
+%			\end{itemize}
+%		\end{tcolorbox}
+%		%  \columnbreak $\overset{\rm Objective}{\longrightarrow}$
+%		
+%		% Right column
+%	%	\columnbreak
+%		\vspace{-0.5cm}
+%		\begin{tcolorbox}[colback=green!5!white, colframe=green!70!black, title=Objective]
+%			%	\textbf{Control framework}
+%		\small	Is it possible to have \textbf{‘one control framework’} that can be used for \textbf{‘many robotic applications’}?
+%		\end{tcolorbox}		
+%%	\end{multicols}
+%\end{frame}
+%\begin{frame}{Motivation - One control framework, many applications}
+%	The control framework should be: 
+%%	\begin{multicols}{1}
+%		% Left column		
+%		\begin{tcolorbox}[colback=green!5!white, colframe=green!70!black]%-è, title=Need for a control framework]
+%		%	\textbf{Control framework}
+%			\begin{itemize} 
+%				\item \textbf{Consistent} enough to render the required application complexity
+%				\item \textbf{General} enough to encompass new applications
+%				\item \textbf{Simple} enough for the user
+%			\end{itemize}
+%		\end{tcolorbox}		
+%%	\end{multicols}
+%\end{frame}
+%
+%\begin{frame}{Motivation - Control framework construction}
+%	\begin{figure}%[t!]
+%		\centering
+%		\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+%			\node  [block](CRA) at (-1, 12) {Complex robotic application};	
+%			\node (COP) at (2.2, 9) {Control objective primitives};
+%			\node [block] (TC) at (2.2, 8)  {\begin{varwidth}{0.24\linewidth}
+%					\begin{itemize}
+%						\item Tasks
+%						\item Constraints
+%					\end{itemize}		
+%			\end{varwidth}};
+%			\node (hardware) at (7.4, 9) {Hardware};
+%			\node [block] (RS) at (7.4, 8) {\begin{varwidth}{0.2\linewidth}
+%					\begin{itemize}
+%						\item Robots
+%						\item Sensors
+%					\end{itemize}	
+%			\end{varwidth}};
+%			\node (PT) at (-3.5, 9) {Parameters tuning};
+%			\node [block] (PC) at (-3.5, 8) {\begin{varwidth}{0.31\linewidth}
+%					\begin{itemize}
+%						\item Priority
+%						\item Convergence rate
+%					\end{itemize}	
+%			\end{varwidth}};
+%			\node (w1) at (4.8, 7) {\small Atomic decomposition};
+%			\node (w2) at (-0.6, 7) {\small Combination};
+%			\node [tmp] at (-1.05, 12) (tmp) {}; 
+%		
+%			\draw [->] ([yshift=0pt]RS.west) -- node[below,pos=0.54]{}(TC);
+%			\draw [->] ([yshift=0pt]TC.west) -- node[below,pos=0.54]{}(PC);
+%		%	\draw [->] ([xshift=-60pt]PC.north) |- node[above,pos=0.7]{\small Complexity rendering}(tmp);
+%			
+%		\end{tikzpicture}
+%	\end{figure}	
+%\end{frame}
+%\begin{frame}{Motivation - Control framework construction}
+%	\begin{figure}
+%		\centering
+%		\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+%			% Nodes
+%			\node [block] (CRA) at (-1, 12) {Complex robotic application};
+%		%	\node [sum] (comp) at (4,11) {}; 
+%			\node [block] (Sim) at (-1,10.5) {Simulation};
+%			\node (COP) at (2.2, 9) {Control objective primitives};
+%		%	\node [block] (adjust) at (6,11) {Adjustment};
+%			\node [block] (TC) at (2.2, 8) {\begin{varwidth}{0.24\linewidth}
+%					\begin{itemize}
+%						\item Tasks
+%						\item Constraints
+%					\end{itemize}		
+%			\end{varwidth}};
+%			\node (hardware) at (7.4, 9) {Hardware};
+%			\node [block] (RS) at (7.4, 8) {\begin{varwidth}{0.2\linewidth}
+%					\begin{itemize}
+%						\item Robots
+%						\item Sensors
+%					\end{itemize}	
+%			\end{varwidth}};
+%			\node (PT) at (-3.5, 9) {Parameters tuning};
+%			\node [block] (PC) at (-3.5, 8) {\begin{varwidth}{0.31\linewidth}
+%					\begin{itemize}
+%						\item Priority
+%						\item Convergence rate
+%					\end{itemize}	
+%			\end{varwidth}};
+%			\node (w1) at (4.8, 7) {\small Atomic decomposition};
+%			\node (w2) at (-0.6, 7) {\small Combination};
+%			\node [tmp] at (-2.3, 10.5) (tmp) {}; 
+%%			\node [tmp] at (7,10.5) (tmp2) {};
+%		%	\node (w3) at (3, 10.2) {\small Complexity rendering};
+%		%	\node (w4) at (4, 12.2) {\small Desired complexity};
+%			% Existing arrows
+%			\draw [->] (RS.west) -- (TC.east);
+%			\draw [->] (TC.west) -- (PC.east);
+%			\draw [->] ([xshift=-60pt]PC.north) |- (tmp);
+%		%	\draw [->] (Sim.east) -| (comp.south);
+%		%	\draw [->] (CRA.east) -| (comp.north);
+%		%	\draw [->] (comp.east) -- (adjust.west);
+%			% NEW: diagonal tuning arrows above blocks
+%%			\foreach \n in {TC,RS,PC}{
+%%				\draw[->,line width=2.5pt,red,opacity=0.55, dashed]  ([yshift=5pt]\n.north east) -- ([yshift=-5pt]\n.south west);
+%%			}
+%		\end{tikzpicture}
+%	\end{figure}	
+%\end{frame}
+%\begin{frame}{Motivation - Control framework construction}
+%	\begin{figure}
+%		\centering
+%		\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+%			% Nodes
+%			\node [block] (CRA) at (-1, 12) {Complex robotic application};
+%			\node [sum] (comp) at (4,11) {}; 
+%			\node [block] (adjust) at (6,11) {\color{red}Adjustment};
+%			\node [block] (Sim) at (-1,10.5) {Simulation};
+%			\node (COP) at (2.2, 9) {Control objective primitives};
+%			\node [block] (TC) at (2.2, 8) {\begin{varwidth}{0.24\linewidth}
+%					\begin{itemize}
+%						\item Tasks
+%						\item Constraints
+%					\end{itemize}		
+%			\end{varwidth}};
+%			\node (hardware) at (7.4, 9) {Hardware};
+%			\node [block] (RS) at (7.4, 8) {\begin{varwidth}{0.2\linewidth}
+%					\begin{itemize}
+%						\item Robots
+%						\item Sensors
+%					\end{itemize}	
+%			\end{varwidth}};
+%			\node (PT) at (-3.5, 9) {Parameters tuning};
+%			\node [block] (PC) at (-3.5, 8) {\begin{varwidth}{0.31\linewidth}
+%					\begin{itemize}
+%						\item Priority
+%						\item Convergence rate
+%					\end{itemize}	
+%			\end{varwidth}};
+%			\node (w1) at (4.8, 7) {\small Atomic decomposition};
+%			\node (w2) at (-0.6, 7) {\small Combination};
+%			\node [tmp] at (-2.3, 10.5) (tmp) {}; 
+%			%			\node [tmp] at (7,10.5) (tmp2) {};
+%			\node (w3) at (3, 10.2) {\small Rendered Complexity};
+%			\node (w4) at (4, 12.2) {\small Desired complexity};
+%			% Existing arrows
+%			\draw [->] (RS.west) -- (TC.east);
+%			\draw [->] (TC.west) -- (PC.east);
+%			\draw [->] ([xshift=-60pt]PC.north) |- (tmp);
+%			\draw [->] (Sim.east) -| (comp.south);
+%			\draw [->] (CRA.east) -| (comp.north);
+%			\draw [->] (comp.east) -- (adjust.west);
+%			% NEW: diagonal tuning arrows above blocks
+%			\foreach \n in {TC,RS,PC}{
+%				\draw[->,line width=2.5pt,red,opacity=0.55, dashed]  ([yshift=5pt]\n.north east) -- ([yshift=-5pt]\n.south west);
+%			}
+%		\end{tikzpicture}
+%	\end{figure}	
+%\end{frame}
+%\begin{frame}{Motivation - Control framework construction}
+%	Example: Moving the base of a quadruped robot
+%	\begin{minipage}{0.51\columnwidth}
+%		\begin{figure}
+%			\includegraphics[width=\columnwidth]{Screenshot from 2025-06-10 16-43-33}
+%		\end{figure}
+%	\end{minipage}
+%	\hfill
+%	\begin{minipage}{0.48\columnwidth}
+%		 \invisible{
+%		\begin{itemize}
+%			\item \textbf{Task:} move the base in the manipulability space
+%			\item \textbf{Constraints:} 
+%			\begin{itemize}
+%				\item Keep end-effector fixed
+%				\item Keep non-slipping contacts
+%				\item Avoid self-collision
+%				\item Respect joint position/velocity/torque constraints
+%				\item Keep CoM projection inside the static equilibrium region
+%			\end{itemize}
+%		\end{itemize}}
+%	\end{minipage}
+%\end{frame}
+%\begin{frame}{Motivation - Control framework construction}
+%	Example: Moving the base of a quadruped robot
+%	\begin{minipage}{0.51\columnwidth}
+%		\begin{figure}
+%			\includegraphics[width=\columnwidth]{multi-task example.pdf}
+%		\end{figure}
+%	\end{minipage}
+%	\hfill
+%	\begin{minipage}{0.48\columnwidth}
+%		\begin{itemize}
+%			\item \textbf{Task:} move the base in the manipulability space
+%			\item \textbf{Constraints:} 
+%			\begin{itemize}
+%				\item Keep end-effector fixed
+%				\item Keep non-slipping contacts
+%				\item Avoid self-collision
+%				\item Respect joint position/velocity/torque constraints
+%				\item Keep CoM projection inside the static equilibrium region
+%			\end{itemize}
+%		\end{itemize}
+%		
+%	\end{minipage}
+%\end{frame}
+%\begin{frame}{Motivation - Control framework construction}
+%\textbf{	One \emph{elegant} solution: Quadratic Programming paradigm }
+%	\begin{align*}
+%		\left.\begin{matrix}
+%			\textit{Multi}\text{-robot} \\
+%			\textit{Multi}\text{-task} \\
+%			\textit{Multi}\text{-sensor}
+%		\end{matrix}
+%		\right\}		
+%		\text{Task-space Quadratic Programming Control}
+%	\end{align*}
+%\end{frame}
+%\begin{frame}{QP Control - Historical overview}
+%	%\begin{columns}
+%		%\column{0.5\linewidth}
+%		\begin{itemize}
+%			\item  \textbf{1960s:} Most works focused on numerical algorithms for QP solving
+%			\item \textbf{1970s:} Emergence of Model Predictive Control (MPC) - Use of QP as a \emph{tool} for solving the MPC problem~\cite{richalet1978automatica}
+%			\item \textbf{1980s:} First use QP for trajectory planning with collision avoidance for redundant manipulator control as an alternative to artificial potential fields method~\cite{faverjon1987icra}
+%			\item \textbf{1990s:} Premises of QP as a \emph{‘controller’} - Standard QP formulations are posed for redundant manipulator control with joints constraints~\cite{cheng1994tra,park1998icra}
+%		\end{itemize}
+%\end{frame}
+%\begin{frame}{QP Control - Historical overview}
+%		\begin{itemize}
+%			
+%			\item \textbf{(2000-2010)s:} Multi-objective control - Use of QP for motion generation in graphical animations of robots in multi-contact~\cite{zhang2004transactionsonSysManCyb2,abe2007siggraph,macchietto2009siggraph,salini2010springer} 
+%			\item \textbf{(2010-Now):} Golden era of QP control - Real-time QP control of large classes of robots (manipulators, humanoids, quadrupeds, drones, unicycles, etc.) with real world application - New control strategy enabled - Breakthrough theoretical contributions 
+%			\item \textbf{(2021-Now):} Real-time implementation of whole-body MPC 
+%		\end{itemize}
+%		%\column{0.4\linewidth}
+%% 		\begin{tikzpicture}[spy using outlines={rectangle,thick,red,fill=red,opacity=0.2,
+%  %                     lens={scale=2.5}, width=2.5cm, height=1cm, connect spies}]
+%  %   % Place main figure
+%  %   \node (image) {\includegraphics[width=0.5\columnwidth]{Figures/mpc_history_0.png}};
+%  %   % Spy on coordinates (x,y) in the image coordinate system
+%  %   % Adjust (x,y) to your region of interest
+%  %   \spy on (0.12,0.7) in node [fill=white] at (4,1);
+%  %   % \fill[red,opacity=0.2] (0.41,0.8) rectangle (0.59,0.70);
+%  % \end{tikzpicture}
+%% 	\end{columns}
+%\end{frame}
+\begin{frame}{Outline}
+	\tableofcontents
+\end{frame}
+%\begin{frame}{Motivation - Control framework construction}
+%One solution: \textbf{Quadratic Programming} paradigm 
+%	\begin{align*}
+%		\begin{matrix}
+%			\textit{Multi-robots} \\
+%			\textit{Multi-tasks} \\
+%			\textit{Multi-sensors}
+%		\end{matrix}
+%		\left\}\begin{matrix}
+%		\begin{split}
+%			\underset{\decisionVar}{\min}&\frac{1}{2}\decisionVar^T\mathbf{H}\decisionVar +\bm{h}^T\decisionVar \\
+%			\rm{S.t:~}&\mathbf{C}_{\rm ineq}\decisionVar\leq\bm{d}_{\rm ineq}\\
+%			&\mathbf{C}_{\rm eq}\decisionVar=\bm{d}_{\rm eq}
+%		\end{split}
+%	\end{matrix}\right.
+%	\end{align*}
+%\end{frame}
