@@ -18,5 +18,6 @@
 *.fls
 *.fdb_latexmk
 build
-
+*.mp4
+*.m4v
 
