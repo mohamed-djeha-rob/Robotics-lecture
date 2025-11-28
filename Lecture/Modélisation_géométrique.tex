@@ -26,7 +26,8 @@
 		\begin{align*}
 			\matriceRdot_B^I&=\matriceR_B^I\left[\vectorOmega_B^B\times\right]\\
 			\matriceRdot_B^I&=\left[\vectorOmega_B^I\times\right]\matriceR_B^I
-		\end{align*} 
+		\end{align*}
+		with $\vectorOmega_B^B,\vectorOmega_B^I\inR^3$ are the body and world expressed angular velocity, respectively, and $\left[\star\times\right]\inR^{3\times 3}$ is the skew-matrix of the vector $\star$
 		\item Orientation can also be represented by: Euler angles, Angle-axis, Quaternions
 	\end{itemize}
 \end{frame}
@@ -188,13 +189,14 @@ The {\color{blue}{position}} and {\color{purple}orientation} of the  frame $\set
 		\end{figure}
 	\end{minipage}
 \end{frame}
-\begin{frame}{Homegeneous transformation}
-Following the same reasoning, the position and orientation of the end-effector frame  $\setR_{ee}$ w.r.t to $\setR_I$ can be obtained through the homogeneous transformation matrix composition
+\begin{frame}{Forward kinematics}
+In the case of articulated robot, the position and orientation of the end-effector frame  $\setR_{ee}$ w.r.t to $\setR_I$ can be obtained through the homogeneous transformation matrix composition as a function of the joint variables
 	
-	\begin{minipage}{0.2\columnwidth}
+	\begin{minipage}{0.35\columnwidth}
 		\begin{align*}
 			\matriceT_{ee}^I&=\matriceT_B^I\matriceT_C^B\matriceT_D^C\matriceT_E^D\matriceT_F^E\matriceT_{ee}^{F}\\
 		\end{align*}
+		$\matriceT_{ee}^I$ is denoted as the \textbf{forward kinematic model}
 	\end{minipage}
 	\hfill
 	\begin{minipage}{0.6\columnwidth}
@@ -204,19 +206,19 @@ Following the same reasoning, the position and orientation of the end-effector f
 		\end{figure}
 	\end{minipage}
 \end{frame}
-\begin{frame}{Homegeneous transformation}
+\begin{frame}{Forward kinematics}
 \begin{itemize}
 	\item The homogeneous transformation matrix $\matriceT_{ee}^I$ depends on the choice of the frames placement
 	\item Need for a \textbf{standard method} to decribe the relative transformation matrices between each pair of bodies with a \textbf{minimum number of parameters}\footnote[frame]{A homogeneous transformation matrix needs 9 parameters.}
 \end{itemize}
 	
-	\begin{minipage}{0.2\columnwidth}
+%	\begin{minipage}{0.2\columnwidth}
 		\begin{align*}
 			\matriceT_{ee}^I&=\begin{bmatrix}
 				{\matriceR_{ee}^I}&{\vectorP_{ee}}\\\vectorZero_{1\times3}&1
 			\end{bmatrix}
 		\end{align*}
-	\end{minipage}
+%	\end{minipage}
 \end{frame}
 \begin{frame}{Denavit-Hartenberg method}
 DH convention is based on the following rules for the frames placement
@@ -230,7 +232,7 @@ DH convention is based on the following rules for the frames placement
 \end{figure}
 \end{frame}
 \begin{frame}{Denavit-Hartenberg method}
-The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is defined using 4 parameters
+The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is defined using 4 DH parameters
 
 	\begin{minipage}{0.5\columnwidth}
 		\begin{itemize}
@@ -257,20 +259,641 @@ The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is defined using 4 p
 \end{frame}
 \begin{frame}{Denavit-Hartenberg method}
 	\begin{itemize}
-		\item $a_j$ and $\alpha_j$ are \textbf{always constant} and depend on the placement of the joint on the robot structure,
-		\item $\theta_j$ and $d_j$ depends on the type of the joint:
+		\item $a_j$ and $\alpha_j$ are \textbf{always constant} and depend on the placement of the joint on the robot structure
+		\item $\theta_j$ and $d_j$ are related to the joint position $q_j$ and depend on the joint type:
 		\begin{itemize}
-			\item If joint $j$ is \textbf{revolute} $ \Rightarrow\theta_j$ is variable, $d_j$ constant
-			\item If joint $j$ is \textbf{prismatic} $ \Rightarrow d_j$ is variable, $\theta_j$ constant
+			\item If joint $j$ is \textbf{revolute} $ \Rightarrow q_j=\theta_j$ is variable, $d_j$ constant
+			\item If joint $j$ is \textbf{prismatic} $ \Rightarrow q_j=d_j$ is variable, $\theta_j$ constant
 		\end{itemize} 
-		\item The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is given as 
-		\begin{equation*}
-			\matriceT_{j}^{j-1} = \begin{bmatrix}
-				\cos(\theta_j)&-\sin(\theta_j)\cos(\alpha_j) &\sin(\theta_j)\sin(\alpha_j) & a_j\cos(\theta_j)\\
-				\sin(\theta_j)&\cos(\theta_j)\cos(\alpha_j) &-\cos(\theta_j)\sin(\alpha_j) & a_j\sin(\theta_j)\\
-				0&\sin(\alpha_j)&\cos(\alpha_j)&d_j\\
-				0&0&0&1
-			\end{bmatrix}
-		\end{equation*}
+		\item Joint position $q_j$ is denoted as $q_j=\overline{\sigma}_j\theta_j+\sigma_jd_j$ ($\sigma=0$ revolute, $\sigma_j=1$ prismatic) 
 	\end{itemize} 	
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is computed as 
+	\begin{align*}
+		\matriceT_{j}^{j-1} &= \matriceR_{z_{j-1},\theta_j}\mathbf{Trans}_{z{j-1},d_j}\mathbf{Trans}_{x_j,a_j}\matriceR_{x_j,\alpha_j}\\
+		\matriceT_{j}^{j-1} &= \begin{bmatrix}
+			\cos(\theta_j)&-\sin(\theta_j)\cos(\alpha_j) &\sin(\theta_j)\sin(\alpha_j) & a_j\cos(\theta_j)\\
+			\sin(\theta_j)&\cos(\theta_j)\cos(\alpha_j) &-\cos(\theta_j)\sin(\alpha_j) & a_j\sin(\theta_j)\\
+			0&\sin(\alpha_j)&\cos(\alpha_j)&d_j\\
+			0&0&0&1
+		\end{bmatrix}
+	\end{align*}
+	The \textbf{forward kinematics model} of the end-effector is obtained as a function of $\vectorQ$
+	\begin{equation*}
+		\matriceT_{ee}^{0}(\vectorQ) = \matriceT_{1}^{0}(q_1) \matriceT_{2}^{1}(q_2)\ldots\matriceT_{n}^{ee}(q_{n})
+	\end{equation*}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+		
+	\begin{minipage}{.4\columnwidth}
+		\begin{itemize}
+			\item Place the frames at each joint
+			\item Determine the parameters $\theta_j$, $d_j$, $\alpha_j$ and $a_j$
+		\end{itemize}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-DH-woFrames}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+		
+	\begin{minipage}{.4\columnwidth}
+$1^{\text st}$ step: place $z$ axis at each joint, $z_0$ axis is for the fixed frame\\
+\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-DH-Z-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$2^{\text nd}$ step: place $x$ axis at each such that $x_i\perp z_{i-1}$ and intersect with it
+	%	\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-DH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$\theta_j$&$d_j$&$\alpha_j$&$a_j$\\ \hline\hline
+				$1$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$2$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$3$&$.$&$.$&$.$&$.$&$.$\\ \hline
+			\end{tabular}
+		\end{table}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-DH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$\theta_j$&$d_j$&$\alpha_j$&$a_j$\\ \hline\hline
+				$1$&$0$&$q_1$&$l_1$&$\pi/2$&$0$\\ \hline
+				$2$&$0$&$q_2$&$0$&$0$&$l_2$\\ \hline
+				$3$&$0$&$q_3$&$0$&$0$&$l_3$\\ \hline
+			\end{tabular}
+		\end{table}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-DH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+	\begin{itemize}
+		\item Place the frames at each joint
+		\item Determine the parameters $\theta_j$, $d_j$, $\alpha_j$ and $a_j$
+	\end{itemize}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-DH-woFrames}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+$1^{\text st}$ step: place $z$ axis at each joint, $z_0$ axis is for the fixed frame\\
+\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-DH-Z-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$2^{\text nd}$ step: place $x$ axis at each such that $x_i\perp z_{i-1}$ and intersect with it\\
+%		\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-DH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+			$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$\theta_j$&$d_j$&$\alpha_j$&$a_j$\\ \hline\hline
+				$1$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$2$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$3$&$.$&$.$&$.$&$.$&$.$\\ \hline
+			\end{tabular}
+		\end{table} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-DH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$\theta_j$&$d_j$&$\alpha_j$&$a_j$\\ \hline\hline
+				$1$&$0$&$q_1$&$0$&$0$&$l_1$\\ \hline
+				$2$&$0$&$q_2$&$0$&$0$&$l_2$\\ \hline
+				$3$&$1$&$0$&$q_3$&$\pi$&$0$\\ \hline
+			\end{tabular}
+		\end{table} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-DH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	For each of the previous examples, $\matriceT_j^{j-1}$ is computed for $j=1,2,3$. Then, the forward kinematic model is obtained by computing 
+	\begin{equation*}
+		\matriceT_{ee}^{0}(\vectorQ) = \matriceT_{1}^{0}(q_1) \matriceT_{2}^{1}(q_2)\matriceT_{2}^{3}(q_3)
+	\end{equation*}
+%	\textbf{Remarks about DH method:}
+%	\begin{itemize}
+%		\item The body frame is located after the joint
+%		\item For complex robot, this can be non-intuitive and prone to error
+%	\end{itemize}
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+	mDH convention is based on \emph{modified} rules for the frames placement
+	\begin{itemize}
+		\item Choose axis $z_j$ along the axis of joint $j$ (previously, joint $j+1$)
+		\item Choose axis $x_{j-1}$ such that $x_{j-1}\perp z_{j}$ and intersects with it (previously, axis $x_j$)
+	\end{itemize}
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.5\textheight]{bodies&joints.pdf}
+	\end{figure}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	The homogeneous transformation matrix $\matriceT_{j}^{j-1}$ is defined using 4 mDH parameters
+	
+	\begin{minipage}{0.5\columnwidth}
+		\begin{itemize}
+			\item $a_j$: distance between $z_{j-1}$ and $z_j$ along $x_{j-1}$
+			\item $\alpha_j$: angle between $z_{j-1}$ and $z_j$ around $x_{j-1}$			
+			\item $d_j$: distance between $x_{j-1}$ and $x_j$ along $z_{j}$
+			\item $\theta_j$: angle between $x_{j-1}$ and $x_j$ around $z_{j}$		
+		\end{itemize}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{0.45\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{mDH.pdf}
+		\end{figure}
+	\end{minipage}
+	%	$a_j$ and $\alpha_j$ are always constant and depends on the placement of the joint on the robot structure, whereas $\theta_j$ and $d_j$ depends on the type of the joint:
+	%	\begin{itemize}
+		%		\item If joint $j$ is revolute $ \Rightarrow\theta_j$ is variable, $d_j$ constant
+		%		\item If joint $j$ is prismatic $ \Rightarrow d_j$ is variable, $\theta_j$ constant
+		%	\end{itemize} 	
+\end{frame}
+\begin{frame}{Denavit-Hartenberg method}
+Another difference is the order of the homogeneous transformation matrix $\matriceT_{j}^{j-1}$ computation 
+	\begin{align*}
+		\matriceT_{j}^{j-1} &=\mathbf{Trans}_{x_{j-1},a_j}\matriceR_{x_{j-1},\alpha_j}\mathbf{Trans}_{z{j},d_j} \matriceR_{z_{j},\theta_j}\\
+		\matriceT_{j}^{j-1} &= \begin{bmatrix}
+			\cos(\theta_j)&-\sin(\theta_j) &0 & a_j\\
+			\cos(\alpha_j)\sin(\theta_j)&\cos(\alpha_j)\cos(\theta_j) &-\sin(\alpha_j) & -d_j\sin(\alpha_j)\\
+			\sin(\alpha_j)\sin(\theta_j)&\sin(\alpha_j)\cos(\theta_j)&\cos(\alpha_j)&d_j\cos(\alpha_j)\\
+			0&0&0&1
+		\end{bmatrix}
+	\end{align*}
+	The \textbf{forward kinematics model} of the end-effector is obtained as a function of $\vectorQ$
+	\begin{equation*}
+		\matriceT_{ee}^{0}(\vectorQ) = \matriceT_{1}^{0}(q_1) \matriceT_{2}^{1}(q_2)\ldots\matriceT_{n}^{ee}(q_{n})
+	\end{equation*}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Similarly to DH method:
+	\begin{itemize}
+		\item $a_j$ and $\alpha_j$ are \textbf{always constant} and depend on the placement of the joint on the robot structure 
+		\item Joint position $q_j$ is denoted as $q_j=\overline{\sigma}_j\theta_j+\sigma_jd_j$ ($\sigma=0$ revolute, $\sigma_j=1$ prismatic) 
+	\end{itemize} 	
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		\begin{itemize}
+			\item Place the frames at each joint
+			\item Determine the parameters $\theta_j$, $d_j$, $\alpha_j$ and $a_j$
+		\end{itemize}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-DH-woFrames}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$1^{\text st}$ step: place $z$ axis at each joint, $z_0$ axis is for the fixed frame\\
+		\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-mDH-Z-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$2^{\text nd}$ step: place $x$ axis at each such that $x_{j-1}\perp z_{j}$ and intersect with it\\
+		%		\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$a_j$&$\alpha_j$&$d_j$&$\theta_j$\\ \hline\hline
+				$1$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$2$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$3$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$ee$&$/$&$.$&$.$&$.$&$.$\\ \hline
+			\end{tabular}
+		\end{table} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$a_j$&$\alpha_j$&$d_j$&$\theta_j$\\ \hline\hline
+				$1$&$0$&$0$&$0$&$l_1$&$q_1$\\ \hline
+				$2$&$0$&$0$&$\pi/2$&$0$&$q_2$\\ \hline
+				$3$&$0$&$l_2$&$0$&$0$&$q_3$\\ \hline
+				$ee$&$/$&$l_3$&$0$&$0$&$0$\\ \hline
+			\end{tabular}
+		\end{table} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRR) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$a_j$&$\alpha_j$&$d_j$&$\theta_j$\\ \hline\hline
+				$1$&$0$&$0$&$0$&$l_1$&$q_1$\\ \hline
+				$2$&$0$&$0$&$\pi/2$&$0$&$q_2$\\ \hline
+				$3$&$0$&$l_2$&$0$&$0$&$q_3$\\ \hline
+				$ee$&$/$&$l_3$&$0$&$0$&$0$\\ \hline
+			\end{tabular}
+		\end{table} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.7\textheight]{ex-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$1^{\text st}$ step: place $z$ axis at each joint, $z_0$ axis is for the fixed frame\\
+		\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-mDH-Z-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$2^{\text nd}$ step: place $x$ axis at each such that $x_{j-1}\perp z_{j}$ and intersect with it\\
+		%		\textbf{Remark:} the frame at the end-effector is set assuming a fixed joint 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$a_j$&$\alpha_j$&$d_j$&$\theta_j$\\ \hline\hline
+				$1$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$2$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$3$&$.$&$.$&$.$&$.$&$.$\\ \hline
+				$ee$&$/$&$.$&$.$&$.$&$.$\\ \hline
+			\end{tabular}
+		\end{table} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	
+	\begin{minipage}{.4\columnwidth}
+		$3^{\text rd}$ step: determine the parameters
+		\begin{table}
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline
+				$j$&$\sigma_j$&$a_j$&$\alpha_j$&$d_j$&$\theta_j$\\ \hline\hline
+				$1$&$0$&$0$&$0$&$0$&$q_1$\\ \hline
+				$2$&$0$&$l_1$&$0$&$0$&$q_2$\\ \hline
+				$3$&$1$&$l_2$&$0$&$0$&$0$\\ \hline
+				$ee$&$/$&$0$&$\pi$&$q_3$&$0$\\ \hline
+			\end{tabular}
+		\end{table} 
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{ex2-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	\begin{align*}
+		T_1^0 &=\begin{bmatrix}
+			\cos(q_1)&-\sin(q_1)&0&0\\
+			\sin(q_1)&\cos(q_1)&0&0\\
+			0&0&1&0\\
+			0&0&0&1
+		\end{bmatrix}, \ 
+		T_2^1 =\begin{bmatrix}
+			\cos(q_2)&-\sin(q_2)&0&l_1\\
+			\sin(q_2)&\cos(q_2)&0&0\\
+			0&0&1&0\\
+			0&0&0&1
+		\end{bmatrix},\\
+		T_3^2 &=\begin{bmatrix}
+			1&0&0&l_2\\
+			0&1&0&0\\
+			0&0&1&0\\
+			0&0&0&1
+		\end{bmatrix}, \ 
+		T_{ee}^3 =\begin{bmatrix}
+			1&0&0&0\\
+			0&-1&0&0\\
+			0&0&-1&-q_3\\
+			0&0&0&1
+		\end{bmatrix},
+	\end{align*}
+\end{frame}
+\begin{frame}{Modified Denavit-Hartenberg method}
+	Example: 3 DoF (RRP) 
+	\begin{align*}
+		T_{ee}^0 =\begin{bmatrix}
+			\cos(q_1+q_2)&\sin(q_1+q_2)&0&l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+			\sin(q_1+q_2)&-\cos(q_1+q_2)&0&l_1\sin(q_1)+l_2\sin(q_1+q_2)\\
+			0&0&-1&-q_3\\
+			0&0&0&1
+		\end{bmatrix}
+	\end{align*}
+	Forward kinematics model of the end-effector: \\
+	End-effector position: $\vectorP_{ee}= \begin{bmatrix}
+		l_1\cos(q_1+q_2)&l_1\sin(q_1+q_2)&-q_3
+	\end{bmatrix}^T$
+	End-effector orientation: $\matriceR_{ee}= \begin{bmatrix}
+	\cos(q_1+q_2)&\sin(q_1+q_2)&0\\
+	\sin(q_1+q_2)&-\cos(q_1+q_2)&0\\
+	0&0&-1
+	\end{bmatrix}$
+\end{frame}
+\begin{frame}{Inverse kinematics}
+	\begin{itemize}
+		\item Forward kinematics model find the the end-effector pose $\vectorXMaj$ ($\vectorP_{ee},\matriceR_{ee}$) given the joints position $\vectorQ$: $\vectorX=f(\vectorQ)$ 		
+		\item In control context, we are particularly interested in finding the joints position $\vectorQ$ given the end-effector pose $\vectorXMaj$: $\vectorQ=f^{-1}(\vectorQ)$
+		\item This is the object of the \textbf{inverse kinematics model}
+		\item There exist two approaches:
+		\begin{enumerate}
+			\item Analytical approach
+			\item Numerical approach
+		\end{enumerate}
+%		\item In general, the forward kinematics model is nonlinear w.r.t $\vectorQ$ $\Rightarrow$ No systematic method to compute analytically $\vectorQ$
+%		\item For some robots, the number of DoF is superieur than the dimension of the task $\Rightarrow$ redundant robot	
+\end{itemize}	
+\end{frame}
+\begin{frame}{Inverse kinematics - Analytical approach}
+Objective: find the analytically the solution of the inverse problem 
+
+\begin{minipage}{.4\columnwidth}
+Example:  a planar 2-DOF robot
+\end{minipage}
+\hfill
+\begin{minipage}{.5\columnwidth}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\columnwidth]{2DOF-woAxis}
+	\end{figure}
+\end{minipage}	
+\end{frame}
+\begin{frame}{Inverse kinematics - Analytical approach}
+	Objective: find the analytically the solution of the inverse problem 
+	
+	\begin{minipage}{.4\columnwidth}
+		1st step: find the forward kinematic model
+%		\begin{equation*}
+%			\matriceT_{ee}^0=\begin{bmatrix}
+%				\cos(q_1+q_2)&\sin(q_1+q_2)&0&l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+%				\sin(q_1+q_2)&-\cos(q_1+q_2)&0&l_1\sin(q_1)+l_2\sin(q_1+q_2)\\
+%				0&0&1&0\\
+%				0&0&0&1
+%			\end{bmatrix}
+%		\end{equation*}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{2DOF-mDH-ZX-Axis}
+		\end{figure}
+	\end{minipage}	
+\end{frame}
+\begin{frame}{Inverse kinematics - Analytical approach}
+	Objective: find the analytically the solution of the inverse problem \\
+	1st step: find the forward kinematic model
+	\begin{equation*}
+	\matriceT_{ee}^0=\begin{bmatrix}
+	\cos(q_1+q_2)&\sin(q_1+q_2)&0&l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+	\sin(q_1+q_2)&-\cos(q_1+q_2)&0&l_1\sin(q_1)+l_2\sin(q_1+q_2)\\
+	0&0&1&0\\
+	0&0&0&1
+	\end{bmatrix}
+	\end{equation*}
+	\begin{align*}
+	p_{{ee}_x} &= l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+	p_{{ee}_y} &= l_1\sin(q_1)+l_2\sin(q_1+q_2)
+	\end{align*}
+\end{frame}
+\begin{frame}{Inverse kinematics - Analytical approach}
+	Given $	p_{{ee}_x}$ and $p_{{ee}_y}$, find $q_1$ and $q_2$
+	\begin{align*}
+		p_{{ee}_x} &= l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+		p_{{ee}_y} &= l_1\sin(q_1)+l_2\sin(q_1+q_2)
+	\end{align*}%$\Leftrightarrow$
+	\begin{align*}
+		p_{{ee}_x}-l_1\cos(q_1) &= l_2\cos(q_1+q_2)\\
+		p_{{ee}_y}-l_1\sin(q_1) &= l_2\sin(q_1+q_2)
+	\end{align*}
+	\begin{align*}
+		\left(p_{{ee}_x}-l_1\cos(q_1)\right)^2 +\left(p_{{ee}_y}-l_1\sin(q_1)\right)^2 &= l_2^2\\
+		\Leftrightarrow A\cos(q_1)+B\sin(q_1)+C&=0
+	\end{align*}
+\end{frame}
+\begin{frame}{Inverse kinematics - Analytical approach}
+	Two possible solutions:
+	\begin{align*}
+	q_{11} &= 2\arctan(\alpha_1),\ \alpha_1 = \frac{-B-\sqrt{A^2+B^2-C^2}}{C-A}\\
+	q_{21}&= - q_{11} + \arctan2(\sin(q_1+q_2)/\cos(q_1+q_2))
+	\end{align*}
+	and 
+	\begin{align*}
+		q_{12} &= 2\arctan(\alpha_2),\ \alpha_1 = \frac{-B+\sqrt{A^2+B^2-C^2}}{C-A}\\
+		q_{22}&= - q_{12} + \arctan2(\sin(q_1+q_2)/\cos(q_1+q_2))
+	\end{align*}
+\end{frame}
+\begin{frame}{Inverse kinematics - Analytical approach}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.47\columnwidth]{2DOF-Sol1}
+		\includegraphics[width=0.47\columnwidth]{2DOF-Sol2}
+		\caption{Two possible inverse kinematics solutions}
+	\end{figure}
+\end{frame}
+\begin{frame}{Inverse kinematics - Analytical approach}
+	\begin{itemize}
+	\item In general, the forward kinematics model is nonlinear w.r.t $\vectorQ$ $\Rightarrow$ No systematic method to compute analytically $\vectorQ$
+	\item If the robot is redundant (number of DoF is superieur than the dimension of the pose) $\Rightarrow$ inverse kinematics problem may have infinite solutions
+	\item In such cases, we resort to numerical approaches	
+	\end{itemize}
+\end{frame}
+\begin{frame}{Inverse kinematics - Numerical approach}
+
 \end{frame}

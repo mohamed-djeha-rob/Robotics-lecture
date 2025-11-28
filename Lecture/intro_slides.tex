@@ -43,7 +43,7 @@
 \end{frame}
 \begin{frame}{Robotic manipulator - Joints}
 		\begin{itemize}
-		\item Basic joints are \emph{prismatic} or \emph{revolute}. 
+		\item Basic joints are \emph{prismatic}, \emph{revolute} 
 		\item Prismatic joint allows a relative translation between two bodies 
 		\item Revolute joint produces a relative rotation between two bodies
 	\end{itemize}
@@ -66,6 +66,7 @@
 			\item Spherical joint: 3 DoF
 		\end{itemize}
 		\item Each joint $\vectorQ$ has mechanical limits ($\vectorQ_{\min}$, $\vectorQ_{\max}$), velocity limits ($\vectorQdot_{\min}$, $\vectorQdot_{\max}$) and acceleration limits  ($\vectorQddot_{\min}$, $\vectorQddot_{\max}$)
+		\item In practice, other types of joints can be used for modeling purposes, e.g., fixed (0 DoF) and floating joints (6 DoF)
 	\end{itemize}
 \end{frame}
 \begin{frame}{Robotic manipulator - Workspace}
@@ -88,116 +89,116 @@
 	\end{itemize} 
 \end{frame}
 
-\begin{frame}{Robots are -\emph{almost}- everywhere !}	
-	\begin{picture}(0,0)
-		\put(0,70){Robots are becoming sophisticated, redundant and versatile}
-		\put(10,-30){\begin{minipage}{0.3\columnwidth}
-				\centering
-				% \href{run:Figures/Quadruped_Redundancy.mp4}{
-				% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 16-43-33.png}} \\
-				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 16-43-33.png}}{Figures/Quadruped_Redundancy.mp4}[autoplay=false,showGUI=true]\\
-				\makebox{\hspace{1cm}\centering\small Armed \emph{Spot} quadruped robot}
-		\end{minipage}}
-		
-		
-		\put(230,-30){\begin{minipage}{0.3\columnwidth}
-				\centering
-				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 17-33-28.png}}{Figures/wheel-legged-robots.mp4}[autoplay=false,showGUI=true]\\
-				% \href{run:Figures/wheel-legged-robots}{
-				% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 17-33-28.png}}
-				% \\
-				\makebox{\hspace{0cm}\centering\small Wheeled \emph{Anymal C} quadruped robot}
-			%	\small{Wheeled quadruped robot}
-		\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
-	\end{picture}
-\end{frame}
-\begin{frame}{Robots are -\emph{almost}- everywhere !}
-	Robots are embedding multiple sensors	
-	% \begin{picture}(0,0)
-		% \put(0,70){}
-		% \put(150,-20){
-		% \begin{minipage}{\columnwidth}
-			\begin{figure}
-									\centering
-								\embedvideo*{\includegraphics[width=0.59\columnwidth,height=5cm]{Screenshot from 2025-06-10 18-19-32.png}}{Figures/OceanOne.m4v}[autoplay=false,showGUI=true]\\
-				\caption*{\emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
-			\end{figure}
-				% \href{run:Figures/OceanOne.m4v}{
-				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 18-19-32.png}}
-				% \\
-
-				% \makebox{\hspace{-1.25cm}\centering\small \emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
-			% \end{minipage}
-			% }
-				
-		
-%		\put(250,-30){\begin{minipage}{0.25\columnwidth}
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+%	\begin{picture}(0,0)
+%		\put(0,70){Robots are becoming sophisticated, redundant and versatile}
+%		\put(10,-30){\begin{minipage}{0.3\columnwidth}
 %				\centering
-%				\includegraphics[height=\columnwidth]{The-Eelume-AIAUV-courtesy-of-Eelume.png}\\
-%				\small{Underwater exploration 
-%				vehicle \\
-%				(Basso et al., 2020)}
-%			\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
-	% \end{picture}
-\end{frame}
-\begin{frame}{Robots are -\emph{almost}- everywhere !}	
-	\begin{picture}(0,0)
-		\put(0,70){Robots are able to accomplish complex missions...}
-		\put(90,-20){\begin{minipage}{0.5\columnwidth}
-				\centering
-				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
-					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
-						\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}[autoplay=false,showGUI=true]\\
-				\makebox{\hspace{1.5cm}\centering\small \emph{Atlas} humanoid robot assisting workers}
-		\end{minipage}}
-	\end{picture}
-\end{frame}
-\begin{frame}{Robots are -\emph{almost}- everywhere !}	
-	\begin{picture}(0,0)
-		\put(0,70){... can cooperate ...}
-		\put(90,-20){\begin{minipage}{0.5\columnwidth}
-				\centering
-				% \href{run:Figures/CooperativeLocomotion.m4v}{
-				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
-									\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/CooperativeLocomotion.m4v}[autoplay=false,showGUI=true]\\
-				\makebox{\hspace{-0.8cm}\centering\small Two \emph{Go 1} quadruped robots cooperating to lift heavy objects}
-		\end{minipage}}
-	\end{picture}
-\end{frame}
-\begin{frame}[t]\frametitle{Robots are -\emph{almost}- everywhere !}
-	\begin{picture}(0,0)
-		\put(0,10){... and even replace humans in tedious tasks}
-		\put(70,-90){\begin{minipage}{0.5\columnwidth}
-				\centering
-				% \href{run:Figures/CooperativeLocomotion.m4v}{
-				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
-			\embedvideo*{\includegraphics[width=1.3\textwidth,height=5.5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/Motivation-IAM.mp4}[autoplay=false,showGUI=true]\\
-				\makebox{\hspace{1.8cm}\centering\small Results from the European Project I.AM}
-		\end{minipage}}
-	\end{picture}
-
-\end{frame}
-\begin{frame}{Robots are -\emph{almost}- everywhere !}	
-	\begin{picture}(0,0)
-		\put(0,70){... but have to satisfy some hard constraints}
-		\put(00,-20){\begin{minipage}{0.5\columnwidth}
-				\centering
-				% \href{run:Figures/Control Barrier Function based safe navigation -- experiment.mp4}{
-				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-50.png}} \\
-										\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-50.png}}{Figures/Control Barrier Function based safe navigation -- experiment.mp4}[autoplay=false,showGUI=true]\\
-
-				\makebox{\hspace{-0.2cm}\centering\small Getting to the target while avoiding collision}
-		\end{minipage}}
-		\put(220,-20){\begin{minipage}{0.5\columnwidth}
-				\centering
-				% \href{run:Figures/Safe Behavior through Control Barrier Functions.mp4}{
-				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-28.png}} \\
-					\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-28.png}}{Figures/Safe Behavior through Control Barrier Functions.mp4}[autoplay=false,showGUI=true]\\
-
-				\makebox{\hspace{-0.5cm}\centering\small Keeping upright position}
-		\end{minipage}}
-	\end{picture}
-\end{frame}
+%				% \href{run:Figures/Quadruped_Redundancy.mp4}{
+%				% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 16-43-33.png}} \\
+%				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 16-43-33.png}}{Figures/Quadruped_Redundancy.mp4}[autoplay=false,showGUI=true]\\
+%				\makebox{\hspace{1cm}\centering\small Armed \emph{Spot} quadruped robot}
+%		\end{minipage}}
+%		
+%		
+%		\put(230,-30){\begin{minipage}{0.3\columnwidth}
+%				\centering
+%				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 17-33-28.png}}{Figures/wheel-legged-robots.mp4}[autoplay=false,showGUI=true]\\
+%				% \href{run:Figures/wheel-legged-robots}{
+%				% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 17-33-28.png}}
+%				% \\
+%				\makebox{\hspace{0cm}\centering\small Wheeled \emph{Anymal C} quadruped robot}
+%			%	\small{Wheeled quadruped robot}
+%		\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
+%	\end{picture}
+%\end{frame}
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}
+%	Robots are embedding multiple sensors	
+%	% \begin{picture}(0,0)
+%		% \put(0,70){}
+%		% \put(150,-20){
+%		% \begin{minipage}{\columnwidth}
+%			\begin{figure}
+%									\centering
+%								\embedvideo*{\includegraphics[width=0.59\columnwidth,height=5cm]{Screenshot from 2025-06-10 18-19-32.png}}{Figures/OceanOne.m4v}[autoplay=false,showGUI=true]\\
+%				\caption*{\emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
+%			\end{figure}
+%				% \href{run:Figures/OceanOne.m4v}{
+%				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 18-19-32.png}}
+%				% \\
+%
+%				% \makebox{\hspace{-1.25cm}\centering\small \emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
+%			% \end{minipage}
+%			% }
+%				
+%		
+%%		\put(250,-30){\begin{minipage}{0.25\columnwidth}
+%%				\centering
+%%				\includegraphics[height=\columnwidth]{The-Eelume-AIAUV-courtesy-of-Eelume.png}\\
+%%				\small{Underwater exploration 
+%%				vehicle \\
+%%				(Basso et al., 2020)}
+%%			\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
+%	% \end{picture}
+%\end{frame}
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+%	\begin{picture}(0,0)
+%		\put(0,70){Robots are able to accomplish complex missions...}
+%		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+%					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+%						\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}[autoplay=false,showGUI=true]\\
+%				\makebox{\hspace{1.5cm}\centering\small \emph{Atlas} humanoid robot assisting workers}
+%		\end{minipage}}
+%	\end{picture}
+%\end{frame}
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+%	\begin{picture}(0,0)
+%		\put(0,70){... can cooperate ...}
+%		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/CooperativeLocomotion.m4v}{
+%				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
+%									\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/CooperativeLocomotion.m4v}[autoplay=false,showGUI=true]\\
+%				\makebox{\hspace{-0.8cm}\centering\small Two \emph{Go 1} quadruped robots cooperating to lift heavy objects}
+%		\end{minipage}}
+%	\end{picture}
+%\end{frame}
+%\begin{frame}[t]\frametitle{Robots are -\emph{almost}- everywhere !}
+%	\begin{picture}(0,0)
+%		\put(0,10){... and even replace humans in tedious tasks}
+%		\put(70,-90){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/CooperativeLocomotion.m4v}{
+%				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
+%			\embedvideo*{\includegraphics[width=1.3\textwidth,height=5.5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/Motivation-IAM.mp4}[autoplay=false,showGUI=true]\\
+%				\makebox{\hspace{1.8cm}\centering\small Results from the European Project I.AM}
+%		\end{minipage}}
+%	\end{picture}
+%
+%\end{frame}
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+%	\begin{picture}(0,0)
+%		\put(0,70){... but have to satisfy some hard constraints}
+%		\put(00,-20){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/Control Barrier Function based safe navigation -- experiment.mp4}{
+%				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-50.png}} \\
+%										\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-50.png}}{Figures/Control Barrier Function based safe navigation -- experiment.mp4}[autoplay=false,showGUI=true]\\
+%
+%				\makebox{\hspace{-0.2cm}\centering\small Getting to the target while avoiding collision}
+%		\end{minipage}}
+%		\put(220,-20){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/Safe Behavior through Control Barrier Functions.mp4}{
+%				% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-28.png}} \\
+%					\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-28.png}}{Figures/Safe Behavior through Control Barrier Functions.mp4}[autoplay=false,showGUI=true]\\
+%
+%				\makebox{\hspace{-0.5cm}\centering\small Keeping upright position}
+%		\end{minipage}}
+%	\end{picture}
+%\end{frame}
 %\begin{frame}{Motivation - One control framework, many applications}
 %	\vspace{-0.5cm}
 %%	\begin{multicols}{2}
