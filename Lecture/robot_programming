@@ -1,0 +1,647 @@
+\documentclass[10pt,aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,3d,calc}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{siunitx}
+
+% Color theme
+\definecolor{primary}{RGB}{0,84,159} % Blue
+\definecolor{secondary}{RGB}{142,186,229} % Light blue
+\definecolor{accent}{RGB}{227,114,34} % Orange
+\definecolor{darkgray}{RGB}{50,50,50}
+\setbeamercolor{structure}{fg=primary}
+\setbeamercolor{title}{fg=white}
+\setbeamercolor{frametitle}{fg=primary}
+\setbeamercolor{block title}{fg=white,bg=primary}
+\setbeamercolor{block body}{bg=secondary!20}
+\setbeamercolor{alerted text}{fg=accent}
+\setbeamercolor{normal text}{fg=darkgray}
+
+% Beamer theme
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+% Title page
+\title{Industrial Robot Programming}
+\subtitle{Based on Chapters 12 \& 13 of\\"Introduction to Robotics" by John J. Craig}
+\author{Robotics Engineering}
+\institute{Department of Mechanical Engineering}
+\date{\today}
+
+\begin{document}
+
+% Title slide
+\begin{frame}
+\titlepage
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=south east] at (current page.south east) {
+\begin{tikzpicture}
+\draw[primary,fill=primary!20] (0,0) circle (0.8);
+\draw[primary,thick] (0,0.2) -- (0,0.6);
+\draw[primary,thick] (-0.3,-0.3) -- (0.3,0.3);
+\draw[primary,thick] (0.3,-0.3) -- (-0.3,0.3);
+\end{tikzpicture}};
+\end{tikzpicture}
+\end{frame}
+
+% Table of contents
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER 12: PROGRAMMING AND LANGUAGES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Chapter 12: Robot Programming Languages}
+
+\begin{frame}{Why Specialized Robot Programming Languages?}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{block}{Unique Robot Requirements}
+\begin{itemize}
+\item \textbf{Motion specification}: Position, orientation, velocity
+\item \textbf{Sensor integration}: Force, vision, proximity
+\item \textbf{Concurrent operations}: Multiple coordinated motions
+\item \textbf{World modeling}: Object relationships and constraints
+\item \textbf{Error recovery}: Exception handling in physical world
+\end{itemize}
+\end{block}
+\vspace{0.3cm}
+\begin{alertblock}{Key Distinction}
+Robot programming ≠ Computer programming\\
+\textbf{Physical effects} and \textbf{uncertainty} dominate
+\end{alertblock}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{tikzpicture}[scale=0.8]
+\node[draw,primary,fill=primary!10,minimum width=2.5cm,minimum height=1.5cm,align=center] at (0,0) {Motion\\Control};
+\node[draw,accent,fill=accent!10,minimum width=2.5cm,minimum height=1.5cm,align=center] at (0,-1.8) {Sensor\\Integration};
+\node[draw,secondary,fill=secondary!10,minimum width=2.5cm,minimum height=1.5cm,align=center] at (0,-3.6) {World\\Modeling};
+\draw[->,thick] (0,-0.75) -- (0,-1.05);
+\draw[->,thick] (0,-2.55) -- (0,-2.85);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Three Generations of Robot Languages (Craig's Classification)}
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{p{0.25\textwidth}p{0.25\textwidth}p{0.25\textwidth}}
+\toprule
+\textbf{First Generation} & \textbf{Second Generation} & \textbf{Third Generation} \\
+\midrule
+\textcolor{primary}{Motion-oriented} & \textcolor{primary}{Structured programming} & \textcolor{primary}{Task-oriented} \\
+Explicit motion commands & Control structures & Object-centered \\
+Limited sensor support & World modeling & AI techniques \\
+\textit{Examples:} & \textit{Examples:} & \textit{Examples:} \\
+- VAL (Unimation) & - AML (IBM) & - RAPT (Edinburgh) \\
+- T3 (Cincinnati) & - RAIL (Automatix) & - AUTOPASS (IBM) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{block}{Evolutionary Trends}
+\begin{itemize}
+\item \textbf{Level of abstraction}: Increasing from joint-level to task-level
+\item \textbf{World model sophistication}: From none to complete CAD models
+\item \textbf{Sensor integration}: From minimal to comprehensive multi-sensor
+\item \textbf{Error handling}: From none to robust exception mechanisms
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Motion Specification in Robot Languages}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{block}{Fundamental Motion Commands}
+\begin{itemize}
+\item \textbf{MOVE TO} \textlangle pose\textrangle: Absolute motion
+\item \textbf{MOVE BY} \textlangle delta\textrangle: Relative motion
+\item \textbf{APPROACH} \textlangle pose, distance\textrangle: Pre-positioning
+\item \textbf{DEPART} \textlangle distance\textrangle: Post-motion retreat
+\item \textbf{STRAIGHT} \textlangle pose\textrangle: Cartesian straight-line
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Example (VAL-style)}
+\begin{verbatim}
+MOVE P1    # Go to point P1
+APPROACH P2, 50  # Approach 50mm from P2
+CLOSEI    # Close gripper
+DEPART 100  # Move away 100mm
+\end{verbatim}
+\end{exampleblock}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{block}{Frame Specification Methods}
+\[
+\text{Frame} = 
+\begin{cases}
+\text{Joint angles: } [\theta_1, \theta_2, \ldots, \theta_n] \\
+\text{Cartesian: } [x, y, z, \phi, \theta, \psi] \\
+\text{Transformation: } 
+\begin{bmatrix}
+n_x & o_x & a_x & p_x \\
+n_y & o_y & a_y & p_y \\
+n_z & o_z & a_z & p_z \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\end{cases}
+\]
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Structured Programming Constructs}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\begin{block}{Control Structures}
+\begin{itemize}
+\item \textbf{IF-THEN-ELSE}: Conditional execution
+\item \textbf{WHILE/REPEAT}: Loops
+\item \textbf{CASE/SWITCH}: Multiple branches
+\item \textbf{PROCEDURES}: Reusable code modules
+\item \textbf{PARALLEL}: Concurrent execution
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Robot-Specific Constructs}
+\begin{itemize}
+\item \textbf{AWAIT}: Wait for sensor condition
+\item \textbf{SIGNAL}: Output to actuators
+\item \textbf{INTERRUPT}: Event handling
+\item \textbf{SPEED}: Motion velocity control
+\end{itemize}
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{exampleblock}{Example: Assembly Task}
+\begin{verbatim}
+PROCEDURE insert_part()
+  APPROACH insert_pose, 20
+  SPEED slow
+  WHILE force < 10 N DO
+    MOVE BY 0,0,-1
+    READ force_sensor
+  END
+  DEPART 30
+  SIGNAL assembly_complete
+END
+\end{verbatim}
+\end{exampleblock}
+
+\begin{block}{Parallel Execution}
+\texttt{PARALLEL BEGIN}\\
+\quad \texttt{robot1.motion()} \\
+\quad \texttt{conveyor.start()} \\
+\quad \texttt{vision.inspect()} \\
+\texttt{END}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{World Modeling and Off-line Programming}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{block}{World Model Components}
+\begin{itemize}
+\item \textbf{Geometric models}: Shapes, dimensions
+\item \textbf{Kinematic models}: Joint limits, workspaces
+\item \textbf{Dynamic models}: Mass, inertia, friction
+\item \textbf{Process models}: Tasks, constraints
+\item \textbf{Environment models}: Fixtures, obstacles
+\end{itemize}
+\end{block}
+
+\vspace{0.5cm}
+\begin{alertblock}{Off-line Programming Advantages}
+\begin{itemize}
+\item \textbf{No production downtime}
+\item \textbf{CAD/CAM integration}
+\item \textbf{Collision detection}
+\item \textbf{Path optimization}
+\item \textbf{Program verification}
+\end{itemize}
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{tikzpicture}[scale=0.7]
+% Robot in environment
+\draw[fill=secondary!30] (0,0) rectangle (4,3);
+\node at (2,3.2) {Workspace};
+
+% Robot base
+\draw[fill=primary!50] (0.5,0.5) rectangle (1.5,1);
+\draw[fill=accent!50] (1,1) -- (2.5,2) -- (3,2) -- (1.5,1) -- cycle;
+
+% Objects
+\draw[fill=accent!30] (2.8,1) rectangle (3.2,1.4) node[midway]{Part};
+\draw[fill=secondary!50] (3,0.5) circle (0.3) node{Obstacle};
+
+% Coordinate frame
+\draw[->,thick,primary] (0.2,0.2) -- (0.7,0.2) node[below]{X};
+\draw[->,thick,primary] (0.2,0.2) -- (0.2,0.7) node[left]{Y};
+\end{tikzpicture}
+
+\vspace{0.5cm}
+\begin{center}
+\textbf{CAD Model Integration}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER 13: TASK PLANNING
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Chapter 13: Task Planning}
+
+\begin{frame}{The Task Planning Problem}
+\begin{block}{Definition}
+Given: \textbf{Initial state}, \textbf{Goal state}, and \textbf{Actions}\\
+Find: \textbf{Sequence of actions} that transforms initial state to goal state
+\end{block}
+
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\begin{exampleblock}{Assembly Task Example}
+\textbf{Initial State:}\\
+Part A on conveyor\\
+Part B in feeder\\
+Gripper empty\\
+
+\textbf{Goal State:}\\
+A assembled with B\\
+B in fixture\\
+
+\textbf{Actions:}\\
+Pick(A), Place(B), Insert(A,B), ...
+\end{exampleblock}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{alertblock}{Challenges in Robot Task Planning}
+\begin{itemize}
+\item \textbf{Continuous state space}
+\item \textbf{Uncertainty} in sensing/actuation
+\item \textbf{Concurrent operations}
+\item \textbf{Resource constraints}
+\item \textbf{Temporal constraints}
+\end{itemize}
+\end{alertblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Task Decomposition and Planning Strategies}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{block}{Hierarchical Task Decomposition}
+\begin{tikzpicture}[scale=0.8]
+\node[draw,primary,fill=primary!20,minimum width=3cm,align=center] (task) at (0,0) {Assembly Task};
+\node[draw,secondary,fill=secondary!20,minimum width=2.5cm,align=center] (pick) at (-2,-1.5) {Pick Part A};
+\node[draw,secondary,fill=secondary!20,minimum width=2.5cm,align=center] (place) at (0,-1.5) {Place in Fixture};
+\node[draw,secondary,fill=secondary!20,minimum width=2.5cm,align=center] (insert) at (2,-1.5) {Insert Part B};
+
+\node[draw,accent,fill=accent!20,minimum width=2cm,align=center] (move1) at (-2,-3) {Move to A};
+\node[draw,accent,fill=accent!20,minimum width=2cm,align=center] (grasp1) at (-2,-4) {Grasp A};
+\node[draw,accent,fill=accent!20,minimum width=2cm,align=center] (move2) at (0,-3) {Move to fixture};
+\node[draw,accent,fill=accent!20,minimum width=2cm,align=center] (release1) at (0,-4) {Release};
+
+\draw[->] (task) -- (pick);
+\draw[->] (task) -- (place);
+\draw[->] (task) -- (insert);
+\draw[->] (pick) -- (move1);
+\draw[->] (move1) -- (grasp1);
+\draw[->] (place) -- (move2);
+\draw[->] (move2) -- (release1);
+\end{tikzpicture}
+\end{block}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{block}{Planning Strategies}
+\begin{enumerate}
+\item \textbf{Forward search}: From initial state
+\item \textbf{Backward search}: From goal state
+\item \textbf{Means-ends analysis}: Difference reduction
+\item \textbf{Hierarchical planning}: Multiple abstraction levels
+\item \textbf{Reactive planning}: Sensor-driven
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{STRIPS-like Representation}
+\textbf{Preconditions}: What must be true\\
+\textbf{Effects}: What becomes true/false\\
+\textbf{Body}: How to achieve
+\end{alertblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Motion Planning vs. Task Planning}
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{p{0.45\textwidth}p{0.45\textwidth}}
+\toprule
+\textbf{Motion Planning} & \textbf{Task Planning} \\
+\midrule
+\textcolor{primary}{Continuous state space} & \textcolor{primary}{Discrete/symbolic state space} \\
+Configuration space $C$ & Symbolic states \\
+Collision-free paths & Action sequences \\
+Workspace constraints & Logical constraints \\
+\textit{Algorithms:} & \textit{Algorithms:} \\
+- Roadmap methods & - STRIPS \\
+- Cell decomposition & - Graph search \\
+- Potential fields & - Planning graphs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\begin{block}{Configuration Space (C-space)}
+\[
+C = \{\mathbf{q} : \mathbf{q} \text{ is a valid configuration}\}
+\]
+\[
+C_{\text{free}} = \{\mathbf{q} \in C : \text{no collision}\}
+\]
+Planning: Find path $P \subset C_{\text{free}}$ from $\mathbf{q}_{\text{start}}$ to $\mathbf{q}_{\text{goal}}$
+\end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{block}{Task Planning Formalism}
+\textbf{State}: Set of logical propositions\\
+\textbf{Action}: $A = \langle \text{Pre}, \text{Add}, \text{Del} \rangle$\\
+\textbf{Plan}: $\pi = [A_1, A_2, \ldots, A_n]$\\
+Goal test: $G \subseteq S_{\text{final}}$
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{The Pick-and-Place Task in Detail}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{block}{Complete Task Decomposition}
+\begin{enumerate}
+\item \textbf{Approach phase}: Move to pre-grasp position
+\item \textbf{Grasp phase}: Close gripper on object
+\item \textbf{Lift phase}: Remove from current location
+\item \textbf{Transport phase}: Move to destination
+\item \textbf{Place phase}: Position at destination
+\item \textbf{Release phase}: Open gripper
+\item \textbf{Depart phase}: Move away
+\end{enumerate}
+\end{block}
+
+\begin{exampleblock}{State Transitions}
+\begin{verbatim}
+State 1: Object at source, gripper empty
+→ APPROACH source
+State 2: At pre-grasp position
+→ GRASP
+State 3: Object in gripper
+→ LIFT
+State 4: Object lifted
+→ MOVE TO destination
+...
+\end{verbatim}
+\end{exampleblock}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{tikzpicture}[scale=0.8]
+% Pick and place sequence
+\coordinate (start) at (0,3);
+\coordinate (pre) at (0,2);
+\coordinate (grasp) at (0,1.5);
+\coordinate (lift) at (0,1);
+\coordinate (move) at (2,1);
+\coordinate (place) at (2,0.5);
+\coordinate (release) at (2,0);
+\coordinate (depart) at (2,-0.5);
+
+\draw[->,thick,primary] (start) node[left]{Start} -- (pre) node[left]{Approach};
+\draw[->,thick,primary] (pre) -- (grasp) node[left]{Grasp};
+\draw[->,thick,primary] (grasp) -- (lift) node[left]{Lift};
+\draw[->,thick,accent] (lift) -- (move) node[midway,above]{Transport};
+\draw[->,thick,primary] (move) -- (place) node[right]{Place};
+\draw[->,thick,primary] (place) -- (release) node[right]{Release};
+\draw[->,thick,primary] (release) -- (depart) node[right]{Depart};
+
+% Object
+\fill[accent] (0,1.5) circle (0.15);
+\fill[accent] (2,0.5) circle (0.15);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Sensor Integration in Task Planning}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{block}{Sensor Types and Applications}
+\begin{table}
+\centering
+\footnotesize
+\begin{tabular}{p{0.4\textwidth}p{0.5\textwidth}}
+\toprule
+\textbf{Sensor Type} & \textbf{Planning Role} \\
+\midrule
+Force/Torque & Contact detection, assembly \\
+Vision & Object recognition, localization \\
+Proximity & Collision avoidance \\
+Tactile & Grasp verification \\
+Encoders & Position feedback \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{block}
+
+\begin{alertblock}{Reactive Planning with Sensors}
+\begin{itemize}
+\item \textbf{Condition monitoring}: Check preconditions
+\item \textbf{Execution monitoring}: Verify action effects
+\item \textbf{Error detection}: Identify failures
+\item \textbf{Recovery actions}: Plan repair sequences
+\end{itemize}
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{block}{Sensor-Guided Assembly}
+\begin{verbatim}
+WHILE inserting_part DO
+  READ force_sensor(f_x, f_y, f_z)
+  IF f_z > threshold THEN
+    CORRECT lateral_error
+  END
+  IF insertion_depth > target THEN
+    TERMINATE insertion
+  END
+END
+\end{verbatim}
+\end{block}
+
+\begin{exampleblock}{Guarded Move}
+\texttt{MOVE TO P1 UNTIL force > 10N}
+\end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Error Recovery and Exception Handling}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\begin{block}{Common Errors in Robot Tasks}
+\begin{enumerate}
+\item \textbf{Grasp failure}: Object dropped/missed
+\item \textbf{Collision}: Unexpected obstacle
+\item \textbf{Jam}: Stuck in assembly
+\item \textbf{Out of tolerance}: Position error
+\item \textbf{Sensor failure}: No valid reading
+\end{enumerate}
+\end{block}
+
+\begin{alertblock}{Recovery Strategies}
+\begin{itemize}
+\item \textbf{Retry}: Attempt same action
+\item \textbf{Alternate approach}: Different strategy
+\item \textbf{Replan}: Generate new plan
+\item \textbf{Human intervention}: Operator assist
+\item \textbf{System reset}: Return to known state
+\end{itemize}
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{exampleblock}{Exception Handling Framework}
+\begin{verbatim}
+TRY
+  pick_object(A)
+  move_to(fixture)
+  place_object(A)
+EXCEPT
+WHEN grasp_failed:
+  reposition_gripper()
+  RETRY
+WHEN collision_detected:
+  retreat_safely()
+  replan_path()
+WHEN timeout:
+  signal_operator()
+  WAIT
+END
+\end{verbatim}
+\end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Future Directions (Craig's Perspective)}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+\begin{block}{Emerging Trends in Robot Programming}
+\begin{itemize}
+\item \textbf{Task-level programming}: "Assemble the widget"
+\item \textbf{Learning from demonstration}: Human-guided teaching
+\item \textbf{Natural language interfaces}: "Pick up the red block"
+\item \textbf{CAD-based programming}: Direct from design models
+\item \textbf{Cloud robotics}: Shared knowledge and skills
+\item \textbf{Adaptive control}: Self-tuning parameters
+\end{itemize}
+\end{block}
+
+\vspace{0.5cm}
+\begin{alertblock}{Key Research Challenges}
+\begin{itemize}
+\item \textbf{Automatic plan generation} from high-level specs
+\item \textbf{Robustness} in unstructured environments
+\item \textbf{Human-robot collaboration} and safety
+\item \textbf{Multi-robot coordination}
+\item \textbf{Real-time replanning} under uncertainty
+\end{itemize}
+\end{alertblock}
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[fill=primary!20] (0,0) circle (1.5);
+\node at (0,1.8) {\textbf{Future Systems}};
+\node[align=center] at (0,1.2) {Intelligent\\Planning};
+\node[align=center] at (0,0.4) {Adaptive\\Control};
+\node[align=center] at (0,-0.4) {Multi-sensor\\Fusion};
+\node[align=center] at (0,-1.2) {Human-Robot\\Collaboration};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Summary: Key Takeaways from Chapters 12 \& 13}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+\begin{block}{Chapter 12: Robot Programming}
+\begin{itemize}
+\item Specialized languages needed for robotics
+\item Three generations of increasing abstraction
+\item Motion specification is fundamental
+\item World modeling enables off-line programming
+\item Structured constructs essential for complex tasks
+\end{itemize}
+\end{block}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{block}{Chapter 13: Task Planning}
+\begin{itemize}
+\item Hierarchical decomposition of complex tasks
+\item State-space search for action sequences
+\item Sensor integration for robust execution
+\item Error recovery as integral component
+\item Balance between planning and reactivity
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{1cm}
+\begin{alertblock}{The Robot Programming Challenge}
+\textbf{Bridging the gap} between high-level task specifications and low-level motion control through effective planning and programming paradigms.
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\centering
+\vspace{1cm}
+{\Huge \textcolor{primary}{Thank You}}\\
+\vspace{1cm}
+{\Large Questions?}\\
+\vspace{2cm}
+{\small Based on "Introduction to Robotics: Mechanics and Control"\\
+by John J. Craig, Chapters 12 \& 13}\\
+\vspace{0.5cm}
+{\tiny Reference: Craig, J.J. (2005). Introduction to Robotics: Mechanics and Control.\\ Pearson Prentice Hall.}
+\end{frame}
+
+\end{document}
