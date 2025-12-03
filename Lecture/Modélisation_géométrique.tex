@@ -11,10 +11,10 @@
 \end{frame}
 \begin{frame}{Rotation matrix }
 	\begin{itemize}
-		\item The columns of $\matriceR_B^I$ are orthogonal to each other: $\vectorX_B^T\vectorY_B=0$, $\vectorY_B^T\vectorZ_B=0$, $\vectorX_B^T\vectorZ_B=0$
-		\item The columns of $\matriceR_B^I$ are normal: $\vectorX_B^T\vectorX_B=1$, $\vectorY_B^T\vectorY_B=1$, $\vectorZ_B^T\vectorZ_B=1$
-		\item$\matriceR_I^B=\left(\matriceR_B^I\right)^{-1}=\left(\matriceR_B^I\right)^T$
-		\item $\rm{SO}(3)$ denotes the group of $3\times3$ orthogonal matrices $\matriceR$ such that $\matriceR^T = \matriceR$ and $\det(\matriceR)=1$
+		\item The columns of $\matriceR_B^I$ are orthogonal to each other: $\vectorX_B^\top\vectorY_B=0$, $\vectorY_B^\top\vectorZ_B=0$, $\vectorX_B^\top\vectorZ_B=0$
+		\item The columns of $\matriceR_B^I$ are normal: $\vectorX_B^\top\vectorX_B=1$, $\vectorY_B^\top\vectorY_B=1$, $\vectorZ_B^\top\vectorZ_B=1$
+		\item$\matriceR_I^B=\left(\matriceR_B^I\right)^{-1}=\left(\matriceR_B^I\right)^\top$
+		\item $\rm{SO}(3)$ denotes the group of $3\times3$ orthogonal matrices $\matriceR$ such that $\matriceR^\top = \matriceR$ and $\det(\matriceR)=1$
 		\item Sucessive rotations are expressed by rotation composition: $\matriceR_C^I = \matriceR_B^I\matriceR_C^B$. Meaning: perfirm a rotation $\matriceR_B^I$ w.r.t $\setR_I$, then perform a rotation $\matriceR_C^B$ w.r.t $\setR_B$
 		\item \textbf{Remark:} rotation composition is generally not commutative!
 	\end{itemize}
@@ -27,8 +27,16 @@
 			\matriceRdot_B^I&=\matriceR_B^I\left[\vectorOmega_B^B\times\right]\\
 			\matriceRdot_B^I&=\left[\vectorOmega_B^I\times\right]\matriceR_B^I
 		\end{align*}
-		with $\vectorOmega_B^B,\vectorOmega_B^I\inR^3$ are the body and world expressed angular velocity, respectively, and $\left[\star\times\right]\inR^{3\times 3}$ is the skew-matrix of the vector $\star$
-		\item Orientation can also be represented by: Euler angles, Angle-axis, Quaternions
+		with $\vectorOmega_B^B,\vectorOmega_B^I\inR^3$ are the body and frame $\setR_I$ expressed angular velocity, respectively, and $\left[\star\times\right]\inR^{3\times 3}$ is the skew-matrix of the vector $\star$
+	%	\item Orientation can also be minimally represented by: Euler angles, Angle-axis, Quaternions
+	\end{itemize}
+\end{frame}
+\begin{frame}{Orientation representation}
+	\begin{itemize}
+		\item Orientation can also be minimally represented using: Euler angles, Angle-axis, Quaternions
+		\item Transformations exist to move (bidirectionnally) from the rotation matrix  to any other minimal orientation representation
+		\item  Example: Euler angles $\rightarrow$ Rotation matrix
+		\item Example: Rotation matrix $\rightarrow$ Euler angles
 	\end{itemize}
 \end{frame}
 \begin{frame}{Rigid body kinematics}
@@ -81,7 +89,7 @@ The rigid body position is given by $\boldsymbol{o}_B\inR^3$ (expressed in $\set
 	The inverse of the homogeneous transformation matrix is given by 
 	\begin{align*}
 		\left(\matriceT_B^I\right)^{-1} = \matriceT^B_I &= \begin{bmatrix}
-			\left(\matriceR_B^I\right)^T & -\left(\matriceR_B^I\right)^T \vectorO_B\\
+			\left(\matriceR_B^I\right)^\top & -\left(\matriceR_B^I\right)^\top \vectorO_B\\
 			\vectorZero_{1\times3} &1
 		\end{bmatrix} \\
 		&=\begin{bmatrix}
@@ -190,16 +198,33 @@ The {\color{blue}{position}} and {\color{purple}orientation} of the  frame $\set
 	\end{minipage}
 \end{frame}
 \begin{frame}{Forward kinematics}
-In the case of articulated robot, the position and orientation of the end-effector frame  $\setR_{ee}$ w.r.t to $\setR_I$ can be obtained through the homogeneous transformation matrix composition as a function of the joint variables
+In the case of articulated robot, the position and orientation of the end-effector frame  $\setR_{ee}$ w.r.t to $\setR_I$ can be obtained through the homogeneous transformation matrix composition as a function of $\vectorQ$
 	
-	\begin{minipage}{0.35\columnwidth}
+	\begin{minipage}{0.45\columnwidth}
 		\begin{align*}
 			\matriceT_{ee}^I&=\matriceT_B^I\matriceT_C^B\matriceT_D^C\matriceT_E^D\matriceT_F^E\matriceT_{ee}^{F}\\
 		\end{align*}
-		$\matriceT_{ee}^I$ is denoted as the \textbf{forward kinematic model}
+	%	$\matriceT_{ee}^I$ is denoted as the \textbf{forward kinematic model}
+		\begin{figure}
+			\centering
+			\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
+				
+				\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
+				
+				% Nodes
+				\node[block] (b1) {Forward kinematic model};
+				
+				% Inputs
+				\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQ$};
+				
+				% Outputs
+				\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\matriceT_{ee}^I$};
+			
+			\end{tikzpicture}
+		\end{figure}
 	\end{minipage}
 	\hfill
-	\begin{minipage}{0.6\columnwidth}
+	\begin{minipage}{0.5\columnwidth}
 		\begin{figure}
 			\centering
 			\includegraphics[height=0.4\textheight]{rigid-tree_TransformationMatrix.pdf}
@@ -779,7 +804,7 @@ Another difference is the order of the homogeneous transformation matrix $\matri
 	Forward kinematics model of the end-effector: \\
 	End-effector position: $\vectorP_{ee}= \begin{bmatrix}
 		l_1\cos(q_1+q_2)&l_1\sin(q_1+q_2)&-q_3
-	\end{bmatrix}^T$
+	\end{bmatrix}^\top$
 	End-effector orientation: $\matriceR_{ee}= \begin{bmatrix}
 	\cos(q_1+q_2)&\sin(q_1+q_2)&0\\
 	\sin(q_1+q_2)&-\cos(q_1+q_2)&0\\
@@ -787,6 +812,23 @@ Another difference is the order of the homogeneous transformation matrix $\matri
 	\end{bmatrix}$
 \end{frame}
 \begin{frame}{Inverse kinematics}
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
+			
+			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
+			
+			% Nodes
+			\node[block] (b1) {Inverse kinematic model};
+			
+			% Inputs
+			\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQ$};
+			
+			% Outputs
+			\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\matriceT_{ee}^I$};
+			
+		\end{tikzpicture}
+	\end{figure}
 	\begin{itemize}
 		\item Forward kinematics model find the the end-effector pose $\vectorXMaj$ ($\vectorP_{ee},\matriceR_{ee}$) given the joints position $\vectorQ$: $\vectorX=f(\vectorQ)$ 		
 		\item In control context, we are particularly interested in finding the joints position $\vectorQ$ given the end-effector pose $\vectorXMaj$: $\vectorQ=f^{-1}(\vectorQ)$
@@ -882,18 +924,73 @@ Example:  a planar 2-DOF robot
 \begin{frame}{Inverse kinematics - Analytical approach}
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.47\columnwidth]{2DOF-Sol1}
-		\includegraphics[width=0.47\columnwidth]{2DOF-Sol2}
+		\includegraphics[width=0.4\columnwidth]{2DOF-Sol1}
+		\includegraphics[width=0.4\columnwidth]{2DOF-Sol2}
 		\caption{Two possible inverse kinematics solutions}
 	\end{figure}
+	The choice of solution is based on the desired end-effector orientation $\theta_d=q_1+q_2$
 \end{frame}
 \begin{frame}{Inverse kinematics - Analytical approach}
 	\begin{itemize}
-	\item In general, the forward kinematics model is nonlinear w.r.t $\vectorQ$ $\Rightarrow$ No systematic method to compute analytically $\vectorQ$
+	\item In general, the forward kinematics model is 
+	\begin{itemize}
+		\item nonlinear w.r.t $\vectorQ$
+		\item strictly depending on robot structure, DoF type and number
+	\end{itemize}
+	$\Rightarrow$ No systematic method to compute analytically $\vectorQ$ for all the robots
 	\item If the robot is redundant (number of DoF is superieur than the dimension of the pose) $\Rightarrow$ inverse kinematics problem may have infinite solutions
 	\item In such cases, we resort to numerical approaches	
 	\end{itemize}
 \end{frame}
 \begin{frame}{Inverse kinematics - Numerical approach}
-
+\begin{itemize}
+	\item Let us assume $\vectorX_d$ is the desired end-effector pose, with $\vectorX_d=f(\vectorQ_d)$
+	\item The inverse kinematics problem consists of finding the root of the algebraic equation 
+	\begin{equation*}
+		\vectorX_d-f(\vectorQ_d) = 0
+	\end{equation*}
+	\item \textbf{Method:} use numerical solvers to find the root $\vectorQ_d$ solution of the inverse kinematic problem
+\end{itemize}
+\end{frame}
+\begin{frame}{Inverse kinematics - Numerical approach}
+	Newton-Raphson method:
+	\begin{itemize}
+		\item Start with inital state $\vectorQ_i$
+		\item Perform Taylor expansion around $\vectorQ_i$:
+		\begin{align*}
+			\vectorX_d = f(\vectorQ_d)&=f(\vectorQ_i+\Delta\vectorQ_i),\ \Delta\vectorQ_i = \vectorQ_d-\vectorQ_i\\
+			&=f(\vectorQ_i) + \dfrac{\partial f}{\partial\vectorQ}\Delta\vectorQ_i+ {\rm H.o.T}\\
+			\vectorX_d	&\approx f(\vectorQ_i) + \dfrac{\partial f}{\partial\vectorQ}\Delta\vectorQ_i\\
+			\Rightarrow \Delta\vectorX_d &=\dfrac{\partial f}{\partial\vectorQ}\Delta\vectorQ, \ \Delta\vectorX_d = \vectorX_d-\vectorX 
+		\end{align*}
+	\end{itemize} 
+\end{frame}
+	\begin{frame}{Inverse kinematics - Numerical approach}
+		Algorithm:
+		\begin{enumerate} 
+			\item Starting with inital state $\vectorQ_i$, compute a solution $\vectorQ_{d_i}$
+			\begin{equation*}
+				\vectorQ_{d_i} = \vectorQ_{i}+\left[\dfrac{\partial f}{\partial\vectorQ}\right]^{-1}\Delta\vectorX_d, \ \Delta\vectorX_d = \vectorX_d-\vectorX 
+			\end{equation*}
+			\item Recompute a new iteration $\vectorQ_{d_{i+1}}$ with initial guess $\vectorQ_i =\vectorQ_{d_i}$ until convergence
+		\end{enumerate}
+\end{frame}
+\begin{frame}{Inverse kinematics - Numerical approach}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.85\textheight]{Newton-raphson}
+		\caption{Iterative computation for numerical inverse kinematics with Newton-Raphson method.}
+	\end{figure}
+\end{frame}
+\begin{frame}{Inverse kinematics - Numerical approach}
+%	\begin{itemize}
+		%\item 
+		In general, dedicated numerical inverse-kinematic approaches are more elaborated to account for
+		\begin{itemize}
+			\item Joints position limits
+			\item Avoid self-collision
+			\item Avoid bad numerical behavior especially when the desired pose $\vectorX_d$ is out of reach (outside the workspace)
+			\item Optimize the solutions (w.r.t some criteria) in case of the robot redundancy, e.g., ensure solutions continuity when $\vectorX_d$ is time-varying
+		%\end{itemize} 
+	\end{itemize}
 \end{frame}

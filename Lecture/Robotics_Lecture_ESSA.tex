@@ -43,6 +43,7 @@
 \def\matriceM{\mathbf{M}}
 \def\matriceS{\mathbf{S}}
 \def\matriceJ{\mathbf{J}}
+\def\matriceJdot{\mathbf{\dot{J}}}
 \def\matriceT{\mathbf{T}}
 \def\matriceI{\mathbf{I}}
 \def\vectorB{\bm{b}}
@@ -65,11 +66,13 @@
 \def\vectorOmega{\boldsymbol{\omega}}
 \def\vectorTau{\boldsymbol{\tau}}
 \def\vectorXdot{\bm{\dot{x}}}
+\def\vectorXddot{\bm{\ddot{x}}}
 \def\vectorYdot{\bm{\dot{y}}}
 \def\vectorZdot{\bm{\dot{z}}}
 \def\vectorEdot{\bm{\dot{e}}}
 \def\vectorQdot{\bm{\dot{q}}}
 \def\vectorQddot{\bm{\ddot{q}}}
+\def\vectorPdot{\bm{\dot{p}}}
 \def\inR{\in\mathbb{R}}
 \def\setC{{\cal C}}
 \def\setR{{\cal R}}
@@ -77,6 +80,8 @@
 \newcommand{\norm}[1]{\begin{Vmatrix}
 		#1
 \end{Vmatrix}}
+\newcommand{\pfrac}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\inv}{^{\text{-}1}}
 \usetheme{CambridgeUS}
 
 \usefonttheme[onlymath]{serif}
@@ -119,7 +124,7 @@
 \section{Kinematic Modeling}
 \input{Modélisation_géométrique.tex}	
 %\section{Modélisation Cinématique}
-%\input{Modélisation_cinématique.tex}
+\input{Modélisation_cinématique.tex}
 \section{Dynamic Modeling}%QP control strategies %New possibilities wit QP
 %\input{Modélisation_dynamique.tex}
 %\input{New Control Strategies.tex}
