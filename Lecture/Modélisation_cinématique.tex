@@ -44,6 +44,31 @@
 		\end{bmatrix}$
 	\end{itemize}
 \end{frame}
+\begin{frame}{Forward differential-kinematic model}
+	\textbf{Why forward differential-kinematic model?}
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
+			
+			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
+			
+			% Nodes
+			\node[block] (b1) {Forward differential-kinematic model};
+
+			
+			% Inputs
+			\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQdot$};
+		
+			% Outputs
+			\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\vectorXdot_{ee}$};			
+		\end{tikzpicture}
+	\end{figure}
+	Forward differential-kinematic model is used for 
+	\begin{itemize}
+		\item \textbf{Simulation:} Construct the links motion given a sequence of joint velocity
+		\item \textbf{Estimation/Measurement:} No need to use sensor for measuring  links velocity, direct mapping of joint velocity to task-space
+	\end{itemize} 
+\end{frame}
 \begin{frame}{Jacobian matrix computation}
 	There are two approaches for computing the Jacobian matrix
 	\begin{enumerate}
@@ -206,7 +231,7 @@
 		\begin{equation*}
 			\vectorQdot=\matriceJ\inv\vectorXdot_{ee}
 		\end{equation*}
-		\item If $n>m$ (flat Jacobian)
+		\item If $n>m$ (flat Jacobian) %TODO: explain redundancy
 		\begin{equation*}
 			\vectorQdot=\matriceJ^\dagger\vectorXdot_{ee}, \ \matriceJ^\dagger=\matriceJ^\top\left(\matriceJ\matriceJ^\top\right)\inv~\text{(Right pseudo-inverse)}
 		\end{equation*}
@@ -216,18 +241,72 @@
 		\end{equation*}
 	\end{itemize}
 \end{frame}
-\begin{frame}{Jacobian inverse}
+\begin{frame}{Inverse differential-kinematic model}
+	\textbf{Why {inverse differential-kinematic model}?}
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
+			
+			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
+			
+			% Nodes
+			\node[block] (b1) {Inverse differential-kinematic model};
+			
+			
+			% Inputs
+			\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorXdot_{ee}$};
+			
+			% Outputs
+			\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\vectorQdot$};			
+		\end{tikzpicture}
+	\end{figure}
+	Inverse differential-kinematic model is used for 
+	\begin{itemize}
+		\item \textbf{Control:} Find the desired joint velocity $\vectorQdot_d$ that needs to be applied to perform a given task-space velocity (motion) $\vectorXdot_d$ 
+	\end{itemize} 
+\end{frame}
+\begin{frame}{Inverse differential-kinematic model}
+\begin{enumerate}
+	\item Given a desired end-effector velocity profil for each instant $k$  designed such that the end-effector goes to a reference pose $\vectorX_{ee}^{ref}$: $\vectorXdot_{ee}^*(k)= -\lambda(\vectorX_{ee}(k)-\vectorX_{ee}^{ref})$
+	\item Compute the corresponding joint velocity: $\vectorQdot(k) = \matriceJ^\dagger\vectorXdot_{ee}^*$
+	\item Integrate to obtain new joint position: $\vectorQ(k+1) = \vectorQ(k) + \vectorQdot(k)$
+	\item Use forward kinematic model to update the end effector pose: $\vectorX_{ee}(k+1)\rightarrow\matriceT_{ee}^0(\vectorQ(k+1))$
+	\item Loop at (1)
+\end{enumerate}
+\end{frame}
+\begin{frame}{Kinematic redundancy}
+	Robot is said to be \textbf{redundant} if it has more DoF $n$ than the task to be acheived.  \\ 
+	Example: RRR robot. Task: Keep the end-effector fixed $\vectorV_{ee}=0$
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.95\columnwidth]{3DOF-Redundancy2}
+		\caption{Three different possible posture resulting from the required task}
+	\end{figure}
+	In such case, the inverse differential kinematic solution $\vectorQdot=\matriceJ^\dagger\vectorXdot_{ee}$ \textbf{is not unique}. The extra DoF can exploited to perform a secondary task!
+\end{frame}
+\begin{frame}{Kinematic redundancy}
+	A more general solution to the inverse differential-kinematic problem is 
+	\begin{equation*}
+		\vectorQdot=\matriceJ^\dagger\vectorXdot_{ee} + \matriceP \vectorQdot_0
+	\end{equation*}
+	with $\matriceP = \matriceI - \matriceJ^\dagger\matriceJ$ is the Jacobian null-space projector and $\vectorQdot_0$ is an arbitrary joint velocity designed to perform another task e.g., 
+	\begin{itemize}
+		\item keep joint away from position limits
+		\item keep joint position close to a prefered posture
+	\end{itemize} 
+\end{frame}
+\begin{frame}{Kinematic singularity}
 	\begin{itemize}
 		\item The Jacobian may not by inversible depending on the configuration $\vectorQ$
-		\item The configurations $\vectorQ$ such that $\det(\matriceJ)=0$ are called \textbf{singular configurations}
+		\item The configurations $\vectorQ$ such that $\det(\matriceJ)=0$ are called \textbf{singular configurations}, and $\matriceJ$ is rank-deficient
 		\item \textbf{Implications of singular configurations:}
 		\begin{itemize}
-			\item \textbf{Forward differential kinamtics:} Task-space velocity is null in a certain direction
-			\item \textbf{Inverse differential kinamtics:} Infinite joint-space velocity is generated around singular configurations
+			\item \textbf{Forward differential kinamtics:} Mobility reduction: task-space velocity is null along a certain direction
+			\item \textbf{Inverse differential kinamtics:} small end-effector velocities generate infinite joint-space velocity in the neighbourhood of   singular configurations
 		\end{itemize}
 	\end{itemize}
 \end{frame}
-\begin{frame}{Jacobian inverse}
+\begin{frame}{Kinematic singularity}
 	Example: 2 DoF planar robot
 	
 	\begin{minipage}{.5\columnwidth}
@@ -250,13 +329,22 @@
 		\end{figure}
 	\end{minipage}
 \end{frame}
-\begin{frame}{Jacobian inverse}
+\begin{frame}{Kinematic singularity}
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.6\textheight]{2DOF-Singular1}
 		\includegraphics[width=0.5\textheight]{2DOF-Singular2}
 		\caption{2 DoF robot in two singular configurations: $q_2=0$ (left), and $q_2=\pi$ (right)}
 	\end{figure}
+\end{frame}
+\begin{frame}{Kinematic singularity}
+	An alternative solution overcoming the problem of inverting diﬀerential
+	kinematics in the neighbourhood of a singularity is the
+	damped least-squares (DLS) inverse
+	\begin{equation*}
+		\matriceJ^\dagger = \matriceJ^\top\left(\matriceJ\matriceJ^\top+k^2\matriceI\right)
+	\end{equation*}
+	with $k$ is a damping factor
 \end{frame}
 \begin{frame}{Second-order forward differential-kinematic model}
 	Second-order forward differential-kinematic model allows to compute the task-space acceleration $\vectorXddot_{ee}\inR^m$ given the joint acceleration $\vectorQddot\inR^n $
