@@ -460,81 +460,85 @@
 \end{frame}
 
 \begin{frame}{Belts, Pulleys, and Other Transmissions}
-    \begin{columns}
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Timing Belts \& Pulleys}
-                \begin{center}
-                    \includegraphics[scale=0.05]{./robotique_figures/pulley_belt_transmission.jpg} 
-                \end{center}
-                \begin{itemize}
-                    \footnotesize
-                    \item \textbf{Synchronous} (no slip)
-                    \item Good for long distances
-                    \item Low backlash
-                    \item Needs tensioning
-                \end{itemize}
-            \end{block}
-            
-            \begin{block}{Ball Screws}
-                \begin{center}
-                    \begin{tikzpicture}[scale=0.5]
-                        \draw[thick] (0,0) -- (4,0);
-                        \foreach \x in {0,0.5,...,4} {
-                            \draw (\x,0.2) -- (\x,-0.2);
-                        }
-                        \draw[thick, fill=gray!20] (2,0) circle (0.5);
-                        \draw[->] (2,0.7) -- (2,0.2);
-                        \draw[->] (2.5,0) -- (3.5,0);
-                    \end{tikzpicture}
-                \end{center}
-                \begin{itemize}
-                    \footnotesize
-                    \item Converts rotation to translation
-                    \item High efficiency (90\%+)
-                    \item Zero backlash possible
-                    \item Used in linear axes
-                \end{itemize}
-            \end{block}
-        \end{column}
-        
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Cable Drives}
-                \begin{center}
-                    \includegraphics[scale=0.1]{./robotique_figures/cable_driven_transmission.png} 
-                \end{center}
-                \begin{itemize}
-                    \footnotesize
-                    \item \textbf{Remote actuation}
-                    \item Low inertia at moving part
-                    \item Used in surgical robots
-                    \item Needs tensioning, can stretch
-                \end{itemize}
-            \end{block}
-            
-            \begin{block}{Direct Drive}
-                \begin{center}
-                    \begin{tikzpicture}[scale=0.5]
-                        \draw[thick, fill=gray!30] (0,0) circle (2);
-                        \draw[thick, fill=white] (0,0) circle (1);
-                        \foreach \i in {0,45,...,315} {
-                            \draw[thick] (\i:1.2) -- (\i:1.8);
-                        }
-                        \node at (0,0) {Motor};
-                        \node at (0,2.5) {Load};
-                        \draw[->] (0,2) -- (0,1.2);
-                    \end{tikzpicture}
-                \end{center}
-                \begin{itemize}
-                    \footnotesize
-                    \item \textbf{No gears} - motor directly connected
-                    \item Zero backlash, high stiffness
-                    \item Needs high-torque motor
-                    \item Used in precision applications
-                \end{itemize}
-            \end{block}
-        \end{column}
-    \end{columns}
+\small
+
+\begin{columns}[t]
+
+    % LEFT COLUMN ---------------------------------------------------
+    \begin{column}{0.48\textwidth}
+
+        % --- SAME POSITION, OVERLAY SWITCHING ---
+        \only<1>{
+        \begin{block}{Timing Belts \& Pulleys}
+            \centering
+            \includegraphics[width=0.55\linewidth]{./robotique_figures/pulley_belt_transmission.jpg}
+            \vspace{-2mm}
+            \begin{itemize}\footnotesize
+                \item \textbf{Synchronous} (no slip)
+                \item Good for long distances
+                \item Low backlash
+                \item Needs tensioning
+            \end{itemize}
+        \end{block}
+        }
+
+        \only<2>{
+        \begin{block}{Ball Screws}
+            \centering
+            \includegraphics[width=0.60\linewidth]{./robotique_figures/ball_screw.jpg}
+            \vspace{-2mm}
+            \begin{itemize}\footnotesize
+                \item Converts rotation to translation
+                \item High efficiency (90\%+)
+                \item Zero backlash possible
+                \item Used in linear axes
+            \end{itemize}
+        \end{block}
+        }
+
+    \end{column}
+
+    % RIGHT COLUMN ---------------------------------------------------
+    \begin{column}{0.48\textwidth}
+
+        % --- SAME POSITION, OVERLAY SWITCHING ---
+        \only<1>{
+        \begin{block}{Cable Drives}
+            \centering
+            \includegraphics[width=0.60\linewidth]{./robotique_figures/cable_driven_transmission.png}
+            \vspace{-2mm}
+            \begin{itemize}\footnotesize
+                \item \textbf{Remote actuation}
+                \item Low inertia at moving part
+                \item Used in surgical robots
+                \item Needs tensioning, can stretch
+            \end{itemize}
+        \end{block}
+        }
+
+        \only<2>{
+        \begin{block}{Direct Drive}
+            \centering
+            \includegraphics[width=0.55\linewidth]{./robotique_figures/direct_drive.png}
+            \vspace{-2mm}
+            \begin{itemize}\footnotesize
+                \item \textbf{No gears} – motor directly connected
+                \item Zero backlash, high stiffness
+                \item Needs high-torque motor
+                \item Used in precision applications
+            \end{itemize}
+        \end{block}
+        }
+
+    \end{column}
+\end{columns}
+
 \end{frame}
+
+
+
+
+
 
 \section{End Effectors for Industrial Robots}
 \begin{frame}{End Effectors: The "Hands" of Robots}
@@ -567,28 +571,10 @@
         \end{column}
         
         \begin{column}{0.5\textwidth}
-            \begin{center}
-                \begin{tikzpicture}[scale=0.7]
-                    % Robot arm
-                    \draw[thick] (0,0) -- (0,2);
-                    \draw[thick] (0,2) -- (2,3);
-                    \draw[thick] (2,3) -- (4,3);
-                    
-                    % Tool changer
-                    \draw[thick, fill=blue!20] (4,3) rectangle (4.5,2.5);
-                    \node[rotate=30] at (4.25,2.75) {TC};
-                    
-                    % Different end effectors
-                    \draw[thick, fill=red!20] (5,3.2) rectangle (6,2.8);
-                    \node at (5.5,3) {Gripper};
-                    
-                    \draw[thick, fill=green!20] (5,2.6) rectangle (6,2.2);
-                    \node at (5.5,2.4) {Welder};
-                    
-                    \draw[thick, fill=yellow!20] (5,2.0) rectangle (6,1.6);
-                    \node at (5.5,1.8) {Camera};
-                \end{tikzpicture}
-            \end{center}
+           \begin{center}
+               \includegraphics[scale=0.43]{./robotique_figures/robots_grippers1.png}
+               \includegraphics[scale=0.43]{./robotique_figures/robot_grippers2.png}
+           \end{center}
         \end{column}
     \end{columns}
     
@@ -598,87 +584,59 @@
 \end{frame}
 
 \begin{frame}{Mechanical Grippers: The Most Common Type}
-    \begin{columns}
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Two-Finger Grippers}
-                \begin{center}
-                    \begin{tikzpicture}[scale=0.7]
-                        \draw[thick, fill=gray!20] (0,0) rectangle (2,1);
-                        \draw[thick] (1,1) -- (1,1.5);
-                        \draw[thick] (0.2,0) rectangle (0.6,-0.5);
-                        \draw[thick] (1.4,0) rectangle (1.8,-0.5);
-                        \draw[->] (0.4,-0.5) -- (0.4,-1);
-                        \draw[->] (1.6,-0.5) -- (1.6,-1);
-                        \node at (1,0.5) {Actuator};
-                        \draw[thick, fill=blue!30] (0.5,-1.5) circle (0.3);
-                        \draw[thick, fill=blue!30] (1.5,-1.5) circle (0.3);
-                        \node at (1,-2) {Object};
-                    \end{tikzpicture}
-                \end{center}
-                \begin{itemize}
-                    \footnotesize
-                    \item Parallel jaw
-                    \item Angular jaw
-                    \item Self-centering
-                    \item Actuation: Pneumatic, electric, hydraulic
-                \end{itemize}
-            \end{block}
-        \end{column}
-        
-        \begin{column}{0.48\textwidth}
-            \begin{block}{Three-Finger Grippers}
-                \begin{center}
-                    \begin{tikzpicture}[scale=0.7]
-                        \draw[thick, fill=gray!20] (0,0) circle (0.8);
-                        \foreach \i in {0,120,240} {
-                            \draw[thick] (\i:0.8) -- (\i:1.5);
-                            \draw[thick, fill=red!30] (\i:1.5) circle (0.2);
-                        }
-                        \draw[thick, fill=blue!30] (0,0) circle (0.5);
-                        \node at (0,0) {Act};
-                        \node at (0,-2) {For cylindrical objects};
-                    \end{tikzpicture}
-                \end{center}
-                \begin{itemize}
-                    \footnotesize
-                    \item Better centering
-                    \item More contact points
-                    \item Can grip irregular shapes
-                    \item More complex mechanism
-                \end{itemize}
-            \end{block}
-        \end{column}
-    \end{columns}
-    
-    \vspace{3mm}
-    \begin{block}{Gripper Specifications}
-        \begin{itemize}
-            \item \textbf{Force:} 10N to 1000N+
-            \item \textbf{Stroke:} Opening width
-            \item \textbf{Repeatability:} Typically ±0.02mm
-            \item \textbf{Weight:} Affects robot payload
-            \item \textbf{Fingers:} Customizable for parts
-        \end{itemize}
-    \end{block}
+
+\begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+        \begin{block}{Two-Finger Grippers}
+            \begin{center}
+                \includegraphics[width=0.2\linewidth]{robotique_figures/two_finger.png}
+            \end{center}
+            \footnotesize
+            \begin{itemize}
+                \item Parallel or angular jaws
+                \item Self-centering options
+                \item Pneumatic, electric, or hydraulic actuation
+            \end{itemize}
+        \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+        \begin{block}{Three-Finger Grippers}
+            \begin{center}
+                \includegraphics[width=0.2\linewidth]{robotique_figures/three_fingers.png}
+            \end{center}
+            \footnotesize
+            \begin{itemize}
+                \item Better centering accuracy
+                \item Increased contact points
+                \item Suitable for irregular shapes
+                \item Mechanically more complex
+            \end{itemize}
+        \end{block}
+    \end{column}
+\end{columns}
+
+\vspace{3mm}
+
+\textbf{Gripper Specifications}
+    \begin{itemize}
+        \item \textbf{Force:} 10–1000+ N
+        \item \textbf{Stroke:} Maximum opening width
+        \item \textbf{Repeatability:} Typically $\pm 0.02$ mm
+        \item \textbf{Weight:} Influences robot payload capacity
+        \item \textbf{Fingers:} Customizable geometries for specific parts
+    \end{itemize}
+
+
 \end{frame}
 
+
 \begin{frame}{Vacuum and Specialized Grippers}
-    \begin{columns}
+    \begin{columns}[t]
         \begin{column}{0.48\textwidth}
             \begin{block}{Vacuum Grippers (Suction Cups)}
                 \begin{center}
-                    \begin{tikzpicture}[scale=0.7]
-                        \draw[thick, fill=gray!20] (0,0) rectangle (2,0.5);
-                        \draw[thick] (1,0.5) -- (1,1);
-                        \foreach \x in {0.4,1,1.6} {
-                            \draw[thick] (\x,0) -- (\x,-0.5);
-                            \draw[thick, fill=red!30] (\x-0.2,-0.5) rectangle (\x+0.2,-0.8);
-                        }
-                        \draw[->, blue] (1,0.2) -- (1,-0.3);
-                        \node[blue] at (1.5,0) {Vacuum};
-                        \draw[thick, fill=green!30] (0.5,-1.5) rectangle (1.5,-1);
-                        \node at (1,-2) {Flat object};
-                    \end{tikzpicture}
+                    \includegraphics[scale=0.43]{./robotique_figures/vaccuum_gripper.png}
                 \end{center}
                 \begin{itemize}
                     \footnotesize
@@ -694,16 +652,7 @@
         \begin{column}{0.48\textwidth}
             \begin{block}{Magnetic Grippers}
                 \begin{center}
-                    \begin{tikzpicture}[scale=0.7]
-                        \draw[thick, fill=gray!20] (0,0) rectangle (1.5,0.5);
-                        \draw[thick] (0.75,0.5) -- (0.75,1);
-                        \draw[thick, fill=red!50] (0.75,0) circle (0.4);
-                        \foreach \i in {0,120,240} {
-                            \draw[->] (\i:0.3) -- (\i:0.6);
-                        }
-                        \draw[thick, fill=blue!30] (0.5,-1) rectangle (1,-1.5);
-                        \node at (0.75,-2) {Ferrous metal};
-                    \end{tikzpicture}
+                    \includegraphics[scale=0.43]{./robotique_figures/magnetic_gripper.png}
                 \end{center}
                 \begin{itemize}
                     \footnotesize
@@ -712,9 +661,10 @@
                     \item No power needed for holding (permanent)
                     \item Can pick through paint/coating
                 \end{itemize}
-            \end{block}
-            
-            \begin{block}{Specialized Grippers}
+            \end{block}            
+        \end{column}
+    \end{columns}
+    \textbf{Specialized Grippers}
                 \begin{itemize}
                     \footnotesize
                     \item \textbf{Needle grippers:} For textiles
@@ -722,26 +672,16 @@
                     \item \textbf{Electrostatic:} For wafers, glass
                     \item \textbf{Cryogenic:} For ice, frozen items
                 \end{itemize}
-            \end{block}
-        \end{column}
-    \end{columns}
 \end{frame}
 
 \begin{frame}{Tool End Effectors}
     \begin{columns}
         \begin{column}{0.48\textwidth}
+        % --- SAME POSITION, OVERLAY SWITCHING ---
+        \only<1>{
             \begin{block}{Welding Torches}
                 \begin{center}
-                    \begin{tikzpicture}[scale=0.7]
-                        \draw[thick, fill=gray!20] (0,0) rectangle (1,0.5);
-                        \draw[thick] (0.5,0.5) -- (0.5,1);
-                        \draw[thick] (0.5,0) -- (0.5,-1);
-                        \draw[thick] (0.3,-1) -- (0.7,-1);
-                        \draw[->, red] (0.5,-1) -- (0.5,-1.5);
-                        \node[red] at (0.5,-1.8) {Arc};
-                        \draw[thick, fill=blue!30] (-0.5,-2) rectangle (1.5,-1.5);
-                        \node at (0.5,-2.3) {Workpiece};
-                    \end{tikzpicture}
+                    \includegraphics[scale=0.43]{./robotique_figures/welding_tool.png}
                 \end{center}
                 \begin{itemize}
                     \footnotesize
@@ -751,18 +691,12 @@
                     \item Needs torch cleaning station
                 \end{itemize}
             \end{block}
-            
+            }
+            % --- SAME POSITION, OVERLAY SWITCHING ---
+        \only<2>{
             \begin{block}{Dispensing Tools}
                 \begin{center}
-                    \begin{tikzpicture}[scale=0.7]
-                        \draw[thick, fill=gray!20] (0,0) rectangle (1,0.5);
-                        \draw[thick] (0.5,0.5) -- (0.5,1);
-                        \draw[thick] (0.5,0) -- (0.5,-0.5);
-                        \draw[thick] (0.3,-0.5) -- (0.7,-0.5);
-                        \draw[thick, fill=green!50] (0.5,-0.5) circle (0.1);
-                        \draw[->] (0.5,-0.6) -- (0.5,-1);
-                        \node at (0.5,-1.3) {Adhesive};
-                    \end{tikzpicture}
+                    \includegraphics[scale=0.43]{./robotique_figures/dispensing_tool.png}
                 \end{center}
                 \begin{itemize}
                     \footnotesize
@@ -772,21 +706,15 @@
                     \item Cleanup important
                 \end{itemize}
             \end{block}
+            }
         \end{column}
         
         \begin{column}{0.48\textwidth}
+        % --- SAME POSITION, OVERLAY SWITCHING ---
+        \only<1>{
             \begin{block}{Spindle Tools}
                 \begin{center}
-                    \begin{tikzpicture}[scale=0.7]
-                        \draw[thick, fill=gray!20] (0,0) rectangle (1.5,0.8);
-                        \draw[thick] (0.75,0.8) -- (0.75,1.3);
-                        \draw[thick] (0.75,0) -- (0.75,-1);
-                        \draw[thick] (0.5,-1) -- (1,-1);
-                        \draw[->] (0.75,-1) -- (0.75,-1.5);
-                        \node at (0.75,-1.8) {Tool rotation};
-                        \draw[thick, fill=brown!30] (-1,-2) rectangle (2.5,-1.5);
-                        \node at (0.75,-2.3) {Workpiece};
-                    \end{tikzpicture}
+                    \includegraphics[scale=0.43]{./robotique_figures/spindle_tool.png}
                 \end{center}
                 \begin{itemize}
                     \footnotesize
@@ -796,7 +724,9 @@
                     \item Chip management
                 \end{itemize}
             \end{block}
-            
+           }
+           % --- SAME POSITION, OVERLAY SWITCHING ---
+        \only<2>{ 
             \begin{block}{Other Common Tools}
                 \begin{itemize}
                     \footnotesize
@@ -807,92 +737,117 @@
                     \textbf{Assembly:} Screwdrivers, nut runners
                 \end{itemize}
             \end{block}
+            }
         \end{column}
     \end{columns}
 \end{frame}
 
 \begin{frame}{End Effector Selection Considerations}
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{block}{Technical Factors}
-                \begin{itemize}
-                    \item \textbf{Part geometry} and material
-                    \item Required \textbf{gripping force}
-                    \item \textbf{Cycle time} requirements
-                    \item \textbf{Payload} capacity of robot
-                    \item \textbf{Accuracy} and repeatability needs
-                    \item \textbf{Environmental conditions}
-                    \begin{itemize}
-                        \footnotesize
-                        \item Temperature
-                        \item Cleanliness
-                        \item Explosive atmosphere
-                    \end{itemize}
-                \end{itemize}
-            \end{block}
-        \end{column}
-        
-        \begin{column}{0.5\textwidth}
-            \begin{block}{Economic \& Practical Factors}
-                \begin{itemize}
-                    \item \textbf{Cost} of end effector
-                    \item \textbf{Maintenance} requirements
-                    \item \textbf{Changeover time} for different parts
-                    \item \textbf{Reliability} and MTBF
-                    \item \textbf{Vendor support}
-                    \item \textbf{Integration complexity}
-                \end{itemize}
-            \end{block}
-            
-            \begin{alertblock}{Modern Trends}
+
+\begin{columns}[t]
+
+    %--------------------- LEFT COLUMN ---------------------
+    \begin{column}{0.48\textwidth}
+        \begin{block}{Technical Factors}
+            \footnotesize
+            \begin{itemize}
+                \item Part \textbf{geometry} and material
+                \item Required \textbf{gripping force}
+                \item \textbf{Cycle time} constraints
+                \item Robot \textbf{payload} capacity
+                \item Needed \textbf{accuracy} / repeatability
+                \item \textbf{Environmental conditions:}
                 \begin{itemize}
                     \footnotesize
-                    \item \textbf{Adaptive grippers} (soft robotics)
-                    \item \textbf{Force sensing} in fingers
-                    \item \textbf{Vision-integrated} grippers
-                    \item \textbf{Quick-change} systems
-                    \item \textbf{Collaborative} (safe) grippers
+                    \item Temperature
+                    \item Cleanliness
+                    \item Hazardous atmosphere
                 \end{itemize}
-            \end{alertblock}
-        \end{column}
-    \end{columns}
-    
-    \vspace{5mm}
-    \begin{exampleblock}{Rule of Thumb}
-        End effector weight should be \textbf{≤ 10\%} of robot's rated payload for optimal performance.
-    \end{exampleblock}
+            \end{itemize}
+        \end{block}
+    \end{column}
+
+    %--------------------- RIGHT COLUMN ---------------------
+    \begin{column}{0.48\textwidth}
+        \begin{block}{Economic \& Practical Factors}
+            \footnotesize
+            \begin{itemize}
+                \item End effector \textbf{cost}
+                \item \textbf{Maintenance} needs
+                \item \textbf{Changeover} time
+                \item \textbf{Reliability} (MTBF)
+                \item \textbf{Vendor support}
+                \item \textbf{Integration} complexity
+            \end{itemize}
+        \end{block}
+        \only<1>{
+        \begin{alertblock}{Modern Trends}
+            \scriptsize
+            \begin{itemize}
+                \item \textbf{Adaptive} (soft) grippers
+                \item \textbf{Force sensing} fingertips
+                \item \textbf{Vision-integrated} grasping
+                \item \textbf{Quick-change} systems
+                \item \textbf{Collaborative-safe} grippers
+            \end{itemize}
+        \end{alertblock}
+        }
+    \end{column}
+
+\end{columns}
+
+\vspace{2mm}
+\only<2>{
+\begin{exampleblock}{Rule of Thumb}
+    \footnotesize
+    End effector weight should be \textbf{$\leq 10\%$} of the robot’s rated payload.
+\end{exampleblock}
+}
 \end{frame}
+
+
 
 \begin{frame}{Summary: Complete Robot System}
     \begin{center}
-        \begin{tikzpicture}[scale=0.8]
-            % Complete system diagram
-            \node[draw, rectangle, fill=blue!20, minimum width=2cm] (controller) {Controller};
-            \node[draw, rectangle, fill=green!20, right=of controller, minimum width=2cm] (amplifier) {Amplifier};
-            \node[draw, rectangle, fill=red!20, right=of amplifier, minimum width=2cm] (motor) {Motor};
-            \node[draw, rectangle, fill=orange!20, right=of motor, minimum width=2cm] (gearbox) {Gearbox};
-            \node[draw, rectangle, fill=purple!20, right=of gearbox, minimum width=2cm] (joint) {Joint};
-            \node[draw, rectangle, fill=brown!20, right=of joint, minimum width=2cm] (ee) {End Effector};
-            
-            % Sensors
-            \node[draw, rectangle, fill=yellow!20, below=of motor, minimum width=2cm] (encoder) {Encoder};
-            \node[draw, rectangle, fill=yellow!20, below=of ee, minimum width=2cm] (ftsensor) {F/T Sensor};
-            
-            % Connections
-            \draw[->, thick] (controller) -- node[above] {Command} (amplifier);
-            \draw[->, thick] (amplifier) -- node[above] {Current} (motor);
-            \draw[->, thick] (motor) -- node[above] {High speed} (gearbox);
-            \draw[->, thick] (gearbox) -- node[above] {Low speed} (joint);
-            \draw[->, thick] (joint) -- node[above] {Motion} (ee);
-            
-            \draw[->, thick] (encoder) -- node[left] {Position} (motor);
-            \draw[->, thick] (encoder) -| (controller);
-            \draw[->, thick] (ftsensor) -- node[left] {Force} (ee);
-            \draw[->, thick] (ftsensor) -| (controller);
-            
-            \draw[<-, thick] (controller.west) -- ++(-1,0) node[left] {Trajectory Plan};
-            \draw[->, thick] (ee.east) -- ++(1,0) node[right] {Task Execution};
-        \end{tikzpicture}
+      \begin{tikzpicture}[
+    every node/.style={font=\scriptsize},
+    node distance=0.5cm
+]
+
+% Main chain (narrow blocks)
+\node[draw, rectangle, fill=blue!20, minimum width=1.5cm] (controller) {Controller};
+\node[draw, rectangle, fill=green!20, right=0.5cm of controller, minimum width=1.5cm] (amplifier) {Amplifier};
+\node[draw, rectangle, fill=red!20, right=0.5cm of amplifier, minimum width=1.5cm] (motor) {Motor};
+\node[draw, rectangle, fill=orange!20, right=0.5cm of motor, minimum width=1.5cm] (gearbox) {Gearbox};
+\node[draw, rectangle, fill=purple!20, right=0.5cm of gearbox, minimum width=1.5cm] (joint) {Joint};
+\node[draw, rectangle, fill=brown!20, right=0.5cm of joint, minimum width=1.7cm] (ee) {End Effector};
+
+% Sensors directly attached (no arrows between them)
+\node[draw, rectangle, fill=yellow!20, below=0cm of motor, minimum width=1.5cm, anchor=north] (encoder) {Encoder};
+\node[draw, rectangle, fill=yellow!20, below=0cm of ee, minimum width=1.5cm, anchor=north] (ftsensor) {F/T Sensor};
+
+% Short arrows between main blocks
+\draw[->, thick] (controller) -- (amplifier);
+\draw[->, thick] (amplifier) -- (motor);
+\draw[->, thick] (motor) -- (gearbox);
+\draw[->, thick] (gearbox) -- (joint);
+\draw[->, thick] (joint) -- (ee);
+
+% Feedback paths (encoder + FT sensor to controller)
+\draw[->, thick] 
+    (encoder.west) -| ($(controller.south)+(0,-0.2)$) -- (controller);
+
+\draw[->, thick]
+    (ftsensor.east) |- ($(encoder.south)+(0,-0.4)$)
+    -| (controller);
+
+% External connections
+\draw[<-, thick] (controller.west) -- ++(-0.3,0);
+\draw[->, thick] (ee.east) -- ++(0.3,0);
+
+\end{tikzpicture}
+
+
     \end{center}
     
     \vspace{5mm}
