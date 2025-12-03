@@ -1,1 +1,149 @@
-\section{Velocity kinematics modeling}
+\section{Differential Kinematic Modeling}
+\begin{frame}{Differential Kinematic Modeling}
+	In differential kinematic modeling, we are interested in the fellowing relations% between the end-effector velocity $\vectorXdot_{ee}=\begin{bmatrix}
+	%	\vectorPdot_{ee}&\vectorOmega_{ee}
+	%\end{bmatrix}^\top$ (w.r.t the base frame) and the joint velocity $\vectorQdot$
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
+			
+			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
+			
+			% Nodes
+			\node[block] (b1) {Forward differential kinematic model};
+			\node[block, below of=b1] (b2) {Inverse differential kinematic model};
+			\node[block, below of=b2] (b3) {Second order forward differential kinematic model};
+			\node[block, below of=b3] (b4) {Second order inverse differential kinematic model};
+			
+			% Inputs
+			\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQdot$};
+			\draw[->] ($(b2.west)+(-1,0)$) -- (b2.west)node[midway, above] {$\vectorXdot_{ee}$};
+			\draw[->] ($(b3.west)+(-1,0)$) -- (b3.west)node[midway, above] {$\vectorQddot$};
+			\draw[->] ($(b4.west)+(-1,0)$) -- (b4.west)node[midway, above] {$\vectorXddot_{ee}$};
+			
+			% Outputs
+			\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\vectorXdot_{ee}$};
+			\draw[->] (b2.east) -- ($(b2.east)+(1,0)$)node[midway, above] {$\vectorQdot_{ee}$};
+			\draw[->] (b3.east) -- ($(b3.east)+(1,0)$)node[midway, above] {$\vectorXddot_{ee}$};
+			\draw[->] (b4.east) -- ($(b4.east)+(1,0)$)node[midway, above] {$\vectorQddot_{ee}$};
+			
+		\end{tikzpicture}
+	\end{figure}
+\end{frame}
+\begin{frame}{Forward differential kinematic model}
+	Forward differential kinematic model allows to compute the task-space velocity $\vectorXdot_{ee}$ based on the joint velocity $\vectorQdot$
+	\begin{equation*}
+		\vectorXdot_{ee}=\matriceJ(\vectorQ)\vectorQdot, \ \vectorQdot\inR^n 
+	\end{equation*}
+	\begin{itemize}
+		\item $\matriceJ\inR^{m\times n}$ is the Jacobian matrix, and $\vectorXdot_{ee}=\begin{bmatrix}
+			\vectorV_{ee}\\\vectorOmega_{ee}
+		\end{bmatrix}\inR^6$ with $\vectorV_{ee}$ is the linear end-effector velocity  and  $\vectorOmega_{ee}$ is the angular end-effector velocity, both w.r.t the base frame
+		\item Jacobian $\matriceJ$ can be decomposed into $\matriceJ =  \begin{bmatrix}
+			\matriceJ_{lin}\\\matriceJ_{rot}
+		\end{bmatrix}$
+	\end{itemize}
+\end{frame}
+\begin{frame}{Jacobian matrix computation}
+\textbf{Forward kinematic derivative:} Compute analytically the partial derivative of $\vectorX_{ee}$ w.r.t $\vectorQ$
+\begin{align*}
+	\matriceJ &= \frac{\partial \vectorX_{ee}}{\partial\vectorQ}\\
+			  &=\begin{bmatrix}
+			  	\frac{\partial \vectorX_{ee}}{\partial q_1} & \frac{\partial \vectorX_{ee}}{\partial q_2} & \ldots & \frac{\partial \vectorX_{ee}}{\partial q_n}
+			  \end{bmatrix}
+\end{align*}
+\end{frame}
+\begin{frame}{Jacobian matrix computation}
+	\begin{minipage}{.4\columnwidth}
+		Example:  a planar 2-DOF robot
+		\begin{align*}
+			p_{{ee}_x} &= l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+			p_{{ee}_y} &= l_1\sin(q_1)+l_2\sin(q_1+q_2)\\
+			\theta_{ee} &= q_1+q_2
+		\end{align*}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{2DOF-woAxis}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Jacobian matrix computation}
+	\begin{minipage}{.4\columnwidth}
+		Example:  a planar 2-DOF robot
+		\begin{align*}
+			p_{{ee}_x} &= l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+			p_{{ee}_y} &= l_1\sin(q_1)+l_2\sin(q_1+q_2)\\
+			\theta_{ee} &= q_1+q_2
+		\end{align*}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		Jacobian matrix $\matriceJ(\vectorQ)$ is computed as 
+		\begin{equation*}
+			\matriceJ(\vectorQ) = \begin{bmatrix}
+				\pfrac{p_{{ee}_x}}{q_1} & \pfrac{p_{{ee}_x}}{q_2} \\
+				 \pfrac{p_{{ee}_y}}{q_1} & \pfrac{p_{{ee}_y}}{q_2} \\
+				 \pfrac{\theta_{{ee}}}{q_1} & \pfrac{\theta_{{ee}}}{q_2}
+			\end{bmatrix}
+		\end{equation*}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Jacobian matrix computation}
+	\begin{minipage}{.4\columnwidth}
+		Example:  a planar 2-DOF robot
+		\begin{align*}
+			p_{{ee}_x} &= l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
+			p_{{ee}_y} &= l_1\sin(q_1)+l_2\sin(q_1+q_2)\\
+			\theta_{ee} &= q_1+q_2
+		\end{align*}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.5\columnwidth}
+		Jacobian matrix $\matriceJ(\vectorQ)$ is computed as 
+		\begin{equation*}
+			\matriceJ(\vectorQ) = \begin{bmatrix}
+				-l_1\sin(q_1) & -l_2\sin(q_1+q_2) \\
+				l_1\cos(q_1) & l_2\cos(q_1+q_2) \\
+				1 & 1
+			\end{bmatrix}%\\
+%			\matriceJ_{lin}(\vectorQ) &= \begin{bmatrix}
+%				-l_1\sin(q_1) & -l_2\sin(q_1+q_2) \\
+%				l_1\cos(q_1) & l_2\cos(q_1+q_2) 
+%			\end{bmatrix}\\
+%%			\matriceJ_{rot}(\vectorQ) &= \begin{bmatrix}
+%%				1 & 1
+%%			\end{bmatrix}
+		\end{equation*}
+	\end{minipage}
+\end{frame}
+\begin{frame}{Jacobian matrix computation}
+	\textbf{Forward kinematic derivative:} \\
+%	\begin{itemize}
+		\textbf{Pro:} Works fine for $\matriceJ_{lin}(\vectorQ)$\\
+		 \textbf{Con:} 
+		\begin{itemize}
+			\item Tricky for $\matriceJ_{rot}(\vectorQ)$ computation (partial derivative of the rotation matrix $\matriceR_{ee}$ w.r.t $\vectorQ$) when the robot forward kinematics is complex
+			\item Less adapted for implementation
+		\end{itemize}
+%	\end{itemize} 
+\end{frame}
+\begin{frame}{Jacobian matrix computation}
+	\textbf{Velocity composition:} This approach is based on the linear and angulaire velocities composition for a multi-body system
+	\begin{minipage}{.5\columnwidth}
+		\begin{align*}
+			\vectorOmega_i &= \vectorOmega_{i-1}+ \overline{\sigma}_i\dot{q}_i\vectorZ_i\\
+			\vectorV_{o_i} &= \vectorV_{o_{i-1}}+\left[\vectorOmega_{i-1}\times\right]\vectorO_{{i-1}\rightarrow i}+{\sigma}_i\dot{q}_i\vectorZ_i
+		\end{align*}
+	\end{minipage}
+	\hfill
+	\begin{minipage}{.4\columnwidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\columnwidth]{two-bodies}
+		\end{figure}
+	\end{minipage}
+	
+\end{frame}

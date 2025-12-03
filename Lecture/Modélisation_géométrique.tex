@@ -11,10 +11,10 @@
 \end{frame}
 \begin{frame}{Rotation matrix }
 	\begin{itemize}
-		\item The columns of $\matriceR_B^I$ are orthogonal to each other: $\vectorX_B^T\vectorY_B=0$, $\vectorY_B^T\vectorZ_B=0$, $\vectorX_B^T\vectorZ_B=0$
-		\item The columns of $\matriceR_B^I$ are normal: $\vectorX_B^T\vectorX_B=1$, $\vectorY_B^T\vectorY_B=1$, $\vectorZ_B^T\vectorZ_B=1$
-		\item$\matriceR_I^B=\left(\matriceR_B^I\right)^{-1}=\left(\matriceR_B^I\right)^T$
-		\item $\rm{SO}(3)$ denotes the group of $3\times3$ orthogonal matrices $\matriceR$ such that $\matriceR^T = \matriceR$ and $\det(\matriceR)=1$
+		\item The columns of $\matriceR_B^I$ are orthogonal to each other: $\vectorX_B^\top\vectorY_B=0$, $\vectorY_B^\top\vectorZ_B=0$, $\vectorX_B^\top\vectorZ_B=0$
+		\item The columns of $\matriceR_B^I$ are normal: $\vectorX_B^\top\vectorX_B=1$, $\vectorY_B^\top\vectorY_B=1$, $\vectorZ_B^\top\vectorZ_B=1$
+		\item$\matriceR_I^B=\left(\matriceR_B^I\right)^{-1}=\left(\matriceR_B^I\right)^\top$
+		\item $\rm{SO}(3)$ denotes the group of $3\times3$ orthogonal matrices $\matriceR$ such that $\matriceR^\top = \matriceR$ and $\det(\matriceR)=1$
 		\item Sucessive rotations are expressed by rotation composition: $\matriceR_C^I = \matriceR_B^I\matriceR_C^B$. Meaning: perfirm a rotation $\matriceR_B^I$ w.r.t $\setR_I$, then perform a rotation $\matriceR_C^B$ w.r.t $\setR_B$
 		\item \textbf{Remark:} rotation composition is generally not commutative!
 	\end{itemize}
@@ -89,7 +89,7 @@ The rigid body position is given by $\boldsymbol{o}_B\inR^3$ (expressed in $\set
 	The inverse of the homogeneous transformation matrix is given by 
 	\begin{align*}
 		\left(\matriceT_B^I\right)^{-1} = \matriceT^B_I &= \begin{bmatrix}
-			\left(\matriceR_B^I\right)^T & -\left(\matriceR_B^I\right)^T \vectorO_B\\
+			\left(\matriceR_B^I\right)^\top & -\left(\matriceR_B^I\right)^\top \vectorO_B\\
 			\vectorZero_{1\times3} &1
 		\end{bmatrix} \\
 		&=\begin{bmatrix}
@@ -198,16 +198,33 @@ The {\color{blue}{position}} and {\color{purple}orientation} of the  frame $\set
 	\end{minipage}
 \end{frame}
 \begin{frame}{Forward kinematics}
-In the case of articulated robot, the position and orientation of the end-effector frame  $\setR_{ee}$ w.r.t to $\setR_I$ can be obtained through the homogeneous transformation matrix composition as a function of the joint variables
+In the case of articulated robot, the position and orientation of the end-effector frame  $\setR_{ee}$ w.r.t to $\setR_I$ can be obtained through the homogeneous transformation matrix composition as a function of $\vectorQ$
 	
-	\begin{minipage}{0.35\columnwidth}
+	\begin{minipage}{0.45\columnwidth}
 		\begin{align*}
 			\matriceT_{ee}^I&=\matriceT_B^I\matriceT_C^B\matriceT_D^C\matriceT_E^D\matriceT_F^E\matriceT_{ee}^{F}\\
 		\end{align*}
-		$\matriceT_{ee}^I$ is denoted as the \textbf{forward kinematic model}
+	%	$\matriceT_{ee}^I$ is denoted as the \textbf{forward kinematic model}
+		\begin{figure}
+			\centering
+			\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
+				
+				\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
+				
+				% Nodes
+				\node[block] (b1) {Forward kinematic model};
+				
+				% Inputs
+				\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQ$};
+				
+				% Outputs
+				\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\matriceT_{ee}^I$};
+			
+			\end{tikzpicture}
+		\end{figure}
 	\end{minipage}
 	\hfill
-	\begin{minipage}{0.6\columnwidth}
+	\begin{minipage}{0.5\columnwidth}
 		\begin{figure}
 			\centering
 			\includegraphics[height=0.4\textheight]{rigid-tree_TransformationMatrix.pdf}
@@ -787,7 +804,7 @@ Another difference is the order of the homogeneous transformation matrix $\matri
 	Forward kinematics model of the end-effector: \\
 	End-effector position: $\vectorP_{ee}= \begin{bmatrix}
 		l_1\cos(q_1+q_2)&l_1\sin(q_1+q_2)&-q_3
-	\end{bmatrix}^T$
+	\end{bmatrix}^\top$
 	End-effector orientation: $\matriceR_{ee}= \begin{bmatrix}
 	\cos(q_1+q_2)&\sin(q_1+q_2)&0\\
 	\sin(q_1+q_2)&-\cos(q_1+q_2)&0\\
@@ -795,6 +812,23 @@ Another difference is the order of the homogeneous transformation matrix $\matri
 	\end{bmatrix}$
 \end{frame}
 \begin{frame}{Inverse kinematics}
+	\begin{figure}
+		\centering
+		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
+			
+			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
+			
+			% Nodes
+			\node[block] (b1) {Inverse kinematic model};
+			
+			% Inputs
+			\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQ$};
+			
+			% Outputs
+			\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\matriceT_{ee}^I$};
+			
+		\end{tikzpicture}
+	\end{figure}
 	\begin{itemize}
 		\item Forward kinematics model find the the end-effector pose $\vectorXMaj$ ($\vectorP_{ee},\matriceR_{ee}$) given the joints position $\vectorQ$: $\vectorX=f(\vectorQ)$ 		
 		\item In control context, we are particularly interested in finding the joints position $\vectorQ$ given the end-effector pose $\vectorXMaj$: $\vectorQ=f^{-1}(\vectorQ)$
@@ -947,4 +981,16 @@ Example:  a planar 2-DOF robot
 		\includegraphics[width=0.85\textheight]{Newton-raphson}
 		\caption{Iterative computation for numerical inverse kinematics with Newton-Raphson method.}
 	\end{figure}
+\end{frame}
+\begin{frame}{Inverse kinematics - Numerical approach}
+%	\begin{itemize}
+		%\item 
+		In general, dedicated numerical inverse-kinematic approaches are more elaborated to account for
+		\begin{itemize}
+			\item Joints position limits
+			\item Avoid self-collision
+			\item Avoid bad numerical behavior especially when the desired pose $\vectorX_d$ is out of reach (outside the workspace)
+			\item Optimize the solutions (w.r.t some criteria) in case of the robot redundancy, e.g., ensure solutions continuity when $\vectorX_d$ is time-varying
+		%\end{itemize} 
+	\end{itemize}
 \end{frame}

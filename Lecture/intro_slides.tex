@@ -69,10 +69,18 @@
 		\item In practice, other types of joints can be used for modeling purposes, e.g., fixed (0 DoF) and floating joints (6 DoF)
 	\end{itemize}
 \end{frame}
+\begin{frame}{Robotic manipulator - Joint-space and Task-space}
+	\begin{itemize}
+		\item \textbf{Joint-space:} space in which the joint configuration $\vectorQ$ is defined. 
+		\item For a robotic arm with $n$ joints, the joint-space $\subseteq\mathbb{R}^n$ 
+		\item \textbf{Task-space:} space in which the end-effector configuration $\vectorX_{ee}$ is defined.
+		\item  $\vectorX_{ee}$ can be the position, the orientation, or both 
+	\end{itemize} 
+\end{frame}
 \begin{frame}{Robotic manipulator - Workspace}
 	\begin{itemize}
 	%	\item Degree of Freedom (DoF) = number of possible motion - constraints imposed by the joint $\Rightarrow$ Each revolute or prismatic joint allows one DoF 
-		\item Workspace: the space reachable by the robot's end-effector. Its shape and volume are defined by the robot structure and the mechanical joint limits.
+		\item \textbf{Workspace:} space reachable by the end-effector. Its shape and volume are defined by the robot structure and the mechanical joint limits.
 		\begin{figure}
 			\centering
 			\includegraphics[width = 0.3\columnwidth]{Cartesian robot.png}
@@ -82,10 +90,11 @@
 		\end{figure}
 	\end{itemize}
 \end{frame}
+
 \begin{frame}{Robotic manipulator - Repeatability and Payload}
 	\begin{itemize}
-		\item Repeatability: a measure of the robot ability to return to a previously reached position. It is measured in $mm$
-		\item Payload: the maximum load the robot can widthstand statically.
+		\item \textbf{Repeatability:} measure of the robot ability to return to a previously reached position. It is measured in $mm$
+		\item \textbf{Payload:} maximum load the robot can widthstand statically.
 	\end{itemize} 
 \end{frame}
 
