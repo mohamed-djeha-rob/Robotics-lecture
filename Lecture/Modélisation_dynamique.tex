@@ -1,7 +1,14 @@
-\begin{frame}{Dynamic model}
+\begin{frame}{Dynamics model}
 	\begin{itemize}
-		\item The dynamic model describes how joint torques $\vectorTau$ is related ($\vectorQ,\vectorQdot, \vectorQddot$) while accounting for all physical effects: links inertia and center of mass, Coriolis/centrifugal forces, gravity, friction, and external forces
-		\item According to this relation, there exists two dynamic models
+		\item The previous models decribe the bidrectional relation between the task-space and joint-space in terms of kinematic motion\only<-2>{... but no dynamics is involved}
+		\only<-3>{\item The dynamic model describes how joint torques $\vectorTau$ is related to $\vectorQ,\vectorQdot, \vectorQddot$ while accounting for all physical effects: links inertia and center of mass, Coriolis/centrifugal forces, gravity, friction, and external forces}
+	\end{itemize}
+\end{frame}
+\begin{frame}{Lagrange method}
+	How the dynamics model is constructed
+\end{frame}
+\begin{frame}{Dynamics model}
+There exists two dynamic models
 			\begin{figure}
 			\centering
 			\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
@@ -9,8 +16,8 @@
 				\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
 				
 				% Nodes
-				\node[block] (b1) {Direct dynamic model};
-				\node[block, below of=b1] (b2) {Inverse  dynamic model};
+				\node[block] (b1) {Forward dynamics model};
+				\node[block, below of=b1] (b2) {Inverse  dynamics model};
 
 				
 				% Inputs
@@ -20,10 +27,13 @@
 				
 				% Outputs
 				\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[pos=0.9, above] {$\vectorQ,\vectorQdot, \vectorQddot$};
-				\draw[->] (b2.east) -- ($(b2.east)+(1,0)$)node[midway, above] {$\vectorTau$};
-				
+				\draw[->] (b2.east) -- ($(b2.east)+(1,0)$)node[midway, above] {$\vectorTau$};				
 			\end{tikzpicture}
-		\end{figure}
-	\end{itemize}
-	
+		\end{figure}	
+\end{frame}
+\begin{frame}{Forward dynamics model}
+	content...
+\end{frame}
+\begin{frame}{Forward dynamics model}
+	content...
 \end{frame}

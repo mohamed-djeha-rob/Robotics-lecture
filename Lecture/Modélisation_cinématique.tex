@@ -1,6 +1,6 @@
-\section{Differential Kinematic Modeling}
-\begin{frame}{Differential Kinematic Modeling}
-	In differential kinematic modeling, we are interested in the fellowing relations% between the end-effector velocity $\vectorXdot_{ee}=\begin{bmatrix}
+\section{Differential Kinematics Modeling}
+\begin{frame}{Differential kinematics modeling}
+	In differential kinematics modeling, we are interested in the fellowing relations% between the end-effector velocity $\vectorXdot_{ee}=\begin{bmatrix}
 	%	\vectorPdot_{ee}&\vectorOmega_{ee}
 	%\end{bmatrix}^\top$ (w.r.t the base frame) and the joint velocity $\vectorQdot$
 	\begin{figure}
@@ -10,10 +10,10 @@
 			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
 			
 			% Nodes
-			\node[block] (b1) {Forward differential-kinematic model};
-			\node[block, below of=b1] (b2) {Inverse differential-kinematic model};
-			\node[block, below of=b2] (b3) {Second-order forward differential-kinematic model};
-			\node[block, below of=b3] (b4) {Second-order inverse differential-kinematic model};
+			\node[block] (b1) {Forward differential-kinematics model};
+			\node[block, below of=b1] (b2) {Inverse differential-kinematics model};
+			\node[block, below of=b2] (b3) {Second-order forward differential-kinematics model};
+			\node[block, below of=b3] (b4) {Second-order inverse differential-kinematics model};
 			
 			% Inputs
 			\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQdot$};
@@ -30,8 +30,8 @@
 		\end{tikzpicture}
 	\end{figure}
 \end{frame}
-\begin{frame}{Forward differential-kinematic model}
-	Forward differential-kinematic model allows to compute the task-space velocity $\vectorXdot_{ee}\inR^m$ given the joint velocity $\vectorQdot\inR^n $
+\begin{frame}{Forward differential-kinematics model}
+	Forward differential-kinematics model allows to compute the task-space velocity $\vectorXdot_{ee}\inR^m$ given the joint velocity $\vectorQdot\inR^n $
 	\begin{equation*}
 		\vectorXdot_{ee}=\matriceJ(\vectorQ)\vectorQdot
 	\end{equation*}
@@ -44,8 +44,8 @@
 		\end{bmatrix}$
 	\end{itemize}
 \end{frame}
-\begin{frame}{Forward differential-kinematic model}
-	\textbf{Why forward differential-kinematic model?}
+\begin{frame}{Forward differential-kinematics model}
+	\textbf{Why forward differential-kinematics model?}
 	\begin{figure}
 		\centering
 		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
@@ -53,7 +53,7 @@
 			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
 			
 			% Nodes
-			\node[block] (b1) {Forward differential-kinematic model};
+			\node[block] (b1) {Forward differential-kinematics model};
 
 			
 			% Inputs
@@ -63,7 +63,7 @@
 			\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\vectorXdot_{ee}$};			
 		\end{tikzpicture}
 	\end{figure}
-	Forward differential-kinematic model is used for 
+	Forward differential-kinematics model is used for 
 	\begin{itemize}
 		\item \textbf{Simulation:} Construct the links motion given a sequence of joint velocity
 		\item \textbf{Estimation/Measurement:} No need to use sensor for measuring  links velocity, direct mapping of joint velocity to task-space
@@ -72,12 +72,12 @@
 \begin{frame}{Jacobian matrix computation}
 	There are two approaches for computing the Jacobian matrix
 	\begin{enumerate}
-		\item Forward kinematic derivative
+		\item Forward kinematics derivative
 		\item Recursive velocity composition
 	\end{enumerate}
 \end{frame}
 \begin{frame}{Jacobian matrix computation}
-\textbf{Forward kinematic derivative:} Compute analytically the partial derivative of $\vectorX_{ee}$ w.r.t $\vectorQ$
+\textbf{Forward kinematics derivative:} Compute analytically the partial derivative of $\vectorX_{ee}$ w.r.t $\vectorQ$
 \begin{align*}
 	\matriceJ &= \frac{\partial \vectorX_{ee}}{\partial\vectorQ}\\
 			  &=\begin{bmatrix}
@@ -152,7 +152,7 @@
 	\end{minipage}
 \end{frame}
 \begin{frame}{Jacobian matrix computation}
-	\textbf{Forward kinematic derivative:} \\
+	\textbf{Forward kinematics derivative:} \\
 %	\begin{itemize}
 		\textbf{Pro:} Works fine for $\matriceJ_{lin}(\vectorQ)$\\
 		 \textbf{Con:} 
@@ -224,8 +224,8 @@
 	\end{itemize}
 	}
 \end{frame}
-\begin{frame}{Inverse differential-kinematic model}
-	Inverse differential-kinematic model allows to compute joint velocity $\vectorQdot\inR^n$ given task-space velocity $\vectorXdot_{ee}\inR^m$
+\begin{frame}{Inverse differential-kinematics model}
+	Inverse differential-kinematics model allows to compute joint velocity $\vectorQdot\inR^n$ given task-space velocity $\vectorXdot_{ee}\inR^m$
 	\begin{itemize}
 		\item If $n=m$
 		\begin{equation*}
@@ -241,8 +241,8 @@
 		\end{equation*}
 	\end{itemize}
 \end{frame}
-\begin{frame}{Inverse differential-kinematic model}
-	\textbf{Why {inverse differential-kinematic model}?}
+\begin{frame}{Inverse differential-kinematics model}
+	\textbf{Why {inverse differential-kinematics model}?}
 	\begin{figure}
 		\centering
 		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
@@ -250,7 +250,7 @@
 			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
 			
 			% Nodes
-			\node[block] (b1) {Inverse differential-kinematic model};
+			\node[block] (b1) {Inverse differential-kinematics model};
 			
 			
 			% Inputs
@@ -260,18 +260,36 @@
 			\draw[->] (b1.east) -- ($(b1.east)+(1,0)$)node[midway, above] {$\vectorQdot$};			
 		\end{tikzpicture}
 	\end{figure}
-	Inverse differential-kinematic model is used for 
+	Inverse differential-kinematics model is used for 
 	\begin{itemize}
 		\item \textbf{Control:} Find the desired joint velocity $\vectorQdot_d$ that needs to be applied to perform a given task-space velocity (motion) $\vectorXdot_d$ 
 	\end{itemize} 
 \end{frame}
-\begin{frame}{Inverse differential-kinematic model}
-\begin{enumerate}
-	\item Given a desired end-effector velocity profil for each instant $k$  designed such that the end-effector goes to a reference pose $\vectorX_{ee}^{ref}$: $\vectorXdot_{ee}^*(k)= -\lambda(\vectorX_{ee}(k)-\vectorX_{ee}^{ref})$
-	\item Compute the corresponding joint velocity: $\vectorQdot(k) = \matriceJ^\dagger\vectorXdot_{ee}^*$
-	\item Integrate to obtain new joint position: $\vectorQ(k+1) = \vectorQ(k) + \vectorQdot(k)$
-	\item Use forward kinematic model to update the end effector pose: $\vectorX_{ee}(k+1)\rightarrow\matriceT_{ee}^0(\vectorQ(k+1))$
-	\item Loop at (1)
+\begin{frame}{Inverse differential-kinematics model}
+	\textbf{Inverse differential-kinematics control method:}
+\begin{enumerate}%[label=\arabic*.]
+	\item Given a desired end-effector velocity profil for each instant $k$  designed such that the end-effector goes to a reference pose $\vectorX_{ee}^{ref}$: 
+	\begin{equation*}
+		\vectorXdot_{ee}^*(k)= -\lambda(\vectorX_{ee}(k)-\vectorX_{ee}^{ref})
+	\end{equation*}
+	\item Compute the corresponding joint velocity with the inverse differential-kinematics model:
+	\begin{equation*}
+		\vectorQdot(k) = \matriceJ^\dagger\vectorXdot_{ee}^*
+	\end{equation*} 
+	\item Integrate to obtain new joint position:
+	\begin{equation*}
+		\vectorQ(k+1) = \vectorQ(k) + \vectorQdot(k)
+	\end{equation*}
+\end{enumerate}
+\end{frame}
+\begin{frame}{Inverse differential-kinematics model}
+	\begin{enumerate}
+		 \setcounter{enumi}{3}
+	\item Use forward kinematics model to update the end effector pose:
+	\begin{equation*}
+		\vectorX_{ee}(k+1)\rightarrow\matriceT_{ee}^0(\vectorQ(k+1))
+	\end{equation*}
+	\item Loop at (1) for $k=k+1$
 \end{enumerate}
 \end{frame}
 \begin{frame}{Kinematic redundancy}
@@ -282,10 +300,10 @@
 		\includegraphics[width=0.95\columnwidth]{3DOF-Redundancy2}
 		\caption{Three different possible posture resulting from the required task}
 	\end{figure}
-	In such case, the inverse differential kinematic solution $\vectorQdot=\matriceJ^\dagger\vectorXdot_{ee}$ \textbf{is not unique}. The extra DoF can exploited to perform a secondary task!
+	In such case, the inverse differential kinematics solution $\vectorQdot=\matriceJ^\dagger\vectorXdot_{ee}$ \textbf{is not unique}. The extra DoF can exploited to perform a secondary task!
 \end{frame}
 \begin{frame}{Kinematic redundancy}
-	A more general solution to the inverse differential-kinematic problem is 
+	A more general solution to the inverse differential-kinematics problem is 
 	\begin{equation*}
 		\vectorQdot=\matriceJ^\dagger\vectorXdot_{ee} + \matriceP \vectorQdot_0
 	\end{equation*}
@@ -346,8 +364,8 @@
 	\end{equation*}
 	with $k$ is a damping factor
 \end{frame}
-\begin{frame}{Second-order forward differential-kinematic model}
-	Second-order forward differential-kinematic model allows to compute the task-space acceleration $\vectorXddot_{ee}\inR^m$ given the joint acceleration $\vectorQddot\inR^n $
+\begin{frame}{Second-order forward differential-kinematics model}
+	Second-order forward differential-kinematics model allows to compute the task-space acceleration $\vectorXddot_{ee}\inR^m$ given the joint acceleration $\vectorQddot\inR^n $
 	\begin{equation*}
 		\vectorXddot_{ee}=\matriceJ(\vectorQ)\vectorQddot + \matriceJdot(\vectorQ,\vectorQdot)\vectorQdot
 	\end{equation*}
@@ -362,8 +380,8 @@
 %		\end{bmatrix}$
 	\end{itemize}
 \end{frame}
-\begin{frame}{Second-order inverse differential-kinematic model}
-	Second-order inverse differential-kinematic model allows to compute the joint acceleration $\vectorQddot\inR^n $ fiven the task-space acceleration $\vectorXddot_{ee}\inR^m$ 
+\begin{frame}{Second-order inverse differential-kinematics model}
+	Second-order inverse differential-kinematics model allows to compute the joint acceleration $\vectorQddot\inR^n $ fiven the task-space acceleration $\vectorXddot_{ee}\inR^m$ 
 	\begin{itemize}
 		\item If $n=m$
 		\begin{equation*}

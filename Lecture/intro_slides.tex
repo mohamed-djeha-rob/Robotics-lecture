@@ -1,33 +1,418 @@
-\begin{frame}{Introduction}
-	\begin{itemize}
-		\item Robotics has a profound historical and cultural roots
-		\item Constant attempts to make machines able to substitue humans in repeititve and tedious tasks
-		\item Origin of \emph{‘Robot’} term
-		\item Historical examples of robots: water clock (Harun Arrachid), Al Jazari, Turk chess player, Japanese robots, etc.
-		\item Isaac Asimov sci-fi roman: robots as mechanical artifacts - Definition of \emph{‘Robotics’} (Science devoted to the study of robots) - Asimov's three fundamental laws:
+\begin{frame}[t]\frametitle{Robots are -\emph{almost}- everywhere !}
+	\begin{picture}(0,0)
+		\put(0,10){Robots are able to replace humans in tedious tasks...}
+		\put(70,-90){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/CooperativeLocomotion.m4v}{
+					% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
+				\embedvideo*{\includegraphics[width=1.3\textwidth,height=5.5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/Motivation-IAM.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.8cm}\centering\small Humanoid robots in logistic tasks}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){Robots are able to accomplish complex missions...}
+		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+				\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.5cm}\centering\small \emph{Atlas} humanoid robot assisting workers}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+%	\begin{picture}(0,0)
+%		\put(0,70){Robots are becoming sophisticated, redundant and versatile}
+%		\put(10,-30){\begin{minipage}{0.3\columnwidth}
+%				\centering
+%				% \href{run:Figures/Quadruped_Redundancy.mp4}{
+%					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 16-43-33.png}} \\
+%				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 16-43-33.png}}{Figures/Quadruped_Redundancy.mp4}[autoplay=false,showGUI=true]\\
+%				\makebox{\hspace{1cm}\centering\small Armed \emph{Spot} quadruped robot}
+%		\end{minipage}}
+%		
+%		
+%		\put(230,-30){\begin{minipage}{0.3\columnwidth}
+%				\centering
+%				\embedvideo*{\includegraphics[width=1.5\columnwidth,height=3.8cm]{Screenshot from 2025-06-10 17-33-28.png}}{Figures/wheel-legged-robots.mp4}[autoplay=false,showGUI=true]\\
+%				% \href{run:Figures/wheel-legged-robots}{
+%					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 17-33-28.png}}
+%				% \\
+%				\makebox{\hspace{0cm}\centering\small Wheeled \emph{Anymal C} quadruped robot}
+%				%	\small{Wheeled quadruped robot}
+%		\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
+%	\end{picture}
+%\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}
+	Robots are embedding multiple sensors	
+	% \begin{picture}(0,0)
+		% \put(0,70){}
+		% \put(150,-20){
+			% \begin{minipage}{\columnwidth}
+				\begin{figure}
+					\centering
+					\embedvideo*{\includegraphics[width=0.59\columnwidth,height=5cm]{Screenshot from 2025-06-10 18-19-32.png}}{Figures/OceanOne.m4v}[autoplay=false,showGUI=true]\\
+					\caption*{\emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
+				\end{figure}
+				% \href{run:Figures/OceanOne.m4v}{
+					% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-10 18-19-32.png}}
+				% \\
+				
+				% \makebox{\hspace{-1.25cm}\centering\small \emph{OceanOne$^\text{\emph{K}}$}  underwater humanoid robot}
+				% \end{minipage}
+			% }
+		
+		
+		%		\put(250,-30){\begin{minipage}{0.25\columnwidth}
+				%				\centering
+				%				\includegraphics[height=\columnwidth]{The-Eelume-AIAUV-courtesy-of-Eelume.png}\\
+				%				\small{Underwater exploration 
+					%				vehicle \\
+					%				(Basso et al., 2020)}
+				%			\end{minipage}}%{\includegraphics[height=0.25\columnwidth]{Screenshot from 2022-08-15 15-48-07.png}}
+		% \end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){Robots are able to perform surgical operations...}
+		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+				\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Démonstration du Robot Chirurgical Da Vinci Xi au CHIC.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.5cm}\centering\small Robotic surgery}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){Robots are able to acheive high level of precise motion...}
+		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+				\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Industrial-robot.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.5cm}\centering\small Robotic arms in car manufacturing }
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){Robots are able to interact safely with human...}
+		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+				\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Service-robot.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.5cm}\centering\small Waiter robot in a restaurant}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+	\begin{picture}(0,0)
+		\put(0,70){Robots can even carry guns and ensure military support...}
+		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+				\centering
+				% \href{run:Figures/Atlas Gets a Grip _ Boston Dynamics.mp4}{
+					% \includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 12-55-26.png}} 
+				\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 12-55-26.png}}{Figures/Military-robot.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{1.5cm}\centering\small Tactical quadruped robot}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+%	\begin{picture}(0,0)
+%		\put(0,70){... can cooperate ...}
+%		\put(90,-20){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/CooperativeLocomotion.m4v}{
+%					% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 13-52-35.png}} \\
+%				\embedvideo*{\includegraphics[width=1.20\textwidth,height=5cm]{Screenshot from 2025-06-11 13-52-35.png}}{Figures/CooperativeLocomotion.m4v}[autoplay=false,showGUI=true]\\
+%				\makebox{\hspace{-0.8cm}\centering\small Two \emph{Go 1} quadruped robots cooperating to lift heavy objects}
+%		\end{minipage}}
+%	\end{picture}
+%\end{frame}
+
+%\begin{frame}{Robots are -\emph{almost}- everywhere !}	
+%	\begin{picture}(0,0)
+%		\put(0,70){... but have to satisfy some hard constraints}
+%		\put(00,-20){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/Control Barrier Function based safe navigation -- experiment.mp4}{
+%					% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-50.png}} \\
+%				\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-50.png}}{Figures/Control Barrier Function based safe navigation -- experiment.mp4}[autoplay=false,showGUI=true]\\
+%				
+%				\makebox{\hspace{-0.2cm}\centering\small Getting to the target while avoiding collision}
+%		\end{minipage}}
+%		\put(220,-20){\begin{minipage}{0.5\columnwidth}
+%				\centering
+%				% \href{run:Figures/Safe Behavior through Control Barrier Functions.mp4}{
+%					% 	\includegraphics[height=\columnwidth]{Screenshot from 2025-06-11 16-33-28.png}} \\
+%				\embedvideo*{\includegraphics[width=\columnwidth,height=4.3cm]{Screenshot from 2025-06-11 16-33-28.png}}{Figures/Safe Behavior through Control Barrier Functions.mp4}[autoplay=false,showGUI=true]\\
+%				
+%				\makebox{\hspace{-0.5cm}\centering\small Keeping upright position}
+%		\end{minipage}}
+%	\end{picture}
+%\end{frame}
+\begin{frame}{Robotics: profound historical and cultural roots}
+	Al-Jazari (1136–1206), father of robotics, author of \emph{The Book of Knowledge of Ingenious Mechanical Devices}
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.55\textheight]{servant}
+		\includegraphics[height=0.55\textheight]{elephant_clock}
+		\includegraphics[height=0.55\textheight]{washing_hand_robot}
+		\caption{Servant robot (left), Elephant clock (middle) and Hand-washing robot (right)}
+	\end{figure}
+\end{frame}
+\begin{frame}{Robotics: profound historical and cultural roots}
+	\emph{Karakuri ningyō} traditional japanese puppets (early 17th century)
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.52\textheight]{67-karakuri-ningyo-histoire-automate-japon-calligraphie}
+		\includegraphics[height=0.52\textheight]{Tea-servant}
+		\includegraphics[height=0.52\textheight]{archer}
+		\caption{Calligraphic writer (left), Tea servant (middle) and Archer (right)}
+	\end{figure}
+\end{frame}
+\begin{frame}{Robotics: profound historical and cultural roots}
+	Isaac Asimov (1940s), author of \emph{The Robot} roman, introduced robots as mechanical artifacts of human appearance but devoid of feelings.
+	
+	\begin{minipage}{0.65\columnwidth}
+		 \textbf{Asimov's three fundamental laws:}
 		\begin{enumerate}
 			\item A robot may not injure human beings 
 			\item A robot must obey the orders given by human beings, except when such orders would conflict with the first law
 			\item A robot must protect its own existence, as long as this protection does not conflict with the first and second laws
 		\end{enumerate}
-	\end{itemize}
+	\end{minipage}
+	\begin{minipage}{0.3\columnwidth}
+		\begin{figure}
+			\raggedleft
+			\includegraphics[height=0.61\textheight]{asimov}
+		\end{figure}
+	\end{minipage}	
 \end{frame}
-\begin{frame}
+\begin{frame}{Robotics in Science-Fiction cinema}
+	\begin{picture}(0,0)
+		%		\put(0,70){Robots are able to accomplish complex missions...}
+		\put(70,-20){\begin{minipage}{0.7\columnwidth}
+				\centering
+				\embedvideo*{\includegraphics[width=\columnwidth]{Screenshot from 2025-11-14 18-07-00.png}}{Figures/embodiment_avatar.mp4}[autoplay=false,showGUI=true]\\
+				\makebox{\hspace{0cm}\centering\small Robotic embodiment in \emph{Avatar} sci-fi movie (2009)}
+		\end{minipage}}
+	\end{picture}
+\end{frame}
+\begin{frame}{Robotics \& Robot}
+\begin{tcolorbox}[colback=blue!5!white, colframe=green!50!black, title=Definition]
 	\begin{itemize}
+		\item Robotics is concerned with the study of the robots that can replace human beings in the execution of a task, as regards both physical activity and decision making
 		\item A robot can be seen as a machine that is able to modify and interact with its environment in which it operates while respecting the Asimov's rules
-		\item Components of a robot: 
-		\begin{enumerate}
-			\item Mechanical system
-			\begin{itemize}
-				\item Locomotion apparatus: wheels, crawler, legs, etc. 
-				\item Manipulation apparatus: manipulator arms, end-effector, hands, section cap, etc.
-			\end{itemize}
-			\item Actuator: the organ by which the robot exert an action (either locomotion or manipulation)
-			\item Sensors: the ability for the perception of the internal status (prioprioceptive sensors, e.g., joint-position sensors) or the external status (exteroceptive sensors, e.g., camera, force sensor)
-			\item Control system: compute commands for the actuators based on the sensors information   
-		\end{enumerate}		 
+	\end{itemize}
+\end{tcolorbox}
+\end{frame}
+\begin{frame}{Robotics: multidisciplinary domain}
+	
+	\centering
+	\begin{tikzpicture}[node distance=3cm, every node/.style={font=\Large}]
+		
+		% Central node
+		\node[draw, circle, thick, minimum size=2.5cm, fill=blue!20] (robotics) {Robotics};
+		
+		% Surrounding disciplines
+		\node[draw, rectangle, rounded corners, thick, fill=green!20] (mech)  [above of=robotics]  {Mechanics};		
+		\node[draw, rectangle, rounded corners, thick, fill=yellow!20] (elec) [right of=robotics, node distance = 4cm]                {Electronics};
+		\node[draw, rectangle, rounded corners, thick, fill=orange!20] (prog)   [above  of=elec, node distance = 3cm]          {Programming};
+		\node[draw, rectangle, rounded corners, thick, fill=red!20] (auto)      [below  of=elec]          {Automatics};
+		\node[draw, rectangle, rounded corners, thick, fill=cyan!20] (ai)       [below of=robotics]                {AI};		
+		\node[draw, rectangle, rounded corners, thick, fill=pink!20] (maths)     [left of=robotics, node distance = 4.3cm]                {Mathematics};
+		\node[draw, rectangle, rounded corners, thick, fill=purple!20] (physics) [below of=maths]          {Physics};
+		\node[draw, rectangle, rounded corners, thick, fill=teal!20] (ethics)    [above of=maths]          {Ethics};
+		%\node[draw, rectangle, rounded corners, thick, fill=brown!20] (matSci)   [below left=1cm and 3cm of robotics] {Material Science};
+		
+		% Connections
+		\foreach \x in {mech,prog,elec,auto,ai,physics,maths,ethics}%,matSci}
+		\draw[thick, -latex] (robotics) -- (\x);
+		
+	\end{tikzpicture}	
+\end{frame}
+%\begin{frame}{Robotics as a Multidisciplinary Domain}
+%	
+%	\centering
+%	\begin{tikzpicture}[
+%		every node/.style={font=\Large, draw, rounded corners, thick, fill=blue!15},
+%		center/.style={circle, fill=red!20, minimum size=2.5cm},
+%		outer/.style={rectangle, minimum width=2.7cm, minimum height=1.2cm}
+%		]
+%		
+%		% central node
+%		\node[center] (robotics) at (0,0) {Robotics};
+%		
+%		% radius of circle
+%		\def\r{4cm}
+%		
+%		% nodes around the circle
+%		\node[outer] (mech)     at (90:\r)   {Mechanics};
+%		\node[outer] (prog)     at (50:\r)   {Programming};
+%		\node[outer] (elec)     at (10:\r)   {Electronics};
+%		\node[outer] (auto)     at (330:\r)  {Automatics};
+%		\node[outer] (ai)       at (270:\r)  {AI};
+%		\node[outer] (physics)  at (230:\r)  {Physics};
+%		\node[outer] (maths)    at (180:\r)  {Mathematics};
+%		\node[outer] (ethics)   at (130:\r)  {Ethics};
+%		\node[outer] (matSci)   at (310:\r)  {Material Science};
+%		
+%		% connections
+%		\foreach \x in {mech,prog,elec,auto,ai,physics,maths,ethics,matSci}
+%		\draw[thick, -latex] (robotics) -- (\x);
+%		
+%	\end{tikzpicture}
+%	
+%\end{frame}
+
+%\begin{frame}{Introduction}
+%	\begin{itemize}
+%%		\item Robotics has a profound historical and cultural roots
+%%		\item Constant attempts to make machines able to substitute humans in repetitive and tedious tasks
+%		\item Origin of \emph{‘Robot’} term
+%%		\item Historical examples of robots: water clock (Harun Arrachid), Al Jazari, Turk chess player, Japanese robots, etc.
+%		\item Isaac Asimov sci-fi roman: robots as mechanical artifacts - Definition of \emph{‘Robotics’} (Science devoted to the study of robots) - Asimov's three fundamental laws:
+%		\begin{enumerate}
+%			\item A robot may not injure human beings 
+%			\item A robot must obey the orders given by human beings, except when such orders would conflict with the first law
+%			\item A robot must protect its own existence, as long as this protection does not conflict with the first and second laws
+%		\end{enumerate}
+%	\end{itemize}
+%\end{frame}
+\begin{frame}{Application domains of robotics}
+	
+	\centering
+	\begin{tikzpicture}[
+		scale=0.95,
+		transform shape,
+		every node/.style={font=\small, draw, rounded corners, thick, fill=blue!15},
+		center/.style={circle, fill=red!20, minimum size=2cm},
+		outer/.style={rectangle, minimum width=2.4cm, minimum height=0.9cm}
+		]
+		
+		% central node
+		\node[center, fill=blue!20] (robotics) at (0,0) {Robotics};
+		
+		% reduced radius
+		\def\r{3.2cm}
+		
+		% nodes around the circle
+		\node[outer, fill=green!20] (industry)   at (90:\r)   {Industrial Robotics};
+		\node[outer, fill=yellow!20] (sci)  	  at (0:\r)  {Scientific Research};
+		\node[outer, fill=orange!20] (med)        at (45:\r)   {Medical / Surgical};
+		\node[outer, fill=red!20] (agri)       at (315:\r)  {Agriculture};
+		\node[outer, fill=cyan!20] (space)      at (270:\r)  {Space Robotics};
+		\node[outer, fill=pink!20] (service)    at (225:\r)  {Service Robots};
+		\node[outer, fill=purple!20] (military)   at (180:\r)  {Defence / Military};
+		\node[outer, fill=teal!20] (logistics)  at (135:\r)  {Logistics};
+		
+		
+		% connections
+		\foreach \x in {industry,sci,med,agri,space,service,military,logistics}
+		\draw[thick, -latex] (robotics) -- (\x);
+	\end{tikzpicture}	
+\end{frame}
+\begin{frame}{Application domains of robotics}	
+	\centering
+	\begin{tikzpicture}[
+		scale=0.95,
+		transform shape,
+		every node/.style={font=\small, draw, rounded corners, thick, fill=blue!15},
+		center/.style={circle, fill=red!20, minimum size=2cm},
+		outer/.style={rectangle, minimum width=2.4cm, minimum height=0.9cm}
+		]
+		
+		% central node
+		\node[center, fill=blue!20] (robotics) at (0,0) {Robotics};
+		
+		% reduced radius
+		\def\r{3.2cm}
+		
+		% nodes around the circle
+		\node[outer, fill=green!20] (industry)   at (90:\r)   {\textbf{Industrial Robotics}};
+		\node[outer, fill=yellow!20] (sci)  	  at (0:\r)  {Scientific Research};
+		\node[outer, fill=orange!20] (med)        at (45:\r)   {Medical / Surgical};
+		\node[outer, fill=red!20] (agri)       at (315:\r)  {Agriculture};
+		\node[outer, fill=cyan!20] (space)      at (270:\r)  {Space Robotics};
+		\node[outer, fill=pink!20] (service)    at (225:\r)  {Service Robots};
+		\node[outer, fill=purple!20] (military)   at (180:\r)  {Defence / Military};
+		\node[outer, fill=teal!20] (logistics)  at (135:\r)  {Logistics};
+		
+		
+		% connections
+		\foreach \x in {industry,sci,med,agri,space,service,military,logistics}
+		\draw[thick, -latex] (robotics) -- (\x);		
+	\end{tikzpicture}	
+\end{frame}
+\begin{frame}{Industrial robotics}
+	Several types of robots are used in indusry:
+	\begin{figure}
+		\centering
+		\includegraphics[width=1\columnwidth]{industrialRobots}
+		\caption{\textbf{Serial arm} (left), \textbf{parallel robot - Delta} (left-center), \textbf{wheeled robot} (right-center), and \textbf{humanoid robot} (right)}
+	\end{figure}
+\end{frame}
+\begin{frame}{Robotic system components}
+	
+	\centering
+	\begin{tikzpicture}[block/.style={draw, thick, minimum width=2cm, minimum height=1cm},
+		sum/.style={draw, circle, minimum size=0.7cm, thick},
+		>=latex]
+		
+		% Blocks
+		\node[block] (controller) {Controller};
+		\node[block, right=3cm of controller] (actuator) {Actuators};
+		\node[block, right=3cm of actuator] (robot) {Robot};
+		\node[block, below=0.5cm of actuator] (sensor) {Sensors};
+		
+		% Arrows
+		\draw[->, thick] (controller.east) -- (actuator.west) node[midway, above] {};
+		\draw[->, thick] (actuator) -- (robot) node[midway, right] {};
+		\draw[->, thick] (robot.south) |- (sensor.east) node[midway, above right] {};
+		%\draw[->, thick] (tmp) -- (sensor.west) node[midway, right] {};
+		\draw[->, thick] (sensor.west) -| (controller.south);
+		
+		% Optional summing junction
+		%\node[sum, left=1.5cm of controller] (sum) {Σ};
+		%\draw[->, thick] (sum.east) -- (controller.west) node[midway, above] {error};
+		
+	\end{tikzpicture}
+	\begin{itemize}
+		\item \textbf{Actuator:} Organ by which the robot exert an action (either locomotion or manipulation)
+		\item \textbf{Sensors:} Perception of the internal status (prioprioceptive sensors, e.g., joint-position sensors) or the external status (exteroceptive sensors, e.g., camera, force sensor)
+		\item \textbf{Control system:} Computing commands for the actuators based on the sensors information   
 	\end{itemize}
 \end{frame}
+\begin{frame}{Robot mechanical components}
+	\begin{figure}
+		\centering
+		\includegraphics[height=0.73\textheight]{robotComponents}
+		\caption{Robot structural components}
+	\end{figure}
+\end{frame}
+%\begin{frame}
+%	\begin{itemize}
+%	%	\item A robot can be seen as a machine that is able to modify and interact with its environment in which it operates while respecting the Asimov's rules
+%		\item Components of a robot: 
+%		\begin{enumerate}
+%			\item Mechanical system
+%			\begin{itemize}
+%				\item Locomotion apparatus: wheels, crawler, legs, etc. 
+%				\item Manipulation apparatus: manipulator arms, end-effector, hands, section cap, etc.
+%			\end{itemize}
+%			\item Actuator: the organ by which the robot exert an action (either locomotion or manipulation)
+%			\item Sensors: the ability for the perception of the internal status (prioprioceptive sensors, e.g., joint-position sensors) or the external status (exteroceptive sensors, e.g., camera, force sensor)
+%			\item Control system: compute commands for the actuators based on the sensors information   
+%		\end{enumerate}		 
+%	\end{itemize}
+%\end{frame}
 \begin{frame}{Robotic manipulator - Structure}
 	\begin{itemize}
 		\item \textbf{Robotic manipulator:} sequence of bodies (links) connected through articulation (joints).
@@ -80,20 +465,26 @@
 \begin{frame}{Robotic manipulator - Workspace}
 	\begin{itemize}
 	%	\item Degree of Freedom (DoF) = number of possible motion - constraints imposed by the joint $\Rightarrow$ Each revolute or prismatic joint allows one DoF 
-		\item \textbf{Workspace:} space reachable by the end-effector. Its shape and volume are defined by the robot structure and the mechanical joint limits.
+		\item \textbf{Workspace:} space reachable by the end-effector. Its shape and volume are defined by the robot structure and the mechanical joint limits. 
 		\begin{figure}
 			\centering
-			\includegraphics[width = 0.3\columnwidth]{Cartesian robot.png}
-			\includegraphics[width = 0.3\columnwidth]{Cylindrical robot.png}
-			\includegraphics[width = 0.3\columnwidth]{Spherical robot.png}
-			\caption{Types of robots according to the shape of the workspace: \textbf{Cartesian} (left), \textbf{cylindrical} (middle) and \textbf{spherical} (right)}
+			\includegraphics[width = 0.22\columnwidth]{Cartesian robot.png}
+			\includegraphics[width = 0.22\columnwidth]{Cylindrical robot.png}
+			\includegraphics[width = 0.22\columnwidth]{Spherical robot.png}
+			\includegraphics[width = 0.21\columnwidth]{anthropomorphic.png}
+			\caption{Types of robots according to the workspace shape: \textbf{Cartesian} (left), \textbf{cylindrical} (left-center), \textbf{spherical} (right-center) an \textbf{anthropomorphic} (right)}
 		\end{figure}
 	\end{itemize}
 \end{frame}
 
+
 \begin{frame}{Robotic manipulator - Repeatability and Payload}
 	\begin{itemize}
-		\item \textbf{Repeatability:} measure of the robot ability to return to a previously reached position. It is measured in $mm$
+		\item \textbf{Repeatability:} measure of the robot ability to return to a previously reached position. In general, it is less than $0.1~mm$
+		\begin{figure}
+			\centering
+			\includegraphics[height=0.45\textheight]{repetability}
+		\end{figure}
 		\item \textbf{Payload:} maximum load the robot can widthstand statically.
 	\end{itemize} 
 \end{frame}

@@ -496,7 +496,7 @@ $1^{\text st}$ step: place $z$ axis at each joint, $z_0$ axis is for the fixed f
 	\end{minipage}
 \end{frame}
 \begin{frame}{Denavit-Hartenberg method}
-	For each of the previous examples, $\matriceT_j^{j-1}$ is computed for $j=1,2,3$. Then, the forward kinematic model is obtained by computing 
+	For each of the previous examples, $\matriceT_j^{j-1}$ is computed for $j=1,2,3$. Then, the forward kinematics model is obtained by computing 
 	\begin{equation*}
 		\matriceT_{ee}^{0}(\vectorQ) = \matriceT_{1}^{0}(q_1) \matriceT_{2}^{1}(q_2)\matriceT_{2}^{3}(q_3)
 	\end{equation*}
@@ -812,6 +812,7 @@ Another difference is the order of the homogeneous transformation matrix $\matri
 	\end{bmatrix}$
 \end{frame}
 \begin{frame}{Inverse kinematics}
+%	\setbeamerfont{enumerate item}{size=\Large}
 	\begin{figure}
 		\centering
 		\begin{tikzpicture}[auto, node distance=1.3cm, >=latex]
@@ -819,7 +820,7 @@ Another difference is the order of the homogeneous transformation matrix $\matri
 			\tikzstyle{block} = [draw, rectangle, minimum width=3cm, minimum height=1cm];
 			
 			% Nodes
-			\node[block] (b1) {Inverse kinematic model};
+			\node[block] (b1) {Inverse kinematics model};
 			
 			% Inputs
 			\draw[->] ($(b1.west)+(-1,0)$) -- (b1.west) node[midway, above] {$\vectorQ$};
@@ -835,6 +836,7 @@ Another difference is the order of the homogeneous transformation matrix $\matri
 		\item This is the object of the \textbf{inverse kinematics model}
 		\item There exist two approaches:
 		\begin{enumerate}
+			
 			\item Analytical approach
 			\item Numerical approach
 		\end{enumerate}
@@ -860,7 +862,7 @@ Example:  a planar 2-DOF robot
 	Objective: find the analytically the solution of the inverse problem 
 	
 	\begin{minipage}{.4\columnwidth}
-		1st step: find the forward kinematic model
+		1st step: find the forward kinematics model
 %		\begin{equation*}
 %			\matriceT_{ee}^0=\begin{bmatrix}
 %				\cos(q_1+q_2)&\sin(q_1+q_2)&0&l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
@@ -880,7 +882,7 @@ Example:  a planar 2-DOF robot
 \end{frame}
 \begin{frame}{Inverse kinematics - Analytical approach}
 	Objective: find the analytically the solution of the inverse problem \\
-	1st step: find the forward kinematic model
+	1st step: find the forward kinematics model
 	\begin{equation*}
 	\matriceT_{ee}^0=\begin{bmatrix}
 	\cos(q_1+q_2)&\sin(q_1+q_2)&0&l_1\cos(q_1)+l_2\cos(q_1+q_2)\\
@@ -949,7 +951,7 @@ Example:  a planar 2-DOF robot
 	\begin{equation*}
 		\vectorX_d-f(\vectorQ_d) = 0
 	\end{equation*}
-	\item \textbf{Method:} use numerical solvers to find the root $\vectorQ_d$ solution of the inverse kinematic problem
+	\item \textbf{Method:} use numerical solvers to find the root $\vectorQ_d$ solution of the inverse kinematics problem
 \end{itemize}
 \end{frame}
 \begin{frame}{Inverse kinematics - Numerical approach}
